@@ -1,6 +1,6 @@
 // showcase: the command line for Kwartz Showcase.
 import { parseArgs } from './args.ts'
-import { cmdAuto, cmdThemes, cmdDoctor, cmdExplore, cmdInit, cmdLogin, cmdMake, cmdPlan, cmdRemix, cmdRender, cmdSetup, cmdSounds, cmdVerify } from './commands.ts'
+import { cmdAuto, cmdTheme, cmdThemes, cmdDoctor, cmdExplore, cmdInit, cmdLogin, cmdMake, cmdPlan, cmdRemix, cmdRender, cmdSetup, cmdSounds, cmdVerify } from './commands.ts'
 
 const HELP = `showcase: narrated product demo videos, rendered from a script
 
@@ -15,6 +15,12 @@ From a config (showcase.config.json): describe the video, and let scenes be writ
       --remix                     rebuild from the last takes, without recording
       --theme <name>              render in this theme, into files named after it
   showcase themes                 list the themes: glass, clay, brutal and the rest
+  showcase theme new <name>       a theme of your own, in themes/<name>.json
+      --from <theme>              the built-in theme to start from (default classic)
+      --accent <hex> --ink <hex>  your highlight colour and your dark colour
+      --prompt "<the brand>"      beta: have Claude write it from a description (needs ANTHROPIC_API_KEY)
+  showcase theme check <name>     is it safe, and readable on video?
+  showcase theme preview <name>   one picture of its cards, captions and labels in both shapes
   showcase auto [config]          beta: explore, have Claude write the scenes through the API, draft, render
                                   (needs ANTHROPIC_API_KEY; --model <id>, --tries <n>, --force, --draft)
   showcase login [config]         sign in once in a visible browser and save the session
@@ -48,6 +54,7 @@ const COMMANDS: Record<string, () => boolean | Promise<boolean>> = {
   make: () => cmdMake(args),
   auto: () => cmdAuto(args),
   themes: () => cmdThemes(),
+  theme: () => cmdTheme(args),
   plan: () => cmdPlan(args),
   explore: () => cmdExplore(args),
   login: () => cmdLogin(args),

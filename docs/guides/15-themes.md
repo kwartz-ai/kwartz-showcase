@@ -95,5 +95,6 @@ at the theme's skill.
 - `glass`, `liquid` and `spatial` render more slowly, because of blur.
 - `soft` has low contrast by nature, and `maximal` is tiring over a long video.
 - The design terms work as names too: `glassmorphism`, `neumorphism`, `skeuomorphism`.
+- None of the twelve fits your brand? Make your own: [guide 16](16-your-own-theme.md).
 - Your own graphics follow the theme if they are built from `theme.look`. See
   [Themes](../themes.md).

@@ -122,7 +122,7 @@ export const THEMES: Record<string, ThemePreset> = {
     backdrop: { colors: ['#FDBA8C', '#FF8F6B', '#FFF1E6'], pattern: 'glow' },
     look: (a) => ({
       canvas: '#FFE8D9', fg: '#4A2B1A', muted: '#7A4E3A', paper: '#FFF3EA', paperFg: '#4A2B1A',
-      panel: 'background:#FF8F6B;border-radius:34px;box-shadow:0 16px 28px rgba(214,96,60,.38),inset 0 -10px 14px rgba(120,30,0,.2),inset 0 10px 14px rgba(255,255,255,.5)', panelFg: '#FFFFFF',
+      panel: 'background:#FF8F6B;border-radius:34px;box-shadow:0 16px 28px rgba(214,96,60,.38),inset 0 -10px 14px rgba(120,30,0,.2),inset 0 10px 14px rgba(255,255,255,.5)', panelFg: '#3B1F12',
       chip: 'background:#7BD3C5;color:#0E3B35;border-radius:999px;box-shadow:0 8px 14px rgba(40,140,125,.3),inset 0 -5px 8px rgba(0,60,50,.2),inset 0 5px 8px rgba(255,255,255,.55)',
       label: 'background:#4A2B1A;color:#FFFFFF;border-radius:18px;box-shadow:0 8px 16px rgba(74,43,26,.35),inset 0 3px 5px rgba(255,255,255,.2)',
       ring: `border:3.5px solid ${a};border-radius:20px`,
@@ -157,7 +157,7 @@ export const THEMES: Record<string, ThemePreset> = {
       canvas: 'radial-gradient(circle at 0% 0%,#FF3D81 0 11%,transparent 11.3%),radial-gradient(circle at 100% 100%,#00C2FF 0 13%,transparent 13.3%),radial-gradient(circle at 100% 0%,#FFD400 0 7%,transparent 7.3%),radial-gradient(circle at 0% 100%,#7C3AED 0 9%,transparent 9.3%),repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 18px,transparent 18px 36px),#1A0B3D',
       fg: '#FFFFFF', muted: '#FBCFE8',
       paper: 'repeating-linear-gradient(-45deg,rgba(26,11,61,.07) 0 20px,transparent 20px 40px),#FFD400', paperFg: '#1A0B3D',
-      panel: 'background:#FF3D81;border:4px solid #1A0B3D;border-radius:6px 28px 6px 28px;box-shadow:8px 8px 0 #00C2FF', panelFg: '#FFFFFF',
+      panel: 'background:#D61F69;border:4px solid #1A0B3D;border-radius:6px 28px 6px 28px;box-shadow:8px 8px 0 #00C2FF', panelFg: '#FFFFFF',
       chip: 'background:#00C2FF;color:#1A0B3D;border:3px solid #FFFFFF;border-radius:6px 18px 6px 18px',
       label: 'background:#FFD400;color:#1A0B3D;border:3px solid #1A0B3D;border-radius:4px 14px 4px 14px;box-shadow:5px 5px 0 #FF3D81',
       ring: `border:4px solid ${a};border-radius:10px`,

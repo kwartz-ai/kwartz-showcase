@@ -10,7 +10,8 @@ import { planFor, type Plan } from './plan.ts'
 import { FONT_PRESETS, GOOGLE_FONTS, facesToLoad, googleFontsUrl } from './fonts.ts'
 import { BACKDROPS, FORMATS, KIND_ADVICE, MOTION_FEELS, PLATFORMS, layoutFor } from './presets.ts'
 import { applyScript, parseScript, scriptFit } from './script.ts'
-import { themeNamed, type ThemePreset } from './themes.ts'
+import { findTheme } from './custom-theme.ts'
+import type { ThemePreset } from './themes.ts'
 
 /** What a scenes file exports: the scenes, and optionally how to reach the first
  *  screen. A scene may leave out `say` when the brief names a script file. */
@@ -96,10 +97,11 @@ const SETTING = { sans: 1, serif: 0.35, condensed: 0, rounded: 0.6, mono: 0.5 }
 /** The brief's style as a theme: the person's fonts and colours first, then the
  *  product's own (when it was explored), then the kit's. `notes` collects what was
  *  taken from the product, so the person is told. */
-export function themeFor(brief: Brief, explored: Explored | null = null, notes: string[] = []): ThemeInput {
+export function themeFor(brief: Brief, explored: Explored | null = null, notes: string[] = [], dir?: string): ThemeInput {
   const s = brief.style ?? {}
   // the order: what the person set, then the theme, then the product's own look
-  const picked = brief.theme ? themeNamed(brief.theme) : null
+  const picked = brief.theme ? findTheme(brief.theme, dir) : null
+  for (const w of picked?.warnings ?? []) notes.push(`theme "${picked!.name}": ${w}`)
   const preset: ThemePreset | null = picked?.preset ?? null
   const feel = MOTION_FEELS[brief.motion?.feel ?? preset?.feel ?? 'calm']
   const match = s.match !== false ? explored : null
@@ -170,7 +172,7 @@ export function borderFor(brief: Brief, dir: string, accent: string): VideoConfi
   if (s.border === 'none') return false
   const bd = s.backdrop
   // a theme brings its own backdrop and corner; the person's choice goes over it
-  const preset = brief.theme ? themeNamed(brief.theme)?.preset : null
+  const preset = brief.theme ? findTheme(brief.theme, dir)?.preset : null
   let border: Exclude<VideoConfig['border'], boolean | undefined> = preset ? { ...preset.backdrop, radius: preset.radius } : {}
   if (Array.isArray(bd)) border = { ...border, colors: bd as [string, string, string] }
   else if (bd === 'brand') border = { ...border, colors: [mix(accent, '#000000', 0.62), mix(accent, '#000000', 0.18), mix(accent, '#ffffff', 0.62)], pattern: 'glow' }
@@ -226,7 +228,7 @@ export function resolveBrief(brief: Brief, dir: string, module: ScenesModule): {
     }
   }
   const hosted = isHosted(brief.url)
-  const theme = themeFor(brief, exploredStyle(dir), notes)
+  const theme = themeFor(brief, exploredStyle(dir), notes, dir)
   const border = borderFor(brief, dir, theme.accent ?? defaultTheme.accent)
   const readOnly = brief.safety?.readOnly ?? hosted
 

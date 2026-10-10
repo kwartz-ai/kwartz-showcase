@@ -156,6 +156,7 @@ The rules that keep it that way:
 | `brief/brief.ts` | The config type; every check on it; local or hosted | file system |
 | `brief/presets.ts` | Shapes, platforms, safe areas, motion feels; the layout for a shape | none |
 | `brief/themes.ts` | The themes: colours, pairing, backdrop, sound mood, and the look of every surface | none |
+| `brief/custom-theme.ts` | Theme files of a project: reading, the checks for safe CSS and readability, finding a theme by name | file system |
 | `brief/fonts.ts` | The Google Fonts table, the pairings, the stylesheet address, the check before a render | network |
 | `brief/plan.ts` | From a length to scenes and a word budget; advice when a render misses | none |
 | `brief/script.ts` | Read a person's script and place its paragraphs on scenes | none |
@@ -180,6 +181,8 @@ The rules that keep it that way:
 | `audio/sound.ts` | Effects per event kind; the generated music bed | FFmpeg |
 | `audio/palette.ts` | Choose, measure and gate soundcn sounds for a project | FFmpeg, soundcn |
 | `auto/auto.ts` | `showcase auto`: ask Claude for the scenes, check the file, draft, fix, render | Claude API, render |
+| `auto/theme.ts` | A theme from a description: ask Claude, check the file, send back what fails | Claude API |
+| `render/preview.ts` | One picture of a theme's cards and overlays in both shapes | Chromium, FFmpeg |
 | `verify/verify.ts` | The checks | ffprobe, FFmpeg |
 | `setup/setup.ts` | `showcase setup` and `showcase doctor` | Playwright CLI, Python, network |
 | `python/kokoro_tts.py` | Text to WAV with kokoro-onnx | Kokoro model |

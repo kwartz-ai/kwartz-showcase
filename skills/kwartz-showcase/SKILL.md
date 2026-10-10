@@ -53,7 +53,9 @@ by the next unfinished item in "Craft standard". With no video yet, run
 | `showcase make --remix` | Rebuild every shape from the last takes (after a sound change) |
 | `showcase login` | The user signs in once in a visible browser; the session is saved |
 | `showcase sounds --role callout --mood "calm"` | List sound candidates |
-| `showcase themes` | List the themes |
+| `showcase themes` | List the themes, built-in and your own |
+| `showcase theme new <name> --from glass --accent "#FF5A1F"` | Start a theme of your own |
+| `showcase theme check <name>`, `showcase theme preview <name>` | Check it; draw one picture of it |
 | `showcase make --theme glass --draft` | Render in a theme for one run, into files named after it |
 | `showcase init` | Adds a hand-written `video.ts` and this skill to a project |
 | `showcase render video.ts --draft` | Picture only, no voice: use until every scene runs |
@@ -165,7 +167,9 @@ rendered file.
    `theme.look` and `arrive(theme)`, never from colours you typed in, so they match the
    cards. If there is no theme, suggest one that suits the product (`showcase themes`
    lists them) and say why; do not pick `maximal` or `brutal` for a serious product.
-   To compare looks, render with `showcase make --theme <name> --draft`.
+   To compare looks, render with `showcase make --theme <name> --draft`. If the user
+   wants the video in their own brand and no built-in theme fits, make one with the
+   `showcase-theme-new` skill (a file in `themes/`), not with one-off colours in scenes.
 8. **Type.** Choose one pairing for the product with `style.fontPreset` (`modern`,
    `geometric`, `technical`, `minimal`, `bold`, `editorial`, `elegant`, `friendly`,
    `playful`, `poster`, `corporate`) and say why. Do not mix faces from two pairings.

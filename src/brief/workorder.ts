@@ -8,7 +8,7 @@ import { isHosted } from './brief.ts'
 import { planFor } from './plan.ts'
 import { FORMATS, PLATFORMS, layoutFor } from './presets.ts'
 import { ctaFor, targetsFor } from './resolve.ts'
-import { themeNamed } from './themes.ts'
+import { findTheme } from './custom-theme.ts'
 import { asset } from '../core/paths.ts'
 
 export function workOrder(brief: Brief, dir: string): string {
@@ -38,11 +38,13 @@ export function workOrder(brief: Brief, dir: string): string {
       + (l.mode !== 'fill' ? `. The product is filmed in a ${l.width}x${l.height} window; zoom closer than usual and keep labels short.` : ''))
   }
   if (targets.length > 1) lines.push('', 'One scenes file serves every shape. Give a scene `formats: [\'landscape\']` to leave it out of the others.')
-  const picked = brief.theme ? themeNamed(brief.theme) : null
+  const picked = brief.theme ? findTheme(brief.theme, dir) : null
   if (picked) {
-    const skill = asset('skills', `showcase-theme-${picked.name}`, 'SKILL.md')
-    lines.push('', `## Theme: ${picked.name} (${picked.preset.style})`, '',
-      `Suits: ${picked.preset.use}.`,
+    // a theme the project made follows the style of the built-in theme it starts from
+    const styleOf = picked.custom ? picked.base ?? 'classic' : picked.name
+    const skill = asset('skills', `showcase-theme-${styleOf}`, 'SKILL.md')
+    lines.push('', picked.custom ? `## Theme: ${picked.name} (your own, from ${styleOf})` : `## Theme: ${picked.name} (${picked.preset.style})`, '',
+      picked.custom ? `About it: ${picked.preset.use}. It is defined in ${path.relative(dir, picked.file!)}.` : `Suits: ${picked.preset.use}.`,
       'The theme already sets the surfaces, fonts, colours, backdrop, movement and sound. Build your own graphics from `theme.look` so they match.',
       fs.existsSync(skill) ? `How a designer uses this style in a video: read ${skill}` : '')
   }

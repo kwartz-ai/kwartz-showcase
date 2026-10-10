@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.2.0 (2026-10-11)
+
+A theme of your own, for your brand.
+
+Added
+- Theme files: `themes/<name>.json` beside the config, each starting from a built-in
+  theme (`extends`) and changing colours, fonts, movement, backdrop, corner, sound mood,
+  or how single surfaces are drawn (`look`). `"theme": "<name>"` uses it.
+- `showcase theme new <name>`: by hand with `--from`, `--accent` and `--ink`, or from a
+  description with `--prompt` (beta: through the Claude API, with a key).
+- `showcase theme check <name>` and `showcase theme preview <name>`: one picture of the
+  cards, captions, highlight ring and label in a wide frame and a tall one, in seconds.
+- A skill, `showcase-theme-new`, for making a theme from a brand description in Claude
+  Code with no key. `showcase init --config` copies it into the project.
+- The same checks as the built-in themes, for every theme file, every time it is used:
+  contrast of captions, text and the highlight, and CSS that may only describe a
+  surface (it may not move or resize a box, or load anything).
+- A schema for theme files, an example theme, and guide 16.
+
+Fixed
+- Text on the panels of the `clay` and `maximal` themes was too close to its ground
+  (2.3 and 3.4 to 1). A new rule, at least 4.5 to 1 on a solid panel, caught both.
+
+Known limits: `showcase theme new --prompt` is beta. It is unit-tested and uses the
+same request code as the rest of the kit, but has not been run end to end with a real
+key. The by-hand way and the Claude Code skill were both tested with real videos. The
+checks keep a theme readable and safe; they cannot tell whether it is beautiful.
+
+Tests: 1085 unit tests, and a mutation run of 60 deliberate breaks.
+
 ## 2.1.1 (2026-10-10)
 
 Corrects the release itself. The code is the same as 2.1.0.

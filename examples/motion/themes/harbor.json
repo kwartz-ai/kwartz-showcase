@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../schema/showcase.theme.schema.json",
+  "description": "An example of a theme of your own: a deep green brand, starting from the bento theme",
+  "extends": "bento",
+  "colors": {
+    "ink": "#06281F",
+    "accent": "#34D399",
+    "mist": "#A7D7C5",
+    "band": "#06281F",
+    "bandText": "#FFFFFF"
+  },
+  "fontPreset": "geometric",
+  "feel": "crisp",
+  "backdrop": ["#03170F", "#0F5B43", "#A7F3D0"],
+  "backdropPattern": "waves",
+  "radius": 0.045,
+  "mood": "calm clean soft",
+  "look": {
+    "canvas": "#06281F",
+    "muted": "#A7D7C5",
+    "paper": "#06281F",
+    "panel": "background:#0E3B2E;border:1.5px solid #1F7A5C;border-radius:20px",
+    "chip": "background:#0E3B2E;border:1.5px solid {accent};color:#FFFFFF;border-radius:14px",
+    "label": "background:{accent};color:#06281F;border-radius:10px;box-shadow:0 8px 22px rgba(0,0,0,.4)",
+    "ring": "border:3px solid {accent};border-radius:14px",
+    "caption": "background:#0E3B2E;border:1.5px solid #1F7A5C;color:#FFFFFF;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.4)"
+  }
+}

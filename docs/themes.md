@@ -157,9 +157,27 @@ import { defineVideo, themeFor } from 'kwartz-showcase'
 export default defineVideo({ name: 'demo', baseUrl: '...', theme: themeFor({ theme: 'glass' }), scenes: [...] })
 ```
 
-## Adding a theme
+## A theme of your own
 
-A theme is one entry in `src/brief/themes.ts`: its colours, a font pairing, a backdrop,
+A project can have its own themes: small files in a `themes` folder beside the config.
+Each starts from a built-in theme and changes what the brand needs.
+
+```bash
+showcase theme new acme --from glass --accent "#FF5A1F"     # by hand
+showcase theme new acme --prompt "orange, rounded, friendly" # from a description, with an API key
+showcase theme check acme
+showcase theme preview acme
+```
+
+Then `"theme": "acme"` in the config. In Claude Code, `/showcase-theme-new` makes one
+from a description with no key. A theme of your own passes the same checks as the
+built-in ones before it may be used: its CSS must only describe a surface, and
+captions and text must stay readable. [Guide 16](guides/16-your-own-theme.md) has every
+setting.
+
+## Adding a built-in theme
+
+A built-in theme is one entry in `src/brief/themes.ts`: its colours, a font pairing, a backdrop,
 a corner size, a sound mood, and a `look` function that returns the CSS for each
 surface. Add a skill beside the others, and the name to the schema. The tests then
 check its contrast, its completeness, and that no style attribute can be cut short.

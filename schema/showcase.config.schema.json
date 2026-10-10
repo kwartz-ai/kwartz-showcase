@@ -385,23 +385,32 @@
       "description": "A video of motion graphics and clips only. No product is filmed, so \"url\" and \"serve\" are not needed."
     },
     "theme": {
-      "enum": [
-        "classic",
-        "minimal",
-        "glass",
-        "liquid",
-        "soft",
-        "clay",
-        "brutal",
-        "maximal",
-        "bento",
-        "real",
-        "spatial",
-        "editorial",
-        "terminal"
-      ],
       "default": "classic",
-      "description": "One word for the whole look: how cards, labels and captions are drawn, the fonts, colours, backdrop, movement and sound. \"style\" still overrides single parts."
+      "description": "One word for the whole look: a built-in theme, or a theme of your own (a file in the \"themes\" folder beside this config, made with \"showcase theme new\"). \"style\" still overrides single parts.",
+      "anyOf": [
+        {
+          "enum": [
+            "classic",
+            "minimal",
+            "glass",
+            "liquid",
+            "soft",
+            "clay",
+            "brutal",
+            "maximal",
+            "bento",
+            "real",
+            "spatial",
+            "editorial",
+            "terminal"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{1,30}$",
+          "description": "The name of a theme in your \"themes\" folder."
+        }
+      ]
     }
   },
   "anyOf": [
