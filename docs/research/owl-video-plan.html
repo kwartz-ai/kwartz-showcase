@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OWL Video Plan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; tables carry the comparisons, the audit and the skills list. */
+:root {
+  --bg: #f3f5f8;
+  --surface: #ffffff;
+  --fg: #1a2233;
+  --muted: #5a667c;
+  --line: #d5dbe6;
+  --accent: #b86a00;
+  --accent-soft: #fbeed8;
+  --code-bg: #e9edf3;
+  --good: #1f7a45; --good-bg: #dff3e6;
+  --gap: #a8321f; --gap-bg: #fbe3de;
+  --part: #7a5a00; --part-bg: #fbf0cc;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121722; --surface: #1a2130; --fg: #e6eaf2; --muted: #9aa6bc;
+    --line: #2c3649; --accent: #f0a63a; --accent-soft: #3a2c12; --code-bg: #232c3d;
+    --good: #7fd6a0; --good-bg: #17382a; --gap: #f29a8a; --gap-bg: #44201b; --part: #ecc95a; --part-bg: #3d3210;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121722; --surface: #1a2130; --fg: #e6eaf2; --muted: #9aa6bc;
+  --line: #2c3649; --accent: #f0a63a; --accent-soft: #3a2c12; --code-bg: #232c3d;
+  --good: #7fd6a0; --good-bg: #17382a; --gap: #f29a8a; --gap-bg: #44201b; --part: #ecc95a; --part-bg: #3d3210;
+  color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-size: 17px; line-height: 1.6;
+  padding-inline: 20px; padding-block: 40px 72px;
+}
+.page { max-width: 800px; margin-inline: auto; display: flex; flex-direction: column; gap: 46px; }
+section, header { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(2rem, 6vw, 2.9rem); font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 1.45rem; font-weight: 700; }
+h3 { font-size: 1.08rem; font-weight: 500; }
+p, ul, ol { margin: 0; }
+ul, ol { padding-left: 1.25em; display: flex; flex-direction: column; gap: 6px; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+code { font-family: var(--mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.kicker { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.18rem; }
+.muted { color: var(--muted); }
+.ask { background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 8px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; }
+.ask strong { font-family: var(--display); }
+
+.craft { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.craft > div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.craft ul { font-size: 0.95rem; gap: 4px; }
+
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 600px; font-size: 0.95rem; }
+th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+thead th { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+tbody th { font-weight: 600; }
+.pill { display: inline-block; font-family: var(--mono); font-size: 0.72rem; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.has { background: var(--good-bg); color: var(--good); }
+.miss { background: var(--gap-bg); color: var(--gap); }
+.partly { background: var(--part-bg); color: var(--part); }
+.cmds { display: flex; flex-direction: column; gap: 8px; list-style: none; padding: 0; }
+.cmds li { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cmds code { background: none; padding: 0; font-size: 0.95rem; color: var(--accent); }
+.prompt { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.prompt summary { cursor: pointer; padding: 12px 16px; font-family: var(--display); font-weight: 500; }
+.prompt summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.prompt pre { margin: 0; padding: 14px 16px; border-top: 1px solid var(--line); overflow-x: auto; max-height: 460px; font-family: var(--mono); font-size: 0.8rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+.copy { align-self: flex-start; font: inherit; font-size: 0.9rem; padding: 6px 14px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent-soft); color: var(--fg); cursor: pointer; }
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sources { font-size: 0.92rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header>
+    <span class="kicker">Research note · October 2026</span>
+    <h1>Making the OWL video with Claude</h1>
+    <p class="lede">The first OWL demo video exists: 1 minute 49 seconds, 1080p, voice and captions, rendered by one command on base OWL with fictional data. It is correct and clear, but it looks like a careful screen recording. This note covers what a senior video editor would add, and which Claude Code skills help us add it.</p>
+  </header>
+
+  <section>
+    <h2>Where the video stands</h2>
+    <p>The pipeline is in <code>tools/demo-video/</code>: Playwright drives the real app and captures frames, Kokoro (a free local voice) reads the narration, FFmpeg joins them. Eleven scenes follow <code>docs/demo-scenarios.md</code>. No paid tool and no outside code is used.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Component</th><th>Status</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><th>Script written first</th><td><span class="pill has">have</span></td><td>One spoken line per scene; scene length follows the voice.</td></tr>
+          <tr><th>Voiceover</th><td><span class="pill has">have</span></td><td>Kokoro. Not yet listened to by a person.</td></tr>
+          <tr><th>Captions</th><td><span class="pill partly">partly</span></td><td>Burned in, plus a caption file. Timing inside a scene is estimated from sentence length.</td></tr>
+          <tr><th>Spotlight and pointer</th><td><span class="pill has">have</span></td><td>Ring that dims the rest; pointer glides and shows a click ripple.</td></tr>
+          <tr><th>Title, end card, explainer</th><td><span class="pill has">have</span></td><td>Simple cards and one four-step animation.</td></tr>
+          <tr><th>Hook in the first 5 seconds</th><td><span class="pill partly">partly</span></td><td>Opens on a title card. A stronger opening shows the problem first.</td></tr>
+          <tr><th>Zoom and camera moves</th><td><span class="pill miss">missing</span></td><td>The frame never moves. Small text stays small.</td></tr>
+          <tr><th>Scene transitions</th><td><span class="pill miss">missing</span></td><td>Hard cuts between tabs, and loading states are visible.</td></tr>
+          <tr><th>Music</th><td><span class="pill miss">missing</span></td><td>No background track.</td></tr>
+          <tr><th>Sound effects</th><td><span class="pill miss">missing</span></td><td>No click or transition sounds.</td></tr>
+          <tr><th>Loudness levelling</th><td><span class="pill miss">missing</span></td><td>Voice averages about −23 dB, quieter than the usual target.</td></tr>
+          <tr><th>Callout labels</th><td><span class="pill miss">missing</span></td><td>The spotlight shows where to look but not why.</td></tr>
+          <tr><th>Call to action</th><td><span class="pill miss">missing</span></td><td>The end card has no next step or contact.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What a senior editor works on</h2>
+    <p>Seven areas, in the order an editor usually handles them. The numbers are common working ranges, not fixed rules.</p>
+    <div class="craft">
+      <div><h3>1. Story</h3><ul>
+        <li>One promise per video.</li>
+        <li>Hook in the first 5 seconds: the problem, not the logo.</li>
+        <li>Show only the 2 or 3 interactions that prove the promise.</li>
+        <li>End with one clear next step.</li>
+      </ul></div>
+      <div><h3>2. Pacing</h3><ul>
+        <li>Cut every second where nothing happens.</li>
+        <li>Speed up waits; never show a spinner at normal speed.</li>
+        <li>Hold text long enough to read it twice.</li>
+        <li>Let the voice start slightly before or after the picture changes, so cuts feel smooth.</li>
+      </ul></div>
+      <div><h3>3. Motion</h3><ul>
+        <li>Nothing moves at constant speed. Entering things slow down; leaving things speed up.</li>
+        <li>Small interface moves last 150 to 300 ms.</li>
+        <li>Items in a list arrive 40 to 80 ms apart.</li>
+        <li>One thing moves at a time. Motion pulls the eye, so use it only where the viewer should look.</li>
+      </ul></div>
+      <div><h3>4. Camera</h3><ul>
+        <li>Zoom in to the area of action, then back out.</li>
+        <li>Smooth pointer paths; no jitter.</li>
+        <li>Highlight or dim to direct attention.</li>
+        <li>Crop out anything messy or irrelevant.</li>
+      </ul></div>
+      <div><h3>5. Graphics and type</h3><ul>
+        <li>One type scale and one colour set, taken from the brand.</li>
+        <li>Callout labels that say why a thing matters.</li>
+        <li>Captions of at most two lines, clear of the action.</li>
+        <li>Consistent title and section cards.</li>
+      </ul></div>
+      <div><h3>6. Sound</h3><ul>
+        <li>Voice is the lead. Level it to a standard loudness.</li>
+        <li>Quiet music under the voice, lowered further while it speaks.</li>
+        <li>Soft sounds on clicks and transitions.</li>
+        <li>No sudden silence between scenes.</li>
+      </ul></div>
+      <div><h3>7. Finish</h3><ul>
+        <li>Watch it once with sound off and once with eyes closed.</li>
+        <li>Export 1080p H.264, plus the caption file.</li>
+        <li>A thumbnail frame that states the promise.</li>
+        <li>Keep it between 60 and 120 seconds.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Skills we can add to Claude Code</h2>
+    <p>A skill is a folder of instructions that teaches Claude a tool or a craft. None of these is installed yet. One entry, soundcn, is a sound library and not a skill. A third-party skill runs with Claude's permissions on the machine, so each one should be read before it is installed.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Skill set</th><th>What it teaches</th><th>Licence</th><th>Fit for our pipeline</th></tr></thead>
+        <tbody>
+          <tr>
+            <th>GSAP skills<br><span class="muted" style="font-weight:400">official, GreenSock</span></th>
+            <td>Eight skills: tweens and easing, timelines, staggering, plugins, performance.</td>
+            <td>MIT</td>
+            <td><strong>High.</strong> Our overlays are plain HTML, so GSAP timelines can drive richer explainers, callouts and transitions.<br><code>npx skills add https://github.com/greensock/gsap-skills</code></td>
+          </tr>
+          <tr>
+            <th>HyperFrames<br><span class="muted" style="font-weight:400">HeyGen</span></th>
+            <td>Writing HTML scenes that render straight to MP4, with audio mixing.</td>
+            <td>Apache 2.0</td>
+            <td><strong>Medium.</strong> Good for a polished intro, outro or explainer made as a separate clip and joined with FFmpeg.<br><code>claude plugin marketplace add heygen-com/hyperframes</code></td>
+          </tr>
+          <tr>
+            <th>Motion craft skills<br><span class="muted" style="font-weight:400">community</span></th>
+            <td>Easing, spring motion, staggering and timing rules. Examples: a web animation practices skill, <code>design-motion-principles</code>, <code>advanced-motion-easing</code>.</td>
+            <td>Varies</td>
+            <td><strong>High, after review.</strong> These add judgement, not tools. Found in community registries; I have not read their contents. The installed <code>motion-designer</code> skill already covers the 12 classic principles.</td>
+          </tr>
+          <tr>
+            <th>claude-code-video-toolkit<br><span class="muted" style="font-weight:400">digitalsamba</span></th>
+            <td>Skills for FFmpeg, Playwright recording, MoviePy, AI music (ACE-Step), and Remotion.</td>
+            <td>MIT</td>
+            <td><strong>Medium.</strong> The FFmpeg, recording and music skills are useful references. Its core is Remotion, and its voice path uses paid ElevenLabs.</td>
+          </tr>
+          <tr>
+            <th>OpenMontage<br><span class="muted" style="font-weight:400">calesthio</span></th>
+            <td>A full production system with a Screen Demo pipeline and style playbooks for type and motion.</td>
+            <td>AGPL 3.0</td>
+            <td><strong>Reference only.</strong> Worth reading for its screen-demo and style guidance. It is a large separate system, and the licence means its code should not be copied into our repo.</td>
+          </tr>
+          <tr>
+            <th>soundcn<br><span class="muted" style="font-weight:400">sound library, not a skill</span></th>
+            <td>700+ short interface sounds: clicks, notifications, transitions. Preview at soundcn.xyz.</td>
+            <td>Mostly CC0</td>
+            <td><strong>High, for sound effects.</strong> Each sound is a small file with the audio stored inside it as text, so our script can turn it into a WAV and FFmpeg can place it at each click. Example: <code>npx shadcn add @soundcn/click-soft</code>.<br>Use only the CC0 sounds. Its World of Warcraft set belongs to Blizzard and must not be used.</td>
+          </tr>
+          <tr>
+            <th>Remotion skills<br><span class="muted" style="font-weight:400">official</span></th>
+            <td>React-based video compositions.</td>
+            <td>Company licence</td>
+            <td><strong>Avoid.</strong> An earlier internal write-up notes a paid licence at 4 or more employees.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Suggested order of improvements</h2>
+    <ol>
+      <li><strong>Sound first.</strong> Level the voice, add a quiet music track that lowers under speech, add soft click and transition sounds from soundcn. FFmpeg can do all three, and the recorder already knows the exact time of every click. This is the largest change in how finished the video feels.</li>
+      <li><strong>Zoom on the action.</strong> Scale the page toward the spotlit element and back, with eased motion.</li>
+      <li><strong>Clean transitions.</strong> Hide loading states behind a short crossfade between tabs.</li>
+      <li><strong>Callout labels.</strong> A short label next to each spotlight that says why it matters.</li>
+      <li><strong>Stronger opening and ending.</strong> Start on the problem; end with a next step.</li>
+      <li><strong>Our own skill.</strong> Done: the <code>owl-demo-video</code> skill below holds this checklist, so every render follows it.</li>
+    </ol>
+    <p class="muted">Steps 2 to 4 are where the GSAP skills and a motion craft skill help most.</p>
+  </section>
+
+  <section>
+    <h2>The command</h2>
+    <p>The editor's brief is saved in the OWL repo as a project skill, <code>.claude/skills/owl-demo-video/SKILL.md</code>. In Claude Code, opened in the OWL folder, one command starts the work. Anything typed after it is the brief for that render.</p>
+    <ul class="cmds">
+      <li><code>/owl-demo-video</code><span>Improve the current video by the next unfinished craft item, then render and verify it.</span></li>
+      <li><code>/owl-demo-video add music and click sounds, level the voice</code><span>One focused pass.</span></li>
+      <li><code>/owl-demo-video 60 second cut for a sales email, focus on silent changes</code><span>A new cut for a stated audience and length.</span></li>
+    </ul>
+    <p>Each run follows the same loop: read the last render, fix the script, draft without voice, render, verify with numbers, and report what was and was not checked. It will not commit, install a skill or record a scene that writes data without a yes.</p>
+    <details class="prompt">
+      <summary>Read the full prompt</summary>
+      <pre id="prompt-text"># OWL demo video
+
+You are the senior video editor and motion designer for the Kwartz OWL demo video.
+The video is rendered by code, never recorded or edited by hand: Playwright drives the
+real app and captures frames, Kokoro reads the narration, FFmpeg joins them. Your job
+is the editor&#x27;s job: decide what the viewer must understand, cut everything else, and
+make each second look and sound finished.
+
+Anything the user typed after the command is the brief for this render (audience,
+length, focus, a scene to add or cut). With no brief, improve the existing video by
+the next unfinished item in &quot;Craft standard&quot; and render it.
+
+## Fixed rules
+
+- **Base OWL only.** Record the synthetic demo world (tenant Acme Aero) on the local
+  stack. No real tenant's data, names or screens may appear. After each
+  render confirm that no scene&#x27;s page text contains a real customer&#x27;s name.
+- **Say on screen that the data is fictional** (the end card does).
+- **Free and clean licences only.** Playwright, FFmpeg, Kokoro, GSAP, HyperFrames.
+  Sound effects only from CC0 sources (soundcn&#x27;s CC0 sets; never its World of
+  Warcraft set). No Remotion (paid company licence). Read OpenMontage for ideas but
+  copy no code from it (AGPL). Music must be royalty-free or generated, with the
+  source written in the README.
+- **Scenes only read data.** No uploads, edits or deletes during a render, so two
+  renders on one day tell the same story. A scene that writes needs the user&#x27;s yes.
+- **Narration avoids exact counts and dates.** The demo clock moves the data daily.
+- **Steps wait for real page states**, never fixed sleeps.
+- **Do not commit, push, open a pull request or touch the work tracker** unless asked in this
+  conversation. Do not install a third-party skill without the user&#x27;s yes.
+
+## Where things are
+
+| Thing | Place |
+|---|---|
+| Pipeline and its README | `tools/demo-video/` (`record.mjs`, `lib.mjs`, `tts.mjs`, `explainer.mjs`) |
+| Scenes: spoken line plus steps | `tools/demo-video/scenes.mjs` |
+| What each tab stages, and the walk | `docs/demo-scenarios.md` |
+| Output (git-ignored) | `tools/demo-video/out/demo.mp4`, `demo.vtt`, `failed.png` |
+| Craft notes and skills research | this page |
+
+Before rendering: the stack must answer on http://localhost:8288 with data current to
+today. Start it with `MSYS_NO_PATHCONV=1 ./run.sh` (Git Bash on Windows rewrites
+`/app` otherwise and the seed silently fails). If `backend/static/dist` is older than
+the frontend source, run `npm run build` in `frontend/` first. One-time tool setup is
+`tools/demo-video/setup.ps1`.
+
+## Craft standard
+
+Work down this list. An item is done only when it is visible or audible in the
+rendered file.
+
+1. **Story.** One promise: OWL finds what changed in a customer&#x27;s order book and
+   keeps the proof. Open on the problem within 5 seconds, not on the logo. Show only
+   the interactions that prove the promise. Target 90 to 120 seconds. End with one
+   next step for the viewer; ask the user what it is if it is not known.
+2. **Pacing.** Cut every moment where nothing happens. Speed up waits and mark them
+   (&quot;Sped up 8x&quot;). Never show a spinner or &quot;Loading&quot; at normal speed. Hold any text
+   long enough to read twice.
+3. **Motion.** Nothing moves at constant speed: entering elements ease out, leaving
+   elements ease in. Small interface moves last 150 to 300 ms, camera moves 400 to
+   800 ms, list items arrive 40 to 80 ms apart. One thing moves at a time, and only
+   where the viewer should look. Use one motion language for the whole video.
+4. **Camera.** Zoom toward the element being discussed, hold, then return. Keep the
+   pointer path smooth. Spotlight or dim to direct attention.
+5. **Graphics and type.** Colours and type come from the app&#x27;s own brand. Each
+   spotlight gets a short callout label that says why it matters. Captions are at
+   most two lines and never cover the thing being shown. Title, section and end cards
+   share one design.
+6. **Sound.** The voice leads: level it to about -16 LUFS. Put a quiet music bed
+   under it, lowered further while the voice speaks. Add soft sounds on clicks and
+   transitions, placed from the recorder&#x27;s own click times. No dead silence between
+   scenes.
+7. **Finish.** 1920x1080, 30 fps, H.264 with AAC, plus the caption file. Captions
+   match the voice. Pick one frame that states the promise as the thumbnail.
+
+If the pipeline cannot yet do something on this list (music, zoom, transitions,
+callouts), extend the pipeline: put the capability in `lib.mjs` as a helper, use it
+from `scenes.mjs`, and document it in the README. Prefer the smallest change that
+gets the result.
+
+## How to work
+
+1. **Read first.** The README, `scenes.mjs`, and the last render if one exists
+   (sample frames from it with ffmpeg and look at them).
+2. **Edit the script before the picture.** Write or revise each scene&#x27;s `say` line.
+   Plain words, short sentences, one idea per scene.
+3. **Draft.** `npm run draft` (no voice) until every scene runs and reads well.
+   Look at frames from every scene, including during clicks and transitions.
+4. **Render.** `npm run video`.
+5. **Verify, and report each result with its number:**
+   - ffprobe: 1920x1080, 30 fps, H.264 and AAC, duration in the target range
+   - speech starts within 0.2 s of each scene&#x27;s first caption (ffmpeg silencedetect)
+   - loudness near the target (ffmpeg loudnorm or volumedetect)
+   - no real customer name in `out/demo.seen.json`
+   - frames from every scene looked at: caption readable, spotlight and pointer on
+     the intended element, no loading state on screen
+6. **Report.** Where the file is, what changed since the last render, what was
+   checked and what could not be. You cannot hear the audio: say so every time and
+   ask the user to listen once before the video is shared.
+
+Ask the user only for decisions that are theirs: the music track, the closing call
+to action, a scene that writes data, installing a skill, committing.</pre>
+    </details>
+    <button class="copy" id="copy-prompt" type="button">Copy the prompt</button>
+  </section>
+
+  <div class="ask">
+    <strong>Decisions needed</strong>
+    <p>Which skills to install (my suggestion: the GSAP skills now, one motion craft skill after I read it). Where the music comes from: a royalty-free track you pick, or an AI-generated one (soundcn covers short effects only, not music). What the end card should ask the viewer to do.</p>
+  </div>
+
+  <section>
+    <h2>Background: the method</h2>
+    <p>The approach comes from an earlier internal demo video of another product: script, local voice, browser automation, FFmpeg, and no editing by hand. Base OWL needed less than that video did, because the demo world is already synthetic and repeatable, no sign-in is needed locally, and every tab has a staged story. The forecast-spike scenario for "OWL Intelligence" and a live-upload scene are not in the video; both need demo-world work first.</p>
+  </section>
+
+  <section class="sources">
+    <span class="kicker">Sources</span>
+    <ul>
+      <li><a href="https://github.com/greensock/gsap-skills">GSAP official AI skills</a></li>
+      <li><a href="https://github.com/heygen-com/hyperframes">HyperFrames</a></li>
+      <li><a href="https://github.com/digitalsamba/claude-code-video-toolkit">claude-code-video-toolkit</a></li>
+      <li><a href="https://github.com/calesthio/OpenMontage">OpenMontage</a></li>
+      <li><a href="https://github.com/kapishdima/soundcn">soundcn</a> (sound effects)</li>
+      <li><a href="https://claudskills.com/skills/emilkowal-animations/">Web animation practices skill</a>, <a href="https://claudskills.com/skills/advanced-motion-easing/">advanced-motion-easing</a>, <a href="https://agentskill.work/zh/skills/kylezantos/design-motion-principles">design-motion-principles</a></li>
+      <li><a href="https://www.boundev.ai/blog/motion-design-principles-guide">Motion design principles guide</a> and <a href="https://madegooddesigns.com/motion-design-principles/">Motion design principles explained</a> (timing and stagger ranges)</li>
+      <li><a href="https://www.moonb.io/blog/saas-product-demo-video">SaaS product demo videos</a> and <a href="https://www.videostudiopro.com/en/tips/demo-video/">How to make a demo video</a></li>
+      <li>An internal write-up of how the earlier demo video was built</li>
+    </ul>
+  </section>
+
+</div>
+
+<script>
+document.getElementById('copy-prompt').addEventListener('click', function () {
+  var btn = this, pre = document.getElementById('prompt-text')
+  var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy the prompt' }, 1600) }
+  var select = function () {
+    pre.closest('details').open = true
+    var r = document.createRange(); r.selectNodeContents(pre)
+    var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r)
+    btn.textContent = 'Selected: press Ctrl+C'
+  }
+  try { navigator.clipboard.writeText(pre.textContent).then(done, select) } catch (e) { select() }
+})
+</script>
+</body>
+</html>

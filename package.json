@@ -1,0 +1,65 @@
+{
+  "name": "kwartz-ai-video",
+  "version": "1.0.0",
+  "description": "Narrated product demo videos rendered from a script: Playwright drives your real app, a local voice reads the narration, FFmpeg joins them. No recording, no editing, no paid tools.",
+  "license": "Apache-2.0",
+  "author": "Kwartz",
+  "homepage": "https://github.com/kwartz-ai/kwartz-ai-video#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwartz-ai/kwartz-ai-video.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kwartz-ai/kwartz-ai-video/issues"
+  },
+  "type": "module",
+  "keywords": [
+    "demo-video",
+    "product-video",
+    "playwright",
+    "screen-recording",
+    "tts",
+    "kokoro",
+    "ffmpeg",
+    "motion-graphics",
+    "claude-code",
+    "agent-skills"
+  ],
+  "bin": {
+    "kav": "src/cli.ts"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "skills",
+    "templates",
+    "docs",
+    "NOTICE"
+  ],
+  "engines": {
+    "bun": ">=1.2.0"
+  },
+  "scripts": {
+    "kav": "bun src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "bun run typecheck && bun run test",
+    "example": "bun src/cli.ts render examples/hello/video.ts",
+    "example:draft": "bun src/cli.ts render examples/hello/video.ts --draft",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "test:mutate": "python tests/mutate.py",
+    "test:clean": "bun scripts/clean-copy.ts"
+  },
+  "dependencies": {
+    "playwright": "1.64.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@vitest/coverage-v8": "^5.0.3",
+    "typescript": "^5.6.0",
+    "vitest": "^5.0.3"
+  }
+}

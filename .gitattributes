@@ -1,0 +1,4 @@
+# Keep line endings as LF on every machine, so scripts and tests behave the same.
+* text=auto eol=lf
+*.png binary
+*.jpg binary

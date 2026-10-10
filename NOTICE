@@ -1,0 +1,16 @@
+Kwartz AI Video
+Copyright 2026 Kwartz
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It does not bundle third-party code or media. At run time it uses, and you
+install separately:
+
+- Playwright (Apache-2.0), to drive the browser and capture frames
+- FFmpeg (LGPL-2.1 or later; GPL when built with libx264), to encode
+- Kokoro-82M (Apache-2.0) through kokoro-onnx (MIT), for the narration voice
+- One click sound downloaded on first use from soundcn
+  (https://github.com/kapishdima/soundcn); only sounds its registry marks CC0
+  are accepted
+- Fonts linked from Google Fonts at render time (Inter, Plus Jakarta Sans and
+  JetBrains Mono, all SIL Open Font License 1.1), unless your theme names others
