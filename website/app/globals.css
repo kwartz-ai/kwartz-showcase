@@ -1,0 +1,403 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-heading);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-clay: var(--clay);
+  --color-clay-2: var(--clay-2);
+  --color-ground-2: var(--ground-2);
+  --color-line: var(--line);
+  --color-violet: var(--violet);
+  --color-violet-deep: var(--violet-deep);
+  --color-violet-soft: var(--violet-soft);
+  --color-mint: var(--mint);
+  --color-mint-soft: var(--mint-soft);
+  --color-mint-ink: var(--mint-ink);
+  --color-peach: var(--peach);
+  --color-peach-soft: var(--peach-soft);
+  --color-peach-ink: var(--peach-ink);
+  --color-sun: var(--sun);
+  --color-sun-soft: var(--sun-soft);
+  --color-sun-ink: var(--sun-ink);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --color-sky-ink: var(--sky-ink);
+  --color-rose: var(--rose);
+  --color-rose-soft: var(--rose-soft);
+  --color-rose-ink: var(--rose-ink);
+  --color-code: var(--code);
+  --color-code-fg: var(--code-fg);
+  --color-code-dim: var(--code-dim);
+}
+
+/* Clay tokens. A lavender ground, clay-white surfaces, one violet for actions and five
+   soft tints. The shadcn/ui names below point at them, so its parts follow the theme. */
+:root {
+  --ground: #ECE9FB;
+  --ground-2: #E2DDF8;
+  --clay: #F7F5FF;
+  --clay-2: #EFEBFD;
+  --ink: #1E1B3A;
+  --ink-muted: #5F5A82;
+  --line: #D6D0F0;
+  --violet: #7C5CF6;
+  --violet-deep: #5B3FD9;
+  --violet-soft: #DDD4FE;
+  --mint: #7FD8B4;
+  --mint-soft: #D2F4E6;
+  --mint-ink: #0F5A3F;
+  --peach: #FFB48A;
+  --peach-soft: #FFE3D2;
+  --peach-ink: #7A3410;
+  --sun: #FFD166;
+  --sun-soft: #FFF0C4;
+  --sun-ink: #6B4A00;
+  --sky: #8EC5FF;
+  --sky-soft: #DCEBFF;
+  --sky-ink: #0E3F77;
+  --rose: #FF9FB8;
+  --rose-soft: #FFE0E8;
+  --rose-ink: #7A1436;
+  --code: #2A2550;
+  --code-fg: #ECE9FB;
+  --code-dim: #A8A2D6;
+  /* the clay recipe: a soft drop, a dark shade inside the lower edge, a light glow inside the upper edge */
+  --clay-drop: 0 14px 30px rgba(92, 72, 190, 0.18), 0 3px 8px rgba(92, 72, 190, 0.1);
+  --clay-drop-sm: 0 6px 14px rgba(92, 72, 190, 0.12);
+  --clay-shade: rgba(98, 80, 190, 0.16);
+  --clay-glow: rgba(255, 255, 255, 0.95);
+
+  --background: var(--ground);
+  --foreground: var(--ink);
+  --card: var(--clay);
+  --card-foreground: var(--ink);
+  --popover: var(--clay);
+  --popover-foreground: var(--ink);
+  --primary: #6A4BEA;
+  --primary-foreground: #ffffff;
+  --secondary: var(--clay-2);
+  --secondary-foreground: var(--ink);
+  --muted: var(--clay-2);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--violet-soft);
+  --accent-foreground: var(--ink);
+  --destructive: #C2264B;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--violet);
+  --radius: 1rem;
+}
+
+.dark {
+  --ground: #17142E;
+  --ground-2: #1D1938;
+  --clay: #2A2550;
+  --clay-2: #322C5E;
+  --ink: #F1EEFF;
+  --ink-muted: #B3ADDB;
+  --line: #3D3670;
+  --violet: #9B82FF;
+  --violet-deep: #B7A4FF;
+  --violet-soft: #3B3275;
+  --mint: #5FC79D;
+  --mint-soft: #1F4A3B;
+  --mint-ink: #BFF3DE;
+  --peach: #FFA877;
+  --peach-soft: #5A3222;
+  --peach-ink: #FFD9C4;
+  --sun: #F5C452;
+  --sun-soft: #4E3E12;
+  --sun-ink: #FFE9A8;
+  --sky: #7DB6F5;
+  --sky-soft: #1E3A5F;
+  --sky-ink: #CFE5FF;
+  --rose: #F58DA8;
+  --rose-soft: #5A2236;
+  --rose-ink: #FFD0DC;
+  --code: #100E22;
+  --code-fg: #ECE9FB;
+  --code-dim: #8E88C4;
+  --clay-drop: 0 14px 30px rgba(0, 0, 0, 0.45), 0 3px 8px rgba(0, 0, 0, 0.3);
+  --clay-drop-sm: 0 6px 14px rgba(0, 0, 0, 0.35);
+  --clay-shade: rgba(0, 0, 0, 0.35);
+  --clay-glow: rgba(255, 255, 255, 0.1);
+  --destructive: #FF8FA8;
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: clip;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.015em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 3px solid var(--violet);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* The clay surfaces. Only things you can press get the deepest shadow. */
+@utility clay {
+  background-color: var(--clay);
+  box-shadow: var(--clay-drop), inset 0 -8px 13px var(--clay-shade), inset 0 8px 13px var(--clay-glow);
+}
+@utility clay-flat {
+  background-color: var(--clay);
+  box-shadow: var(--clay-drop-sm), inset 0 -4px 8px var(--clay-shade), inset 0 4px 8px var(--clay-glow);
+}
+@utility clay-pressed {
+  background-color: var(--clay-2);
+  box-shadow: inset 0 5px 10px var(--clay-shade), inset 0 -4px 8px var(--clay-glow);
+}
+@utility clay-tint {
+  box-shadow: var(--clay-drop-sm), inset 0 -5px 8px rgba(0, 0, 0, 0.12), inset 0 5px 8px rgba(255, 255, 255, 0.45);
+}
+@utility clay-violet {
+  color: #fff;
+  background-image: linear-gradient(180deg, #9478ff, #6a4bea);
+  box-shadow: 0 12px 22px rgba(106, 75, 234, 0.38), inset 0 -6px 10px rgba(50, 26, 150, 0.45), inset 0 6px 10px rgba(255, 255, 255, 0.42);
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(12px, -18px) rotate(8deg);
+  }
+}
+@utility animate-bob {
+  animation: bob 5s ease-in-out infinite;
+}
+@utility animate-drift {
+  animation: drift 14s ease-in-out infinite;
+}
+
+/* A thin scrollbar in the clay colours, for the lists that scroll inside a card. */
+@utility quiet-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--violet-soft) transparent;
+}
+
+/* Docs prose: markdown from the kit's docs folder. */
+.prose-clay {
+  max-width: 46rem;
+  overflow-wrap: break-word;
+}
+.prose-clay > * + * {
+  margin-top: 1.1rem;
+}
+.prose-clay h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-top: 2.6rem;
+}
+.prose-clay h3 {
+  font-size: 1.22rem;
+  font-weight: 700;
+  margin-top: 2rem;
+}
+.prose-clay h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 1.6rem;
+}
+.prose-clay a {
+  color: var(--violet-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-clay ul {
+  list-style: disc;
+  padding-left: 1.3rem;
+}
+.prose-clay ol {
+  list-style: decimal;
+  padding-left: 1.3rem;
+}
+.prose-clay li + li {
+  margin-top: 0.4rem;
+}
+.prose-clay li > ul,
+.prose-clay li > ol,
+.prose-clay li > pre,
+.prose-clay li > p + p {
+  margin-top: 0.5rem;
+}
+.prose-clay :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--clay-2);
+  padding: 0.1em 0.4em;
+  border-radius: 0.45em;
+}
+.prose-clay pre {
+  background: var(--code);
+  color: var(--code-fg);
+  border-radius: 1.1rem;
+  padding: 1rem 1.15rem;
+  overflow-x: auto;
+  font-size: 0.84rem;
+  line-height: 1.65;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+.prose-clay pre code {
+  font-family: var(--font-mono);
+}
+.prose-clay blockquote {
+  background: var(--sky-soft);
+  color: var(--sky-ink);
+  border-radius: 1.1rem;
+  padding: 0.9rem 1.1rem;
+}
+.prose-clay blockquote a {
+  color: inherit;
+}
+.prose-clay .table-wrap {
+  overflow-x: auto;
+  background: var(--clay);
+  border-radius: 1.1rem;
+  box-shadow: var(--clay-drop-sm), inset 0 -4px 8px var(--clay-shade), inset 0 4px 8px var(--clay-glow);
+  padding: 0.4rem 0.6rem;
+}
+.prose-clay table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+}
+.prose-clay th,
+.prose-clay td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.6rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+}
+.prose-clay tr:last-child td {
+  border-bottom: 0;
+}
+.prose-clay thead th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.prose-clay hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: 2rem;
+}
+.prose-clay strong {
+  font-weight: 700;
+}
+.prose-clay .mermaid-box {
+  background: var(--clay);
+  border-radius: 1.1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  box-shadow: var(--clay-drop-sm), inset 0 -4px 8px var(--clay-shade), inset 0 4px 8px var(--clay-glow);
+}
+
+/* Code colours, readable on the dark code ground in both themes. */
+.hljs-comment,
+.hljs-quote {
+  color: var(--code-dim);
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-literal {
+  color: #c4b5fd;
+}
+.hljs-string,
+.hljs-attr,
+.hljs-addition {
+  color: #9be7c4;
+}
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+  color: #ffd08a;
+}
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-property {
+  color: #9ccbff;
+}
+.hljs-deletion {
+  color: #ffa7bc;
+}

@@ -149,6 +149,8 @@ so in a note, and you judge it in the preview.
 - The config still wins: `"style": { "accent": "..." }` goes over your theme.
 - A theme never restyles your product's screens.
 - `examples/motion/themes/harbor.json` is a complete example.
+- `examples/website-tour/themes/lavender.json` is a second: a light clay theme made to match
+  the kit's website, used for the tour video of that site.
 - A theme made from a description is saved once. Later renders do not ask the model
   again, so the look does not change by itself.
 - Nothing here can tell whether a theme is beautiful. The checks keep it readable and

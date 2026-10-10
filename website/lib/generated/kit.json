@@ -1,0 +1,533 @@
+{
+  "version": "2.2.1",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/kwartz-ai/kwartz-showcase",
+  "themes": [
+    {
+      "name": "minimal",
+      "style": "Minimalism",
+      "use": "business software, finance, anything that must feel calm and exact",
+      "aliases": [
+        "minimalism",
+        "clean"
+      ],
+      "ink": "#0E1320",
+      "accent": "#2563EB",
+      "paper": "#FFFFFF",
+      "fontPreset": "minimal",
+      "display": "Geist",
+      "text": "Geist",
+      "feel": "crisp",
+      "enter": "rise",
+      "mood": "soft dry minimal",
+      "backdrop": {
+        "colors": [
+          "#E7EAF0",
+          "#F3F5F8",
+          "#FFFFFF"
+        ],
+        "pattern": "plain"
+      },
+      "radius": 0.022,
+      "look": {
+        "canvas": "#F6F7F9",
+        "fg": "#0E1320",
+        "muted": "#5B6475",
+        "panel": "background:#FFFFFF;border:1.5px solid #AEB7C5;border-radius:10px",
+        "panelFg": "#0E1320",
+        "chip": "border:1.5px solid #0E1320;color:#0E1320;border-radius:8px",
+        "label": "background:#0E1320;color:#FFFFFF;border-radius:6px",
+        "caption": "background:#0E1320;color:#FFFFFF;border-radius:8px",
+        "upper": false
+      }
+    },
+    {
+      "name": "glass",
+      "style": "Glassmorphism",
+      "use": "modern apps, AI products, launch videos",
+      "aliases": [
+        "glassmorphism",
+        "frosted"
+      ],
+      "ink": "#1E1B4B",
+      "accent": "#FDE68A",
+      "paper": "#EDE9FE",
+      "fontPreset": "geometric",
+      "display": "Sora",
+      "text": "DM Sans",
+      "feel": "calm",
+      "enter": "float",
+      "mood": "light airy soft",
+      "backdrop": {
+        "colors": [
+          "#312E81",
+          "#4F46E5",
+          "#F0ABFC"
+        ],
+        "pattern": "waves"
+      },
+      "radius": 0.04,
+      "look": {
+        "canvas": "linear-gradient(135deg,#4C1D95 0%,#1D4ED8 55%,#BE185D 100%)",
+        "fg": "#FFFFFF",
+        "muted": "rgba(255,255,255,.82)",
+        "panel": "background:rgba(255,255,255,.17);border:1px solid rgba(255,255,255,.45);border-radius:22px;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 14px 40px rgba(15,10,60,.3)",
+        "panelFg": "#FFFFFF",
+        "chip": "background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.55);border-radius:999px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:none;color:#FFFFFF",
+        "label": "background:rgba(255,255,255,.94);color:#1E1B4B;border-radius:12px;box-shadow:0 8px 24px rgba(15,10,60,.35)",
+        "caption": "background:rgba(24,18,70,.74);border:1px solid rgba(255,255,255,.3);border-radius:16px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 8px 28px rgba(10,6,40,.4);color:#FFFFFF",
+        "upper": false
+      }
+    },
+    {
+      "name": "liquid",
+      "style": "Liquid glass",
+      "use": "consumer apps, products that want to look current",
+      "aliases": [
+        "liquid-glass",
+        "liquidglass"
+      ],
+      "ink": "#0B2A4A",
+      "accent": "#FDE047",
+      "paper": "#E0F2FE",
+      "fontPreset": "modern",
+      "display": "Plus Jakarta Sans",
+      "text": "Inter",
+      "feel": "calm",
+      "enter": "float",
+      "mood": "soft glassy light",
+      "backdrop": {
+        "colors": [
+          "#0F766E",
+          "#1D4ED8",
+          "#A5F3FC"
+        ],
+        "pattern": "waves"
+      },
+      "radius": 0.052,
+      "look": {
+        "canvas": "radial-gradient(circle at 16% 20%,#F59E0B 0,transparent 30%),radial-gradient(circle at 84% 76%,#22D3EE 0,transparent 36%),linear-gradient(160deg,#0F766E,#1D4ED8)",
+        "fg": "#FFFFFF",
+        "muted": "rgba(255,255,255,.86)",
+        "panel": "background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.6);border-radius:34px;-webkit-backdrop-filter:blur(7px) saturate(1.7);backdrop-filter:blur(7px) saturate(1.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),inset 0 -14px 24px rgba(255,255,255,.13),inset 0 12px 18px rgba(255,255,255,.08),0 16px 36px rgba(0,20,60,.32)",
+        "panelFg": "#FFFFFF",
+        "chip": "background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.65);color:#FFFFFF;border-radius:999px;-webkit-backdrop-filter:blur(6px) saturate(1.6);backdrop-filter:blur(6px) saturate(1.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -6px 10px rgba(255,255,255,.12)",
+        "label": "background:rgba(255,255,255,.93);color:#0B2A4A;border-radius:999px;box-shadow:inset 0 1px 0 #FFFFFF,0 8px 22px rgba(0,20,60,.4)",
+        "caption": "background:rgba(8,24,48,.6);border:1px solid rgba(255,255,255,.5);color:#FFFFFF;border-radius:24px;-webkit-backdrop-filter:blur(14px) saturate(1.6);backdrop-filter:blur(14px) saturate(1.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 10px 28px rgba(0,16,48,.4)",
+        "upper": false
+      }
+    },
+    {
+      "name": "soft",
+      "style": "Neumorphism",
+      "use": "calm dashboards, health and wellness, hardware controls",
+      "aliases": [
+        "neumorphism",
+        "neomorphism",
+        "neumorphic"
+      ],
+      "ink": "#2B3447",
+      "accent": "#4F46E5",
+      "paper": "#E3E7EE",
+      "fontPreset": "corporate",
+      "display": "Manrope",
+      "text": "Public Sans",
+      "feel": "calm",
+      "enter": "rise",
+      "mood": "muted soft quiet",
+      "backdrop": {
+        "colors": [
+          "#CBD2DD",
+          "#DDE2EA",
+          "#F4F6F9"
+        ],
+        "pattern": "plain"
+      },
+      "radius": 0.045,
+      "look": {
+        "canvas": "#E3E7EE",
+        "fg": "#232B3D",
+        "muted": "#55607A",
+        "panel": "background:#E3E7EE;border-radius:26px;box-shadow:12px 12px 24px #B4BCC9,-12px -12px 24px #FFFFFF",
+        "panelFg": "#232B3D",
+        "chip": "background:#E3E7EE;color:#232B3D;border-radius:999px;box-shadow:inset 5px 5px 10px #B4BCC9,inset -5px -5px 10px #FFFFFF",
+        "label": "background:#232B3D;color:#FFFFFF;border-radius:12px;box-shadow:6px 6px 14px rgba(40,50,70,.35)",
+        "caption": "background:#232B3D;color:#FFFFFF;border-radius:16px;box-shadow:8px 8px 18px rgba(40,50,70,.3)",
+        "upper": false
+      }
+    },
+    {
+      "name": "clay",
+      "style": "Claymorphism",
+      "use": "consumer apps, education, friendly brands",
+      "aliases": [
+        "claymorphism"
+      ],
+      "ink": "#4A2B1A",
+      "accent": "#D4401C",
+      "paper": "#FFF3EA",
+      "fontPreset": "playful",
+      "display": "Fredoka",
+      "text": "Nunito Sans",
+      "feel": "lively",
+      "enter": "pop",
+      "mood": "playful round warm",
+      "backdrop": {
+        "colors": [
+          "#FDBA8C",
+          "#FF8F6B",
+          "#FFF1E6"
+        ],
+        "pattern": "glow"
+      },
+      "radius": 0.06,
+      "look": {
+        "canvas": "#FFE8D9",
+        "fg": "#4A2B1A",
+        "muted": "#7A4E3A",
+        "panel": "background:#FF8F6B;border-radius:34px;box-shadow:0 16px 28px rgba(214,96,60,.38),inset 0 -10px 14px rgba(120,30,0,.2),inset 0 10px 14px rgba(255,255,255,.5)",
+        "panelFg": "#3B1F12",
+        "chip": "background:#7BD3C5;color:#0E3B35;border-radius:999px;box-shadow:0 8px 14px rgba(40,140,125,.3),inset 0 -5px 8px rgba(0,60,50,.2),inset 0 5px 8px rgba(255,255,255,.55)",
+        "label": "background:#4A2B1A;color:#FFFFFF;border-radius:18px;box-shadow:0 8px 16px rgba(74,43,26,.35),inset 0 3px 5px rgba(255,255,255,.2)",
+        "caption": "background:#4A2B1A;color:#FFFFFF;border-radius:22px;box-shadow:0 10px 20px rgba(74,43,26,.32),inset 0 3px 6px rgba(255,255,255,.18)",
+        "upper": false
+      }
+    },
+    {
+      "name": "brutal",
+      "style": "Brutalism",
+      "use": "developer tools, creative studios, brands that want attitude",
+      "aliases": [
+        "brutalism",
+        "neobrutalism",
+        "neo-brutalism"
+      ],
+      "ink": "#000000",
+      "accent": "#1D4ED8",
+      "paper": "#FFFFFF",
+      "fontPreset": "technical",
+      "display": "Space Grotesk",
+      "text": "IBM Plex Sans",
+      "feel": "crisp",
+      "enter": "cut",
+      "mood": "dry mechanical hard",
+      "backdrop": {
+        "colors": [
+          "#111111",
+          "#111111",
+          "#111111"
+        ],
+        "pattern": "plain"
+      },
+      "radius": 0,
+      "look": {
+        "canvas": "#FFE500",
+        "fg": "#000000",
+        "muted": "#000000",
+        "panel": "background:#FFFFFF;border:4px solid #000000;border-radius:0;box-shadow:8px 8px 0 #000000",
+        "panelFg": "#000000",
+        "chip": "background:#000000;color:#FFE500;border-radius:0",
+        "label": "background:#000000;color:#FFE500;border-radius:0;box-shadow:5px 5px 0 rgba(0,0,0,.35)",
+        "caption": "background:#FFFFFF;color:#000000;border:3px solid #000000;border-radius:0;box-shadow:6px 6px 0 #000000",
+        "upper": true
+      }
+    },
+    {
+      "name": "maximal",
+      "style": "Maximalism",
+      "use": "entertainment, fashion, events, short social video",
+      "aliases": [
+        "maximalism",
+        "max"
+      ],
+      "ink": "#1A0B3D",
+      "accent": "#FFD400",
+      "paper": "#FFD400",
+      "fontPreset": "bold",
+      "display": "Bricolage Grotesque",
+      "text": "Inter",
+      "feel": "lively",
+      "enter": "pop",
+      "mood": "bright playful loud",
+      "backdrop": {
+        "colors": [
+          "#BE185D",
+          "#FF3D81",
+          "#FFD400"
+        ],
+        "pattern": "waves"
+      },
+      "radius": 0.05,
+      "look": {
+        "canvas": "radial-gradient(circle at 0% 0%,#FF3D81 0 11%,transparent 11.3%),radial-gradient(circle at 100% 100%,#00C2FF 0 13%,transparent 13.3%),radial-gradient(circle at 100% 0%,#FFD400 0 7%,transparent 7.3%),radial-gradient(circle at 0% 100%,#7C3AED 0 9%,transparent 9.3%),repeating-linear-gradient(45deg,rgba(255,255,255,.06) 0 18px,transparent 18px 36px),#1A0B3D",
+        "fg": "#FFFFFF",
+        "muted": "#FBCFE8",
+        "panel": "background:#D61F69;border:4px solid #1A0B3D;border-radius:6px 28px 6px 28px;box-shadow:8px 8px 0 #00C2FF",
+        "panelFg": "#FFFFFF",
+        "chip": "background:#00C2FF;color:#1A0B3D;border:3px solid #FFFFFF;border-radius:6px 18px 6px 18px",
+        "label": "background:#FFD400;color:#1A0B3D;border:3px solid #1A0B3D;border-radius:4px 14px 4px 14px;box-shadow:5px 5px 0 #FF3D81",
+        "caption": "background:#1A0B3D;color:#FFFFFF;border:3px solid #FF3D81;border-radius:6px 18px 6px 18px;box-shadow:5px 5px 0 #00C2FF",
+        "upper": false
+      }
+    },
+    {
+      "name": "bento",
+      "style": "Bento grid",
+      "use": "feature overviews, \"everything it does\" videos",
+      "aliases": [
+        "bento-grid",
+        "bentogrid"
+      ],
+      "ink": "#0F1420",
+      "accent": "#F0A63A",
+      "paper": "#0F1420",
+      "fontPreset": "modern",
+      "display": "Plus Jakarta Sans",
+      "text": "Inter",
+      "feel": "crisp",
+      "enter": "rise",
+      "mood": "soft clean precise",
+      "backdrop": {
+        "colors": [
+          "#0A0E18",
+          "#1B2333",
+          "#3B4A66"
+        ],
+        "pattern": "glow"
+      },
+      "radius": 0.04,
+      "look": {
+        "canvas": "#0F1420",
+        "fg": "#FFFFFF",
+        "muted": "#9AA6BC",
+        "panel": "background:#1B2333;border:1.5px solid #46557A;border-radius:22px",
+        "panelFg": "#FFFFFF",
+        "chip": "background:#1B2333;border:1.5px solid #2F3B54;color:#FFFFFF;border-radius:14px",
+        "label": "background:#F0A63A;color:#0F1420;border-radius:10px;box-shadow:0 8px 22px rgba(0,0,0,.4)",
+        "caption": "background:#1B2333;border:1.5px solid #2F3B54;color:#FFFFFF;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.4)",
+        "upper": false
+      }
+    },
+    {
+      "name": "real",
+      "style": "Skeuomorphism",
+      "use": "music and audio tools, products about a physical thing, deliberate nostalgia",
+      "aliases": [
+        "skeuomorphism",
+        "skeumorphism",
+        "skeuomorphic"
+      ],
+      "ink": "#2B2118",
+      "accent": "#F2C14E",
+      "paper": "#F4EBD9",
+      "fontPreset": "elegant",
+      "display": "Playfair Display",
+      "text": "Work Sans",
+      "feel": "calm",
+      "enter": "rise",
+      "mood": "physical paper switch",
+      "backdrop": {
+        "colors": [
+          "#2A1C10",
+          "#5A3F27",
+          "#C9A66B"
+        ],
+        "pattern": "glow"
+      },
+      "radius": 0.026,
+      "look": {
+        "canvas": "linear-gradient(#6B4E33,#3A2717)",
+        "fg": "#FBF3E4",
+        "muted": "#E2D2B4",
+        "panel": "background:linear-gradient(#FDFDFD,#D2D2D2);border:1px solid #868686;border-radius:12px;box-shadow:inset 0 1px 0 #FFFFFF,inset 0 -5px 9px rgba(0,0,0,.2),0 8px 14px rgba(0,0,0,.5)",
+        "panelFg": "#242424",
+        "chip": "background:linear-gradient(#F7D774,#C08E22);color:#3B2A08;border:1px solid #8A6516;border-radius:999px;box-shadow:inset 0 1px 0 rgba(255,255,255,.75),0 4px 6px rgba(0,0,0,.45)",
+        "label": "background:linear-gradient(#FFF8DC,#EFDf9A);color:#3B2A08;border:1px solid #B79B4A;border-radius:6px;box-shadow:0 5px 10px rgba(0,0,0,.45)",
+        "caption": "background:linear-gradient(#33271C,#1A130D);color:#FBF3E4;border:1px solid #7A5B3D;border-radius:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 16px rgba(0,0,0,.5)",
+        "upper": false
+      }
+    },
+    {
+      "name": "spatial",
+      "style": "Spatial UI",
+      "use": "hardware, 3D and AR products, premium technology",
+      "aliases": [
+        "spatial-ui",
+        "visionos"
+      ],
+      "ink": "#070A14",
+      "accent": "#7DD3FC",
+      "paper": "#0B1020",
+      "fontPreset": "geometric",
+      "display": "Sora",
+      "text": "DM Sans",
+      "feel": "calm",
+      "enter": "depth",
+      "mood": "airy soft deep",
+      "backdrop": {
+        "colors": [
+          "#05070F",
+          "#1B2550",
+          "#7DD3FC"
+        ],
+        "pattern": "glow"
+      },
+      "radius": 0.05,
+      "look": {
+        "canvas": "radial-gradient(circle at 50% 36%,#33427A 0%,#070A14 78%)",
+        "fg": "#FFFFFF",
+        "muted": "rgba(255,255,255,.78)",
+        "panel": "background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.36);border-radius:28px;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.38)",
+        "panelFg": "#FFFFFF",
+        "chip": "background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.4);border-radius:999px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 12px 24px rgba(0,0,0,.45);color:#FFFFFF",
+        "label": "background:rgba(255,255,255,.93);color:#0B1020;border-radius:999px;box-shadow:0 14px 28px rgba(0,0,0,.55)",
+        "caption": "background:rgba(14,20,42,.74);border:1px solid rgba(255,255,255,.3);border-radius:999px;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 16px 32px rgba(0,0,0,.55);color:#FFFFFF",
+        "upper": false
+      }
+    },
+    {
+      "name": "editorial",
+      "style": "Editorial",
+      "use": "finance, law, publishing, reports",
+      "aliases": [
+        "magazine",
+        "print"
+      ],
+      "ink": "#111111",
+      "accent": "#B4232A",
+      "paper": "#FFFFFF",
+      "fontPreset": "editorial",
+      "display": "Fraunces",
+      "text": "Source Sans 3",
+      "feel": "calm",
+      "enter": "rise",
+      "mood": "paper soft quiet",
+      "backdrop": {
+        "colors": [
+          "#D9D6CE",
+          "#E9E6DF",
+          "#FFFFFF"
+        ],
+        "pattern": "plain"
+      },
+      "radius": 0,
+      "look": {
+        "canvas": "#FAF9F6",
+        "fg": "#111111",
+        "muted": "#4A4A4A",
+        "panel": "background:transparent;border-top:3px solid #111111;border-bottom:1.5px solid #111111;border-radius:0",
+        "panelFg": "#111111",
+        "chip": "border-top:2.5px solid #111111;border-bottom:2.5px solid #111111;color:#111111;border-radius:0",
+        "label": "background:#111111;color:#FFFFFF;border-radius:0",
+        "caption": "background:#111111;color:#FFFFFF;border-radius:0",
+        "upper": false
+      }
+    },
+    {
+      "name": "terminal",
+      "style": "Terminal",
+      "use": "developer tools, APIs, security products",
+      "aliases": [
+        "console",
+        "cli"
+      ],
+      "ink": "#08100B",
+      "accent": "#4ADE80",
+      "paper": "#08100B",
+      "fontPreset": null,
+      "display": "JetBrains Mono",
+      "text": "IBM Plex Sans",
+      "feel": "crisp",
+      "enter": "type",
+      "mood": "dry keys mechanical",
+      "backdrop": {
+        "colors": [
+          "#030705",
+          "#0C1A11",
+          "#14532D"
+        ],
+        "pattern": "plain"
+      },
+      "radius": 0.012,
+      "look": {
+        "canvas": "#08100B",
+        "fg": "#D1FAE5",
+        "muted": "#86EFAC",
+        "panel": "background:#0C1710;border:1.5px solid #2F8052;border-radius:6px",
+        "panelFg": "#D1FAE5",
+        "chip": "border:1.5px solid #4ADE80;color:#4ADE80;border-radius:4px",
+        "label": "background:#4ADE80;color:#08100B;border-radius:4px",
+        "caption": "background:#0C1710;border:1.5px solid #23492F;color:#D1FAE5;border-radius:4px",
+        "upper": false
+      }
+    }
+  ],
+  "fontPresets": [
+    {
+      "name": "modern",
+      "display": "Plus Jakarta Sans",
+      "text": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    {
+      "name": "geometric",
+      "display": "Sora",
+      "text": "DM Sans",
+      "mono": "DM Mono"
+    },
+    {
+      "name": "technical",
+      "display": "Space Grotesk",
+      "text": "IBM Plex Sans",
+      "mono": "IBM Plex Mono"
+    },
+    {
+      "name": "minimal",
+      "display": "Geist",
+      "text": "Geist",
+      "mono": "Geist Mono"
+    },
+    {
+      "name": "bold",
+      "display": "Bricolage Grotesque",
+      "text": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    {
+      "name": "editorial",
+      "display": "Fraunces",
+      "text": "Source Sans 3",
+      "mono": "IBM Plex Mono"
+    },
+    {
+      "name": "elegant",
+      "display": "Playfair Display",
+      "text": "Work Sans",
+      "mono": "Roboto Mono"
+    },
+    {
+      "name": "friendly",
+      "display": "Nunito",
+      "text": "Nunito Sans",
+      "mono": "Roboto Mono"
+    },
+    {
+      "name": "playful",
+      "display": "Fredoka",
+      "text": "Nunito Sans",
+      "mono": "DM Mono"
+    },
+    {
+      "name": "poster",
+      "display": "Barlow Condensed",
+      "text": "Inter",
+      "mono": "JetBrains Mono"
+    },
+    {
+      "name": "corporate",
+      "display": "Manrope",
+      "text": "Public Sans",
+      "mono": "Roboto Mono"
+    }
+  ]
+}

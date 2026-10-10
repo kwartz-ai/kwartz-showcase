@@ -42,7 +42,7 @@ export default defineVideo({
 showcase render video.ts
 ```
 
-> Version 2.2.0. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
+> Version 2.2.1. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
 > It is not on npm; install it from GitHub as shown below.
 
 ## What you get
@@ -187,6 +187,12 @@ Start at the [docs index](docs/README.md), which lists these in reading order.
 - [Release checklist](docs/release-checklist.md): how to know it works before you commit, push or release
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research notes](docs/research.md): the tools and skills we compared before building this
+
+## Website
+
+The landing page and docs site are in [`website/`](website/README.md): Next.js, in a clay
+style, reading these same docs so the two cannot drift apart. It is not part of the
+package. A three minute tour of it, made with the kit, is in `examples/website-tour/`.
 
 ## Background
 

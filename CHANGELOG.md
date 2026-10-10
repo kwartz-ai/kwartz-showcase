@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.2.1 (2026-10-11)
+
+A website for the kit. Nothing in the kit's own code changed.
+
+Added
+- `website/`: a landing page and docs site in a clay style (Next.js, TypeScript,
+  Tailwind CSS, shadcn/ui, lucide-react, Motion). It reads every doc and the changelog
+  from this repo at build time, and the themes, font pairings and version from the
+  kit's source, so the site cannot say something different from the product. It has a
+  ten step "Your first video" guide, a page for each of the twelve themes with its
+  video in two shapes, search, light and dark, a sitemap and structured data. It is not
+  part of the package.
+- `examples/website-tour/`: a tour of the website of a little over three minutes, in 21
+  scenes, filmed on the site while it ran locally.
+- A second example theme, `lavender`: a light clay theme made to match the website
+  (`examples/website-tour/themes/lavender.json`, and beside `harbor` in
+  `examples/motion/themes/`).
+- CI builds the website, and fails when its copy of the theme facts is out of date.
+
+Known limits: the website has been built and looked at on one machine and is not
+deployed yet. Its address is a setting (`NEXT_PUBLIC_SITE_URL`). An unknown address
+shows the "not here" page but answers with status 200.
+
 ## 2.2.0 (2026-10-11)
 
 A theme of your own, for your brand.
