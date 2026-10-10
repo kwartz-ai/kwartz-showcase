@@ -19,3 +19,21 @@ jobs:
       - run: bun run build
       # the built package must start under Node, with no Bun in the way
       - run: node bin/showcase.js help
+
+  # the website in website/: its theme facts must match the kit's source, and it must build
+  website:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: bun install --frozen-lockfile
+      - run: bun run sync:kit
+      - run: git diff --exit-code lib/generated/kit.json
+      - run: bun run lint
+      - run: bun run build

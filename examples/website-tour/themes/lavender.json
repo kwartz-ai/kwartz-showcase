@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../schema/showcase.theme.schema.json",
+  "description": "The look of the Showcase website: lavender clay, violet actions, soft pastel chips",
+  "extends": "clay",
+  "colors": {
+    "ink": "#1E1B3A",
+    "accent": "#6A4BEA",
+    "mist": "#5F5A82",
+    "paper": "#F7F5FF",
+    "band": "#E2DDF8",
+    "bandText": "#1E1B3A"
+  },
+  "fonts": {
+    "display": "Outfit",
+    "text": "DM Sans",
+    "mono": "JetBrains Mono"
+  },
+  "feel": "lively",
+  "backdrop": ["#BBA9F7", "#DDD4FE", "#F7F5FF"],
+  "backdropPattern": "glow",
+  "radius": 0.06,
+  "mood": "soft round light",
+  "look": {
+    "canvas": "#ECE9FB",
+    "fg": "#1E1B3A",
+    "muted": "#5F5A82",
+    "paper": "#F7F5FF",
+    "paperFg": "#1E1B3A",
+    "panel": "background:#F7F5FF;border-radius:34px;box-shadow:0 16px 30px rgba(92,72,190,.22),inset 0 -10px 14px rgba(98,80,190,.16),inset 0 10px 14px rgba(255,255,255,.95)",
+    "panelFg": "#1E1B3A",
+    "chip": "background:#D2F4E6;color:#0F5A3F;border-radius:999px;box-shadow:0 8px 14px rgba(60,160,120,.22),inset 0 -5px 8px rgba(0,80,50,.12),inset 0 5px 8px rgba(255,255,255,.6)",
+    "label": "background:#6A4BEA;color:#FFFFFF;border-radius:18px;box-shadow:0 10px 18px rgba(106,75,234,.38),inset 0 -5px 8px rgba(50,26,150,.45),inset 0 5px 8px rgba(255,255,255,.35)",
+    "ring": "border:3.5px solid {accent};border-radius:20px",
+    "caption": "background:#1E1B3A;color:#FFFFFF;border-radius:22px;box-shadow:0 10px 20px rgba(30,27,58,.3),inset 0 3px 6px rgba(255,255,255,.16)"
+  }
+}
