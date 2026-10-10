@@ -2,6 +2,28 @@
 
 Start with `showcase doctor`. It shows what is installed and what is missing.
 
+## The layout check fails
+
+The report names the scene, the thing, and by how much:
+
+```
+FAIL  layout       1 thing(s) cut off, off screen or covered: in "pipeline", the box around "Video" is cut off or too close at the bottom, by 24 px
+```
+
+| It says | Do this |
+|---|---|
+| cut off or too close at the bottom, or the top | In a motion scene: make the graphic smaller or put less in it. On a tall frame graphics must sit between `layout.safe.top` and `layout.captionBand.y` |
+| runs off the left or right side | Narrow the row, or stack it in a column on a tall frame |
+| the caption covers ... | Move the graphic up, or leave about 120 px clear at the bottom of a wide frame |
+| a highlight is partly off screen | Scroll the element into view, or zoom so all of it shows, before `stage.spotlight` |
+| a label would be drawn partly off screen | Choose another `side`, or a shorter label |
+| a caption does not fit the caption band | Shorten that line of narration, or set `caption` to a shorter text |
+
+A thing counts as too close when it is within about 1 percent of the frame from the
+edge of its area: something that touches the edge looks cut even when it is not.
+The check measures every shape separately, so a scene can pass in landscape and fail
+in vertical.
+
 ## The render stopped in a scene
 
 The message names the scene and the step that timed out. `out/failed.png` shows the

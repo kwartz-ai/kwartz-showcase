@@ -7,7 +7,8 @@ import type { Cta, ResolvedVideo, Scene, VideoConfig } from '../core/types.ts'
 import { resolveVideo } from '../video/define.ts'
 import { isHosted, type Brief } from './brief.ts'
 import { planFor, type Plan } from './plan.ts'
-import { FORMATS, KIND_ADVICE, MOTION_FEELS, PLATFORMS, layoutFor } from './presets.ts'
+import { FONT_PRESETS, GOOGLE_FONTS, facesToLoad, googleFontsUrl } from './fonts.ts'
+import { BACKDROPS, FORMATS, KIND_ADVICE, MOTION_FEELS, PLATFORMS, layoutFor } from './presets.ts'
 import { applyScript, parseScript, scriptFit } from './script.ts'
 
 /** What a scenes file exports: the scenes, and optionally how to reach the first
@@ -50,36 +51,124 @@ export function ctaFor(brief: Brief): Cta | null {
 }
 
 const CAPTION_SCALE = { small: 0.85, medium: 1, large: 1.2 }
-const WEIGHTS = { display: '500;600;700;800', text: '400;500;600;700', mono: '500;700' }
 
-/** The brief's style as a theme: the person's fonts and colours over the defaults. */
-export function themeFor(brief: Brief): ThemeInput {
+/** What "showcase explore" found out about the product's own look. */
+export interface Explored { font: string | null; accent: string | null; fontOnGoogle?: boolean | null }
+
+/** The explored look of the product beside a config, when it has been explored. */
+export function exploredStyle(dir: string): Explored | null {
+  const file = path.join(dir, '.showcase', 'explore', 'map.json')
+  if (!fs.existsSync(file)) return null
+  try {
+    return (JSON.parse(fs.readFileSync(file, 'utf8')) as { style?: Explored }).style ?? null
+  } catch {
+    return null
+  }
+}
+
+const channels = (hex: string): [number, number, number] => {
+  const h = hex.replace('#', '')
+  const full = h.length === 3 ? [...h].map((c) => c + c).join('') : h
+  return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16)) as [number, number, number]
+}
+const toHex = (rgb: number[]) => '#' + rgb.map((n) => Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, '0')).join('')
+/** A colour moved part of the way toward another. */
+export const mix = (a: string, b: string, share: number) => toHex(channels(a).map((n, i) => n + (channels(b)[i]! - n) * share))
+
+/** How far apart two colours are in brightness, as WCAG measures it: 1 to 21. */
+export function contrast(a: string, b: string): number {
+  const lum = (hex: string) => {
+    const [r, g, bl] = channels(hex).map((n) => {
+      const c = n / 255
+      return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+    }) as [number, number, number]
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl
+  }
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x) as [number, number]
+  return (hi + 0.05) / (lo + 0.05)
+}
+
+/** How a display face of a kind is set: its heaviest useful weight and how much
+ *  of the tight title tracking it can take. */
+const SETTING = { sans: 1, serif: 0.35, condensed: 0, rounded: 0.6, mono: 0.5 }
+
+/** The brief's style as a theme: the person's fonts and colours first, then the
+ *  product's own (when it was explored), then the kit's. `notes` collects what was
+ *  taken from the product, so the person is told. */
+export function themeFor(brief: Brief, explored: Explored | null = null, notes: string[] = []): ThemeInput {
   const s = brief.style ?? {}
   const feel = MOTION_FEELS[brief.motion?.feel ?? 'calm']
-  const fonts = s.fonts ?? {}
+  const match = s.match !== false ? explored : null
+  const theme: ThemeInput = { ease: feel.ease, speed: feel.speed, captionScale: CAPTION_SCALE[s.captions ?? 'medium'] }
   const type: ThemeInput['type'] = {}
-  if (fonts.display) type.display = `'${fonts.display}', ${defaultTheme.type.text}`
-  if (fonts.text) type.text = `'${fonts.text}', 'Segoe UI', system-ui, sans-serif`
-  if (fonts.mono) type.mono = `'${fonts.mono}', Consolas, monospace`
-  const theme: ThemeInput = { type, ease: feel.ease, speed: feel.speed, captionScale: CAPTION_SCALE[s.captions ?? 'medium'] }
+
   if (s.ink) theme.ink = s.ink
   if (s.accent) theme.accent = s.accent
+  else if (match?.accent) {
+    // a highlight must stand out on the dark cards it is drawn on
+    const ink = s.ink ?? defaultTheme.ink
+    if (contrast(match.accent, ink) >= 3) {
+      theme.accent = match.accent
+      notes.push(`accent colour ${match.accent} taken from the product's own buttons (set "style.accent" to choose another)`)
+    } else notes.push(`the product's button colour ${match.accent} is too dark to use as the highlight on cards; the default is kept`)
+  }
+
+  const named = s.fonts ?? {}
+  const preset = FONT_PRESETS[s.fontPreset ?? 'modern']!
+  // the product's own face is used for captions and labels, unless the person chose
+  let matchedText: string | undefined
+  if (match?.font && !named.text && !s.fontPreset && s.fontSource !== 'installed') {
+    if (match.fontOnGoogle) {
+      matchedText = match.font
+      if (match.font !== preset.text) notes.push(`caption font "${match.font}" taken from the product (set "style.fonts.text" or "style.fontPreset" to choose another)`)
+    } else if (match.fontOnGoogle === false) {
+      notes.push(`the product's font "${match.font}" is not on Google Fonts, so captions use ${preset.text}. Set "style.fontSource" to "installed" if it is on this machine.`)
+    }
+  }
+  const fonts = { display: named.display ?? preset.display, text: named.text ?? matchedText ?? preset.text, mono: named.mono ?? preset.mono }
+  const chosen = !!s.fontPreset || Object.keys(named).length > 0 || (!!matchedText && matchedText !== preset.text)
+  if (chosen) {
+    type.display = `'${fonts.display}', ${defaultTheme.type.text}`
+    type.text = `'${fonts.text}', 'Segoe UI', system-ui, sans-serif`
+    type.mono = `'${fonts.mono}', Consolas, monospace`
+    const known = GOOGLE_FONTS[fonts.display]
+    if (named.display && known) {
+      theme.displayWeight = Math.min(800, Math.max(...known.weights))
+      theme.tracking = SETTING[known.kind]
+      theme.titleScale = known.kind === 'condensed' ? 1.28 : 1
+    } else if (!named.display) {
+      theme.displayWeight = preset.displayWeight
+      theme.tracking = preset.tracking
+      theme.titleScale = preset.titleScale ?? 1
+    }
+  }
+  theme.type = type
   if (s.fontSource === 'installed') {
     theme.fontsCss = null
     theme.fontsToLoad = []
-  } else if (Object.keys(fonts).length) {
-    // link the person's families and the defaults for the roles they left alone
-    const families = {
-      display: fonts.display ?? 'Plus Jakarta Sans',
-      text: fonts.text ?? 'Inter',
-      mono: fonts.mono ?? 'JetBrains Mono',
-    }
-    theme.fontsCss = 'https://fonts.googleapis.com/css2?'
-      + (Object.keys(families) as (keyof typeof families)[]).map((r) => `family=${families[r].replace(/ /g, '+')}:wght@${WEIGHTS[r]}`).join('&')
-      + '&display=swap'
-    theme.fontsToLoad = [`800 40px "${families.display}"`, `500 20px "${families.text}"`, `500 16px "${families.mono}"`]
+  } else if (chosen) {
+    theme.fontsCss = googleFontsUrl(fonts)
+    theme.fontsToLoad = facesToLoad(fonts, theme.displayWeight ?? 800)
   }
   return theme
+}
+
+/** The backdrop a brief asks for, as a border setting. */
+export function borderFor(brief: Brief, dir: string, accent: string): VideoConfig['border'] {
+  const s = brief.style ?? {}
+  if (s.border === 'none') return false
+  const bd = s.backdrop
+  let border: Exclude<VideoConfig['border'], boolean | undefined> = {}
+  if (Array.isArray(bd)) border = { colors: bd as [string, string, string] }
+  else if (bd === 'brand') border = { colors: [mix(accent, '#000000', 0.62), mix(accent, '#000000', 0.18), mix(accent, '#ffffff', 0.62)], pattern: 'glow' }
+  else if (typeof bd === 'string' && BACKDROPS[bd]) border = { ...BACKDROPS[bd] }
+  else if (typeof bd === 'string') {
+    const image = path.resolve(dir, bd)
+    if (!fs.existsSync(image)) throw new Error(`"style.backdrop" points at ${image}, which does not exist`)
+    border = { image }
+  }
+  if (s.backdropPattern) border.pattern = s.backdropPattern
+  return Object.keys(border).length ? border : true
 }
 
 /** Load the scenes file a brief points at. */
@@ -124,6 +213,8 @@ export function resolveBrief(brief: Brief, dir: string, module: ScenesModule): {
     }
   }
   const hosted = isHosted(brief.url)
+  const theme = themeFor(brief, exploredStyle(dir), notes)
+  const border = borderFor(brief, dir, theme.accent ?? defaultTheme.accent)
   const readOnly = brief.safety?.readOnly ?? hosted
 
   const videos = targets.map((target) => {
@@ -138,7 +229,7 @@ export function resolveBrief(brief: Brief, dir: string, module: ScenesModule): {
       prepare: module.prepare,
       appRoot: module.appRoot,
       layout,
-      theme: themeFor(brief),
+      theme,
       voice: brief.voice ? { voice: brief.voice } : undefined,
       sound: { music: brief.music ?? 'generated', effects: brief.sound?.effects !== 'none' },
       banned: brief.safety?.banned ?? [],
@@ -148,8 +239,7 @@ export function resolveBrief(brief: Brief, dir: string, module: ScenesModule): {
       motion: { blur: brief.motion?.blur ?? true },
       session: brief.auth?.session ?? null,
       readOnly: readOnly ? { allow: brief.safety?.allow ?? [] } : false,
-      border: brief.style?.border === 'none' ? false
-        : brief.style?.backdrop ? { colors: brief.style.backdrop as [string, string, string] } : true,
+      border,
     }
     return { target, video: resolveVideo(config, dir) }
   })

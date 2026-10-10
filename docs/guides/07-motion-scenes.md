@@ -53,6 +53,36 @@ them.
    bunx showcase make --draft
    ```
 
+## A video of motion graphics alone
+
+A video does not have to film a product. Set `"motionOnly": true` in place of `url`,
+and make every scene a motion scene (or a clip):
+
+```json
+{ "name": "explainer", "motionOnly": true, "length": 45, "formats": ["landscape", "vertical"] }
+```
+
+`examples/motion/` is a complete one: six scenes, no screen recorded. Beyond the
+ready-made cards it shows words that arrive with the voice and are crossed out, a
+diagram that draws itself step by step, shapes that pop in, and a bar chart that
+grows from zero with numbers that count up.
+
+```bash
+bun run showcase make examples/motion/showcase.config.json
+```
+
+Three things that example does, which your own graphics should do too:
+
+- **Time to the voice.** Each animation starts at a point in the narration:
+  `350 + sayMs * 0.3` ms is 30 percent of the way through the line.
+- **Follow the shape.** On a tall frame it stacks rows into columns, draws larger,
+  and keeps everything above the caption band (`layout.captionBand.y`).
+- **Trust the layout check.** After every render the kit measures each motion scene
+  at several moments and fails the render if text or a box is cut off, reaches into
+  the caption band, or sits under the caption. It names the scene and the pixels.
+- **Draw large.** A graphic is read at a glance. Type under about 20 px in the
+  finished frame is too small.
+
 ## Check it worked
 
 The log marks the scene: `scene 1/4 hook @ 0.0 s (motion)`. In the video the card's

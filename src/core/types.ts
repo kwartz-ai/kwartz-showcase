@@ -52,7 +52,8 @@ export interface SceneContext {
 
 export interface Scene {
   id: string
-  /** The spoken line. Also the captions, unless `caption` is set. */
+  /** The spoken line. Also the captions, unless `caption` is set. A clip scene may
+   *  leave it empty: the clip then plays for its own length with no narration. */
   say: string
   /** Caption text when it must differ from what is spoken (for example "EDI" for a
    *  line that spells out "E.D.I." so the voice reads it right). */
@@ -62,8 +63,24 @@ export interface Scene {
   /** A motion scene: full-screen graphics as HTML with CSS animations, rendered
    *  frame by frame so every frame is exact. Give one of `run` or `motion`. */
   motion?: (ctx: MotionContext) => string
+  /** A clip scene: a finished video file placed on the timeline. A path beside the
+   *  video file, or an object to trim it, fill the frame, or keep its sound. */
+  clip?: string | ClipSpec
   /** Leave the scene out of every shape not listed here. */
   formats?: string[]
+}
+
+export interface ClipSpec {
+  /** The video file, beside the video file or config. */
+  file: string
+  /** contain: the whole clip, inside the frame. cover: fill the frame, cut the overflow. */
+  fit?: 'contain' | 'cover'
+  /** Keep the clip's own sound, under the narration. Default: silent. */
+  sound?: boolean
+  /** Start this many seconds into the clip. */
+  from?: number
+  /** Use this many seconds of it. Default: to its end. */
+  seconds?: number
 }
 
 export interface MotionContext {
@@ -141,6 +158,11 @@ export interface Border {
   colors: [string, string, string]
   /** How dark the shadow under the picture is, 0 to 1. */
   shadow: number
+  /** What is drawn in the backdrop: soft glows at the sides, flowing ribbons, or
+   *  the plain slope of colour. */
+  pattern: 'glow' | 'waves' | 'plain'
+  /** A picture to use as the backdrop in place of the colours. */
+  image: string | null
 }
 
 export interface ResolvedVideo extends Required<Pick<VideoConfig, 'name' | 'scenes' | 'banned'>> {
@@ -169,6 +191,9 @@ export interface Cue { text: string; start: number; end: number }
 export interface Dissolve { t1: number; t2: number; ms: number }
 export type EventKind = 'click' | 'callout' | 'whoosh'
 /** A caption drawn on the canvas instead of in the page. */
+/** Something that sits where it should not: cut off, off screen, or covered. */
+export interface LayoutIssue { scene: string; problem: string }
+
 export interface CaptionImage { file: string; start: number; end: number }
 export interface StageEvent { t: number; kind: EventKind }
 export interface Clip { file: string; at: number; gain?: number }
@@ -190,4 +215,7 @@ export interface Take {
   captionImages?: CaptionImage[]
   /** Requests that read-only mode refused, as "METHOD url". */
   blocked?: string[]
+  /** What the layout check found. Present (and empty) when everything was measured
+   *  and sat inside its area. */
+  layout?: LayoutIssue[]
 }

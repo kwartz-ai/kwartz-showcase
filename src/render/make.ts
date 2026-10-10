@@ -5,6 +5,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { credits, resolvePalette, type Palette } from '../audio/palette.ts'
 import { loadBrief } from '../brief/brief.ts'
+import { workingFontsUrl } from '../brief/fonts.ts'
 import { fitAdvice, type Plan } from '../brief/plan.ts'
 import { loadScenes, resolveBrief, type BriefVideo } from '../brief/resolve.ts'
 import { PLATFORMS } from '../brief/presets.ts'
@@ -46,6 +47,10 @@ export async function make(configFile: string | undefined, opts: RenderOptions &
     palette = await resolvePalette(choice, brief.sound?.mood ?? '', path.join(workDir(dir), 'sounds.json'))
     for (const role of ['click', 'callout', 'transition'] as const) log(`sound, ${role}: ${palette[role].name} (${palette[role].why})`)
   }
+
+  // Google leaves out a family it cannot serve, without a word: find out now
+  const fontsCss = videos[0] ? await workingFontsUrl(videos[0].video.theme.fontsCss) : null
+  for (const { video } of videos) video.theme.fontsCss = fontsCss
 
   const made: Made[] = []
   for (const { target, video } of videos) {

@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { DEFAULT_BORDER, resolveTheme } from '../core/theme.ts'
@@ -28,12 +29,21 @@ export function resolveVideo(config: VideoConfig, dir: string): ResolvedVideo {
     throw new Error(`video "name" must be letters, digits, dots, dashes or underscores (got ${JSON.stringify(config.name)})`)
   }
   if (!config.scenes?.length) throw new Error('video has no scenes')
-  if (!config.baseUrl && !config.serve) throw new Error('video needs "baseUrl" (an app to film) or "serve" (a folder of static files)')
+  // a video made only of motion graphics and clips films no product
+  if (!config.baseUrl && !config.serve && config.scenes.some((s) => s.run)) {
+    throw new Error('video needs "baseUrl" (an app to film) or "serve" (a folder of static files): it has scenes that run on a product')
+  }
   const seen = new Set<string>()
   for (const s of config.scenes) {
     if (!s.id || seen.has(s.id)) throw new Error(`scene ids must be unique and non-empty (problem at ${JSON.stringify(s.id)})`)
-    if (!s.say?.trim()) throw new Error(`scene "${s.id}" has no "say" line`)
-    if (!s.run === !s.motion) throw new Error(`scene "${s.id}" needs exactly one of "run" (steps on the app) or "motion" (full-screen graphics)`)
+    if (!s.say?.trim() && !s.clip) throw new Error(`scene "${s.id}" has no "say" line`)
+    if ([s.run, s.motion, s.clip].filter(Boolean).length !== 1) {
+      throw new Error(`scene "${s.id}" needs exactly one of "run" (steps on the app), "motion" (full-screen graphics) or "clip" (a video file)`)
+    }
+    if (s.clip) {
+      const file = path.resolve(dir, typeof s.clip === 'string' ? s.clip : s.clip.file ?? '')
+      if (!fs.existsSync(file) || !fs.statSync(file).isFile()) throw new Error(`scene "${s.id}": the clip ${file} does not exist`)
+    }
     seen.add(s.id)
   }
   return {
@@ -69,6 +79,7 @@ export function resolveBorder(input: VideoConfig['border']): Border {
   if (!(border.inset >= 0 && border.inset <= 0.2)) throw new Error(`border "inset" must be between 0 and 0.2 (got ${border.inset})`)
   if (!(border.radius >= 0 && border.radius <= 0.2)) throw new Error(`border "radius" must be between 0 and 0.2 (got ${border.radius})`)
   if (border.colors.length !== 3 || border.colors.some((c) => !/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c))) throw new Error('border "colors" must be three hex colours, for example ["#1B2A8F", "#3D5AF1", "#B9A5FF"]')
+  if (!['glow', 'waves', 'plain'].includes(border.pattern)) throw new Error(`border "pattern" must be glow, waves or plain (got ${border.pattern})`)
   return border
 }
 

@@ -2,7 +2,8 @@
 // Only the address is required. Everything else has a default.
 import fs from 'node:fs'
 import path from 'node:path'
-import { FORMATS, MOTION_FEELS, PLATFORMS, type LayoutMode, type MotionFeel } from './presets.ts'
+import { FONT_PRESETS } from './fonts.ts'
+import { BACKDROPS, FORMATS, MOTION_FEELS, PLATFORMS, type LayoutMode, type MotionFeel } from './presets.ts'
 
 export type EffectsChoice = 'auto' | 'generated' | 'none' | { click?: string; callout?: string; transition?: string }
 
@@ -13,6 +14,9 @@ export interface Brief {
   url?: string
   /** A folder of static files to serve and film, beside the config. */
   serve?: string
+  /** A video of motion graphics and clips only: no product is filmed, so it needs
+   *  neither `url` nor `serve`. */
+  motionOnly?: boolean
   /** Seconds. Default 30. */
   length?: number
   /** Where it will be posted, by name. Each maps to a shape. */
@@ -32,6 +36,8 @@ export interface Brief {
   style?: {
     ink?: string
     accent?: string
+    /** A ready pairing of display, text and mono faces: see docs/fonts.md. */
+    fontPreset?: string
     fonts?: { display?: string; text?: string; mono?: string }
     /** 'google' links the named families from Google Fonts. 'installed' uses
      *  fonts already on the machine or loaded by the product. */
@@ -40,8 +46,14 @@ export interface Brief {
     /** 'rounded' (the default) sets the picture on a soft backdrop with rounded
      *  corners. 'none' fills the frame. */
     border?: 'rounded' | 'none'
-    /** The backdrop's three colours: from, to, and the glow at the sides. */
-    backdrop?: string[]
+    /** The backdrop behind the rounded picture: a preset name, "brand" (made from
+     *  the accent colour), three colours, or the path of a picture. */
+    backdrop?: string | string[]
+    /** What is drawn in the backdrop: glow, waves or plain. */
+    backdropPattern?: 'glow' | 'waves' | 'plain'
+    /** Use the product's own font and button colour, found by "showcase explore",
+     *  for anything not set here. On by default. */
+    match?: boolean
   }
   voice?: string
   /** 'generated', false, or a path to a track. */
@@ -60,7 +72,8 @@ export function isHosted(url: string | undefined): boolean {
 }
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i
-const KNOWN = new Set(['$schema', 'name', 'url', 'serve', 'length', 'platforms', 'formats', 'layout', 'audience', 'promise', 'cta',
+export const IMAGE = /\.(png|jpe?g|webp)$/i
+const KNOWN = new Set(['$schema', 'name', 'url', 'serve', 'motionOnly', 'length', 'platforms', 'formats', 'layout', 'audience', 'promise', 'cta',
   'script', 'scenes', 'style', 'voice', 'music', 'motion', 'sound', 'auth', 'safety'])
 
 /** Check a brief and say everything that is wrong with it at once. */
@@ -72,8 +85,9 @@ export function validateBrief(input: unknown): Brief {
   for (const key of Object.keys(b)) if (!KNOWN.has(key)) bad(`"${key}" is not a setting. Known settings: ${[...KNOWN].filter((k) => k !== '$schema').join(', ')}`)
 
   if (b.serve !== undefined && typeof b.serve !== 'string') bad('"serve" must be the path of a folder')
-  if (b.url === undefined && b.serve) { /* a static folder needs no address */ }
-  else if (typeof b.url !== 'string' || !b.url) bad('"url" is required: the address of the product to film (or "serve": a folder of static files)')
+  if (b.motionOnly !== undefined && typeof b.motionOnly !== 'boolean') bad('"motionOnly" must be true or false')
+  if (b.url === undefined && (b.serve || b.motionOnly === true)) { /* a static folder, or no product at all, needs no address */ }
+  else if (typeof b.url !== 'string' || !b.url) bad('"url" is required: the address of the product to film (or "serve": a folder of static files, or "motionOnly": true for a video of graphics alone)')
   else {
     try {
       const u = new URL(b.url)
@@ -97,9 +111,15 @@ export function validateBrief(input: unknown): Brief {
   }
   if (b.style?.captions !== undefined && !['small', 'medium', 'large'].includes(b.style.captions)) bad('"style.captions" must be small, medium or large')
   if (b.style?.border !== undefined && !['rounded', 'none'].includes(b.style.border)) bad('"style.border" must be rounded or none')
-  if (b.style?.backdrop !== undefined && !(Array.isArray(b.style.backdrop) && b.style.backdrop.length === 3 && b.style.backdrop.every((c) => typeof c === 'string' && HEX.test(c)))) {
-    bad('"style.backdrop" must be three hex colours, for example ["#1B2A8F", "#3D5AF1", "#B9A5FF"]')
+  const bd = b.style?.backdrop
+  if (bd !== undefined) {
+    const colours = Array.isArray(bd) && bd.length === 3 && bd.every((c) => typeof c === 'string' && HEX.test(c))
+    const named = typeof bd === 'string' && (bd === 'brand' || bd in BACKDROPS || IMAGE.test(bd))
+    if (!colours && !named) bad(`"style.backdrop" must be one of ${['brand', ...Object.keys(BACKDROPS)].join(', ')}; three hex colours; or the path of a .png, .jpg or .webp picture`)
   }
+  if (b.style?.backdropPattern !== undefined && !['glow', 'waves', 'plain'].includes(b.style.backdropPattern)) bad('"style.backdropPattern" must be glow, waves or plain')
+  if (b.style?.fontPreset !== undefined && !(b.style.fontPreset in FONT_PRESETS)) bad(`"style.fontPreset" must be one of: ${Object.keys(FONT_PRESETS).join(', ')}`)
+  if (b.style?.match !== undefined && typeof b.style.match !== 'boolean') bad('"style.match" must be true or false')
   if (b.motion?.feel !== undefined && !(b.motion.feel in MOTION_FEELS)) bad(`"motion.feel" must be one of: ${Object.keys(MOTION_FEELS).join(', ')}`)
   if (b.motion?.fps !== undefined && b.motion.fps !== 30 && b.motion.fps !== 60) bad('"motion.fps" must be 30 or 60')
   const fx = b.sound?.effects

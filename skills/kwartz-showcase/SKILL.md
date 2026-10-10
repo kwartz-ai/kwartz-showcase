@@ -95,6 +95,10 @@ both. `say` is the spoken line and the captions; the scene lasts as long as the 
 takes to say. A scene is one of two kinds:
 
 - **App scene:** `{ id, say, run }`. The real product is filmed while `run` clicks.
+- **Clip scene:** `{ id, say, clip }`. A finished video file on the timeline:
+  `clip: 'file.mp4'` or `{ file, from, seconds, fit: 'contain' | 'cover', sound }`.
+  `say` may be empty. You cannot see inside a clip, so never claim what it shows, and
+  ask the user to confirm it holds no name from the banned list.
 - **Motion scene:** `{ id, say, motion }`. A full-screen graphic rendered frame by
   frame, never filmed: the same frames on any machine, with motion blur.
   `motion: ({ theme, sayMs, cta, layout }) => hookCard(theme, {...}, sayMs)` returns
@@ -153,11 +157,18 @@ rendered file.
    (a bright highlight sound was heard by reviewers as a squeak). Read the "sound,"
    lines `showcase make` prints and report which sounds were used and which were refused.
    Never bypass the measurements by naming a sound you have not measured.
-7. **Border.** Every video sits on a soft backdrop with rounded corners (on by
-   default). Keep it unless the user asks otherwise; set `style.backdrop` (config) or
-   `border.colors` (video file) to the product's brand colours when they are known.
+7. **Type.** Choose one pairing for the product with `style.fontPreset` (`modern`,
+   `geometric`, `technical`, `minimal`, `bold`, `editorial`, `elegant`, `friendly`,
+   `playful`, `poster`, `corporate`) and say why. Do not mix faces from two pairings.
+   After `showcase explore`, the product's own font and button colour are used for
+   what the config leaves unset: read the "note:" lines and report them.
+8. **Border.** Every video sits on a backdrop with rounded corners (on by
+   default). Keep it unless the user asks otherwise. `style.backdrop` takes a preset
+   (`indigo`, `aurora`, `ocean`, `forest`, `sunset`, `rose`, `graphite`, `paper`),
+   `brand` (made from the accent colour: the safe choice for a branded video), three
+   colours, or a picture the user supplies.
    Nothing important may sit in the outer 3 percent of the page: the corner cuts it.
-8. **Finish.** The size of the shape (1920x1080 for landscape, 1080x1920 for
+9. **Finish.** The size of the shape (1920x1080 for landscape, 1080x1920 for
    vertical), 30 fps, H.264 with AAC, plus the caption file. Short vertical video must
    show the problem in the first 2 seconds and make sense with the sound off. Pick one
    frame that states the promise as the thumbnail.
@@ -177,7 +188,10 @@ kit only when a second video needs it too.
    `out/failed.png`.
 4. **Render.** `showcase render video.ts`. After a sound-only change, `showcase remix video.ts`.
 5. **Verify.** `showcase render` and `showcase make` print the checks; report each with its
-   number: picture, length, loudness, captions, holds, banned text, read-only, fonts.
+   number: picture, length, loudness, captions, holds, banned text, read-only,
+   layout, fonts. A failed `layout` check is never acceptable: it means something is
+   cut off, off screen or under a caption in a shape. Fix it and render again; do not
+   report the video as done. It is measured per shape, so read every shape's report.
    If read-only mode refused a request, say which, and whether a screen was missing
    because of it. Then look at frames from
    every scene yourself: caption readable, spotlight and pointer on the intended

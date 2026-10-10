@@ -16,7 +16,7 @@ what you need.
 | 0 | **[User guide](user-guide.md)** | The whole journey in 15 steps, plus skills. Start here | 30 min |
 | 1 | [Getting started](getting-started.md) | Install the tools, start a video, draft it, render it | 10 min |
 | 2 | [Writing a video](writing-a-video.md) | The video file, and everything a scene can do: pointer, cuts, spotlight, camera, cards, theme | 20 min |
-| 2a | **[Feature guides](guides/README.md)** | Twelve short guides, one per feature, each with steps and how to check it worked | 5 min each |
+| 2a | **[Feature guides](guides/README.md)** | Fourteen short guides, one per feature, each with steps and how to check it worked | 5 min each |
 | 2b | [A video from a config](config-driven-video.md) | `showcase.config.json`: length and word budget, platforms and shapes, style, your own script, motion scenes, sounds, a hosted product | 15 min |
 
 The user guide alone is enough to make a complete video. Docs 1 and 2 are the shorter
@@ -26,6 +26,7 @@ version and the full reference.
 
 | # | Doc | What you learn | Time |
 |---|---|---|---|
+| 3a | [Fonts for video](fonts.md) | Why video type is not web type, what a check of 60 Google Fonts found, and eleven pairings | 10 min |
 | 3 | [Craft guide](craft-guide.md) | What a senior editor works on: story, pacing, motion, camera, type, sound, finish, with working numbers and a review checklist | 10 min |
 | 4 | [Troubleshooting](troubleshooting.md) | What to do when a render stops, a check fails, or something looks or sounds wrong | as needed |
 

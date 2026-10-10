@@ -50,6 +50,7 @@ at it and your editor completes and checks the file as you type.
 | `name` | `video` | Names the files: `out/<name>.mp4` |
 | `url` | (required) | The product to film: local (`http://localhost:3000`) or hosted |
 | `serve` | none | In place of `url`: a folder of static files to serve and film |
+| `motionOnly` | `false` | In place of `url`: a video of motion graphics and clips alone. No product is filmed |
 | `length` | `30` | Seconds, 10 to 600. 30, 60, 90 and 180 have ready structures |
 | `platforms` | none | Where it will be posted, by name. See the table below |
 | `formats` | `["landscape"]` | Shapes to render, by name or `{ "width", "height" }` |
@@ -59,7 +60,7 @@ at it and your editor completes and checks the file as you type.
 | `cta` | see below | The closing line: `{ "text", "sub" }` |
 | `script` | none | A text file with your own narration |
 | `scenes` | `video.ts` | The scenes file, beside the config |
-| `style` | kit theme | `ink`, `accent`, `fonts`, `fontSource`, `captions`, `border`, `backdrop` |
+| `style` | kit theme | `fontPreset`, `ink`, `accent`, `fonts`, `fontSource`, `captions`, `border`, `backdrop`, `backdropPattern`, `match` |
 | `voice` | `af_heart` | A Kokoro voice name |
 | `music` | `generated` | `generated`, `false`, or the path of a track you may use |
 | `motion` | calm, blur on | `feel` (`calm`, `crisp`, `lively`), `blur`, `fps` (30 or 60) |
@@ -183,18 +184,31 @@ budget, the kit says by how many words and renders it anyway.
 `"installed"` uses fonts already on the machine. Use fonts you have the right to use.
 `captions` is `small`, `medium` or `large`.
 
+**Font pairings.** `"fontPreset"` sets all three faces at once from eleven pairings
+chosen for video (`modern`, `geometric`, `technical`, `minimal`, `bold`, `editorial`,
+`elegant`, `friendly`, `playful`, `poster`, `corporate`). `fonts` then replaces single
+faces. See [Fonts for video](fonts.md).
+
+**Matching the product.** Once the product has been explored, its button colour is
+used as `accent` and its font for captions and labels, for anything not set here.
+`"match": false` turns that off.
+
 **The rounded border.** Every video is set a little smaller on a soft backdrop, with
 rounded corners and a shadow under it. `border` is `rounded` (the default) or `none`
-(the picture fills the frame). `backdrop` is the backdrop's three colours: from, to,
-and the glow at the sides. The border is added when the file is built, so
+(the picture fills the frame). `backdrop` is a preset name (`indigo`, `aurora`, `ocean`,
+`forest`, `sunset`, `rose`, `graphite`, `paper`), `brand` (made from the accent
+colour), three colours (from, to, glow), or the path of a picture. `backdropPattern`
+is `glow`, `waves` or `plain`. The border is added when the file is built, so
 `showcase make --remix` changes it without recording again, and `--no-border` leaves it
 off for one run.
 
 ## Motion scenes
 
-A scene is one of two kinds.
+A scene is one of three kinds.
 
 - An **app scene** has `run`: the real product is filmed while the scene clicks.
+- A **clip scene** has `clip`: a finished video file is placed on the timeline. See
+  [guide 13](guides/13-clip-scenes.md).
 - A **motion scene** has `motion`: a full-screen graphic (a hook, a "how it works"
   card, an end card) that is rendered frame by frame, never filmed.
 
@@ -314,8 +328,14 @@ bun run showcase make examples/tour/showcase.config.json --draft
 bun run showcase make examples/tour/showcase.config.json
 ```
 
+## With no agent: showcase auto
+
+`showcase auto` explores the product, has Claude write the scenes file through the
+API, drafts until every scene runs, and renders. It needs `ANTHROPIC_API_KEY`. The
+generated file is checked before it is run. See [guide 14](guides/14-showcase-auto.md).
+
 ## Not built yet
 
-- `clip` scenes (placing a finished MP4 on the timeline)
-- applying the explored font and colour to `style` automatically
-- `showcase auto`: writing the script and scenes through an API with no agent in the loop
+- sending screenshots to the model in `showcase auto` (it works from the text map)
+- a container file (the layout is ready; see Architecture, Packaging)
+- publishing to npm

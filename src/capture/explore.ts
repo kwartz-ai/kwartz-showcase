@@ -5,6 +5,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { chromium, type Page } from 'playwright'
+import { onGoogleFonts } from '../brief/fonts.ts'
 import { guardReadOnly } from './readonly.ts'
 
 export interface Control {
@@ -31,7 +32,7 @@ export interface ProductMap {
   exploredAt: string
   screens: Screen[]
   /** The product's own look, for a matching style. */
-  style: { font: string | null; accent: string | null }
+  style: { font: string | null; accent: string | null; fontOnGoogle?: boolean | null }
   /** Pages that were found but not visited, because of the limit. */
   skipped: string[]
 }
@@ -140,7 +141,7 @@ export async function explore(opts: ExploreOptions): Promise<ProductMap> {
     const screens: Screen[] = []
     const skipped: string[] = []
     let queue = [opts.url.replace(/\/$/, '')]
-    let style = { font: null as string | null, accent: null as string | null }
+    let style: ProductMap['style'] = { font: null, accent: null }
     while (queue.length && screens.length < max) {
       const url = queue.shift()!
       if (visited.has(url)) continue
@@ -155,6 +156,8 @@ export async function explore(opts: ExploreOptions): Promise<ProductMap> {
       queue.push(...next.visit.filter((u) => !queue.includes(u)))
       skipped.push(...next.skipped.filter((u) => !skipped.includes(u)))
     }
+    // a video can only use the product's font if it can be loaded outside the product
+    style.fontOnGoogle = style.font ? await onGoogleFonts(style.font) : null
     const map: ProductMap = { url: opts.url, exploredAt: new Date().toISOString(), screens, style, skipped: skipped.filter((u) => !visited.has(u)) }
     fs.writeFileSync(path.join(opts.outDir, 'map.json'), JSON.stringify(map, null, 2))
     fs.writeFileSync(path.join(opts.outDir, 'map.md'), mapAsText(map))
@@ -167,7 +170,7 @@ export async function explore(opts: ExploreOptions): Promise<ProductMap> {
 /** The map as a page a person or an agent can read top to bottom. */
 export function mapAsText(map: ProductMap): string {
   const lines = [`# Product map: ${map.url}`, '', `Explored ${map.exploredAt.slice(0, 10)}. ${map.screens.length} screen(s).`,
-    `The product's own font: ${map.style.font ?? 'not found'}. Its main button colour: ${map.style.accent ?? 'not found'}.`, '']
+    `The product's own font: ${map.style.font ?? 'not found'}${map.style.fontOnGoogle ? ' (on Google Fonts)' : map.style.fontOnGoogle === false ? ' (not on Google Fonts)' : ''}. Its main button colour: ${map.style.accent ?? 'not found'}.`, '']
   for (const [i, s] of map.screens.entries()) {
     lines.push(`## ${i + 1}. ${s.title || s.url}`, '', `Address: ${s.url}`, `Screenshot: ${s.screenshot}`, '')
     if (s.headings.length) lines.push(`Headings: ${s.headings.join(' | ')}`, '')

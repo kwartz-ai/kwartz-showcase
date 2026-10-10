@@ -10,8 +10,9 @@ import { Recorder, loadFonts, preparePage } from '../capture/recorder.ts'
 import { serveStatic } from '../capture/serve.ts'
 import { sessionFor } from '../capture/session.ts'
 import { Stage } from '../capture/stage.ts'
-import type { Clip, Cue, ResolvedVideo, SceneContext, Take } from '../core/types.ts'
+import type { Clip, Cue, LayoutIssue, ResolvedVideo, SceneContext, Take } from '../core/types.ts'
 import { sleep } from '../core/util.ts'
+import { clipSceneMs, clipSound, clipSpec, probeClip, renderClip } from '../graphics/clip.ts'
 import { renderMotion, textOf } from '../graphics/motion.ts'
 import { captionCues, writeVtt } from './captions.ts'
 import { composeFrames, renderCaptionImages } from './compose.ts'
@@ -37,6 +38,9 @@ export interface RenderOptions {
 /** How much larger a card is drawn when the page is a window on a tall frame. */
 export const TALL_CARD_SCALE = 1.35
 const MOTION_DISSOLVE_MS = 380
+
+/** The page behind a video that films no product. */
+export const blankPage = (ink: string) => `data:text/html,${encodeURIComponent(`<!doctype html><html><head><title>.</title></head><body style="margin:0;background:${ink}"></body></html>`)}`
 
 export const outDir = (video: ResolvedVideo) => path.join(video.dir, 'out')
 export const outFiles = (video: ResolvedVideo) => {
@@ -89,7 +93,10 @@ export async function render(video: ResolvedVideo, opts: RenderOptions = {}): Pr
   const files = outFiles(video)
   fs.mkdirSync(files.dir, { recursive: true })
 
-  const clips = await narrate(video.scenes.map((s) => s.say), { ...video.voice, draft })
+  // a clip scene may have nothing to say: only spoken lines go to the voice
+  const spoken = video.scenes.map((s) => s.say?.trim() ?? '')
+  const voiced = await narrate(spoken.filter(Boolean), { ...video.voice, draft })
+  const clips = spoken.map((line) => (line ? voiced.shift()! : { file: null, ms: 0 }))
   log(`narration: ${(clips.reduce((n, c) => n + c.ms, 0) / 1000).toFixed(1)} s over ${video.scenes.length} scenes${draft ? ' (draft, silent)' : ''}`)
 
   const server = video.serve ? await serveStatic(video.serve) : null
@@ -104,7 +111,8 @@ export async function render(video: ResolvedVideo, opts: RenderOptions = {}): Pr
   let take: Take | null = null
   try {
     await preparePage(page, layout, theme)
-    await page.goto(baseUrl, { waitUntil: 'networkidle' })
+    // with no product to film, the page is a blank one in the video's dark colour
+    await page.goto(baseUrl || blankPage(theme.ink), { waitUntil: 'networkidle' })
     const rec = new Recorder(page, files.frames, layout)
     const stage = new Stage(page, layout, theme, () => rec.now(), video.appRoot)
     if (video.prepare) await video.prepare({ page, baseUrl, theme })
@@ -116,19 +124,42 @@ export async function render(video: ResolvedVideo, opts: RenderOptions = {}): Pr
     const audio: Clip[] = []
     const cues: Cue[] = []
     const seen: Take['seen'] = []
+    const issues: LayoutIssue[] = []
     let afterMotion = false
     for (const [i, scene] of video.scenes.entries()) {
       current = scene.id
       const clip = clips[i]!
       // let the app paint the cleared caption before a card takes over, so the
       // last picture of the app that the card dissolves from has no caption on it
-      if (scene.motion && i > 0 && !afterMotion) await sleep(90)
+      if ((scene.motion || scene.clip) && i > 0 && !afterMotion) await sleep(90)
       const start = rec.now()
       const voiceAt = start + pace.leadMs
-      const sceneCues = captionCues(scene.caption ?? scene.say, voiceAt, clip.ms)
+      const sceneCues = clip.ms ? captionCues(scene.caption ?? scene.say, voiceAt, clip.ms) : []
       cues.push(...sceneCues)
       if (clip.file) audio.push({ file: clip.file, at: voiceAt })
-      log(`scene ${i + 1}/${video.scenes.length} ${scene.id} @ ${(start / 1000).toFixed(1)} s${scene.motion ? ' (motion)' : ''}`)
+      log(`scene ${i + 1}/${video.scenes.length} ${scene.id} @ ${(start / 1000).toFixed(1)} s${scene.motion ? ' (motion)' : scene.clip ? ' (clip)' : ''}`)
+
+      if (scene.clip) {
+        // like a motion scene, a clip is made into frames while the clock is stopped
+        const spec = clipSpec(scene.clip)
+        const file = path.resolve(video.dir, spec.file)
+        const info = await probeClip(file)
+        const durationMs = clipSceneMs(info.seconds, spec, clip.ms ? pace.leadMs + clip.ms + pace.tailMs : 0)
+        const dir = path.join(files.motion, String(i).padStart(2, '0'))
+        rec.pause()
+        const frames = await renderClip(context, {
+          file, fit: spec.fit, from: spec.from, durationMs, layout, theme, dir,
+          cues: layout.captions === 'page' ? sceneCues.map((c) => ({ ...c, start: c.start - start, end: c.end - start })) : null,
+        })
+        rec.insert(frames.map((f) => ({ file: f.file, t: start + f.t })))
+        if (spec.sound && info.hasSound && !draft) audio.push({ file: await clipSound(file, spec.from, durationMs, dir), at: start, gain: clip.ms ? 0.35 : 1 })
+        if (i > 0) stage.markDissolve(start - 0.5, start + MOTION_DISSOLVE_MS, MOTION_DISSOLVE_MS)
+        rec.resume(durationMs)
+        // what a clip shows cannot be read, so the banned-text check does not cover it
+        seen.push({ id: scene.id, text: '' })
+        afterMotion = true
+        continue
+      }
 
       if (scene.motion) {
         // The clock stops while the scene is rendered frame by frame, then moves on
@@ -145,6 +176,7 @@ export async function render(video: ResolvedVideo, opts: RenderOptions = {}): Pr
           dir: path.join(files.motion, String(i).padStart(2, '0')),
         })
         rec.insert(frames.map((f) => ({ file: f.file, t: start + f.t })))
+        for (const problem of frames.problems) issues.push({ scene: scene.id, problem })
         if (i > 0) stage.markDissolve(start - 0.5, start + MOTION_DISSOLVE_MS, MOTION_DISSOLVE_MS)
         rec.resume(durationMs)
         seen.push({ id: scene.id, text: textOf(html) })
@@ -171,7 +203,9 @@ export async function render(video: ResolvedVideo, opts: RenderOptions = {}): Pr
         sayMs: clip.ms,
         untilSaid: (fraction) => sleep(Math.max(0, voiceAt + clip.ms * fraction - rec.now())),
       }
+      const before = stage.problems.length
       await scene.run!(ctx)
+      for (const problem of new Set(stage.problems.slice(before))) issues.push({ scene: scene.id, problem })
       await sleep(Math.max(0, voiceAt + clip.ms + pace.tailMs - rec.now()))
       live = false
       await captions
@@ -184,8 +218,11 @@ export async function render(video: ResolvedVideo, opts: RenderOptions = {}): Pr
     if (holds.length) log(`dissolves held the old screen for (ms): ${holds.join(' ')}`)
     if (blocked.length) log(`read-only mode refused ${blocked.length} request(s) that could change data`)
     // captions that are drawn on the canvas are made here, while the browser is open
-    const captionImages = layout.captions === 'composite' ? await renderCaptionImages(context, cues, layout, theme, files.captions) : undefined
-    take = { draft, frames: rec.frames, endMs, audio, cues, events: stage.events, dissolves: stage.dissolves, seen, missingFonts, captionImages, blocked: [...new Set(blocked)] }
+    const captionProblems: string[] = []
+    const captionImages = layout.captions === 'composite' ? await renderCaptionImages(context, cues, layout, theme, files.captions, captionProblems) : undefined
+    for (const problem of captionProblems) issues.push({ scene: 'captions', problem })
+    for (const i of issues) log(`layout: scene "${i.scene}": ${i.problem}`)
+    take = { draft, frames: rec.frames, endMs, audio, cues, events: stage.events, dissolves: stage.dissolves, seen, missingFonts, captionImages, blocked: [...new Set(blocked)], layout: issues }
     fs.writeFileSync(files.take, JSON.stringify(take))
   } catch (e) {
     await page.screenshot({ path: files.failed }).catch(() => {})

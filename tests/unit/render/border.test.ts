@@ -202,7 +202,7 @@ describe('the border in a video and in a config', () => {
   it('checks the config settings', () => {
     expect(() => validateBrief({ url: 'http://localhost', style: { border: 'rounded', backdrop: ['#111', '#222', '#333'] } })).not.toThrow()
     expect(() => validateBrief({ url: 'http://localhost', style: { border: 'square' } })).toThrow(/"style.border" must be rounded or none/)
-    expect(() => validateBrief({ url: 'http://localhost', style: { backdrop: ['#111', '#222'] } })).toThrow(/"style.backdrop" must be three hex colours/)
+    expect(() => validateBrief({ url: 'http://localhost', style: { backdrop: ['#111', '#222'] } })).toThrow(/"style.backdrop" must be one of brand/)
     expect(() => validateBrief({ url: 'http://localhost', style: { backdrop: ['blue', '#222', '#333'] } })).toThrow(/"style.backdrop"/)
   })
 })

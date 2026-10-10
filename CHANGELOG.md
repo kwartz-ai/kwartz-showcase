@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 (not released)
+## 2.0.0 (2026-10-10)
 
 The project has a new name, **Kwartz Showcase**, and a video can now be described in
 a config file and rendered in several shapes.
@@ -38,7 +38,29 @@ Added
 - Hosted products: banned names are required, read-only mode refuses every request
   that could change data, and `showcase login` saves a sign-in outside git.
 - `showcase explore`: a map of the product's screens with selectors, its font and colour.
-- Twelve feature guides in `docs/guides/`.
+- Fonts chosen for video: 60 Google Fonts families checked with their real weights,
+  eleven pairings (`style.fontPreset`), title weight and tracking per face, and a
+  check before every render that Google really gave every family. See `docs/fonts.md`.
+- Backdrops: eight presets, `brand` (made from the accent colour), your own picture,
+  and three patterns (`glow`, `waves`, `plain`).
+- The product's own look: after `showcase explore`, its button colour and font are
+  used for anything the config leaves unset (`style.match`).
+- Clip scenes: `clip:` places a finished video file on the timeline, trimmed, fitted
+  or covering, with or without its own sound, with narration and captions.
+- `showcase auto` (beta): with `ANTHROPIC_API_KEY`, Claude writes the scenes file through
+  the API; the file is checked before it runs, a failed draft goes back for a fix,
+  and the length is fitted in words. Unit-tested, and the request was sent to the
+  live API once with an invalid key (answered 401, as expected). It has not yet been
+  run end to end with a real key.
+- A layout check after every render. Each motion scene is measured at several
+  moments, in every shape: text or a box that reaches outside its area, into the
+  caption band, or under the caption fails the render and is named, with the scene
+  and the number of pixels. In app scenes a highlight or label that would leave the
+  screen, or sit under the caption, is reported the same way. A caption too tall for
+  its band is reported too. `showcase auto` sends these back for a fix.
+- Motion-only videos: `"motionOnly": true` in place of an address, for a video of
+  graphics and clips alone. `examples/motion/` is one, in landscape and vertical.
+- Fourteen feature guides in `docs/guides/`.
 - A build for Node and npm (`bun run build`), a launcher (`bin/showcase.js`), and package
   exports for both runtimes.
 
@@ -50,11 +72,20 @@ Changed
 - The examples import the kit by its package name.
 
 Fixed
+- On a framed video, captions under a light motion scene were white on a light
+  ground and could not be read. The caption band now stays dark.
+- A caption that changed during a blurred frame showed both texts for one frame.
+- A long title on a tall frame ran to the edges of a card; it now wraps.
 - A motion scene at 60 frames a second no longer gets one frame too many.
 
-Tests: 797 unit tests, and a mutation run of 37 deliberate breaks, all caught.
+Tests: 962 unit tests, and a mutation run of 50 deliberate breaks, all caught.
 
-Not built yet: `clip` scenes, applying the explored style automatically, `showcase auto`.
+Known limits: built and tested on Windows 11 only; `showcase auto` is beta and has not
+run end to end with a real key; the `fit` and `responsive` layouts have unit tests but
+no real render yet; the layout check measures positions, not taste, and cannot see
+inside a clip.
+
+Not built yet: screenshots in `showcase auto`, a container file, an npm release.
 
 ## 1.0.0 (2026-10-10)
 
@@ -72,7 +103,7 @@ Source: https://github.com/kwartz-ai/kwartz-showcase
 - Captions: two balanced lines at most, burned in and as WebVTT
 - Checks after every render: picture, length, loudness, captions, holds, banned text, fonts
 - Skill for Claude Code: `skills/kwartz-ai-video`
-- 495 unit tests (Vitest), a mutation run and a clean-copy test
+- 962 unit tests (Vitest), a mutation run and a clean-copy test
 - Docs: user guide, reference, craft guide, architecture, tech stack, testing and
   release checklist
 

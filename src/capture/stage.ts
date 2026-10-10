@@ -17,6 +17,9 @@ export class Stage {
   readonly events: StageEvent[] = []
   /** Screen changes the encoder will blend. */
   readonly dissolves: Dissolve[] = []
+  /** What the stage drew that does not sit well: a highlight or a label that leaves
+   *  the screen, or sits under the caption. The runner reads this per scene. */
+  readonly problems: string[] = []
   private caption: Disposable | null = null
   private captionText: string | null = null
   private spot: Disposable | null = null
@@ -141,7 +144,7 @@ export class Stage {
        <div style="position:absolute;inset:0;background:${ink}"></div>
        <div style="position:absolute;left:0;right:0;top:40%;text-align:center;color:#fff">
          <div style="font:600 ${17 * k}px/1 ${type.mono};letter-spacing:.18em;color:${accent};animation:showcasechap 480ms ${EASE_OUT} 250ms both">${esc(overline)}</div>
-         <div style="margin-top:${20 * k}px;font:800 ${60 * k}px/1.08 ${type.display};letter-spacing:-.03em;animation:showcasechap 520ms ${EASE_OUT} 380ms both">${esc(title)}</div>
+         <div style="margin-top:${20 * k}px;font:${this.theme.displayWeight} ${60 * k}px/1.08 ${type.display};letter-spacing:${+(-0.03 * this.theme.tracking).toFixed(4)}em;animation:showcasechap 520ms ${EASE_OUT} 380ms both">${esc(title)}</div>
        </div>`)
     await fn()
     await sleep(Math.max(0, t + hold - this.clock()))
@@ -181,6 +184,7 @@ export class Stage {
       right: `left:${x + w + 14 * u}px;top:${y}px`,
       left: `right:${vw - x + 14 * u}px;top:${y}px`,
     }[side]
+    this.checkSpot({ x, y, w, h }, label, side, vw, vh)
     const { ink, accent, type } = this.theme
     const old = this.spot
     this.spot = await this.overlay(
@@ -197,6 +201,30 @@ export class Stage {
     // under it: the caption is drawn again so that it stays on top and fully lit
     await this.setCaption(this.captionText)
     if (label) this.mark('callout', 180)
+  }
+
+/** Measure a spotlight before it is drawn: the ring must be on screen, and the
+   *  label, whose size is worked out from its text, must be too. */
+  private checkSpot(b: { x: number; y: number; w: number; h: number }, label: string | undefined, side: Side, vw: number, vh: number): void {
+    const u = this.u
+    const what = label ? `the highlight "${label}"` : 'a highlight'
+    if (b.x < 0 || b.y < 0 || b.x + b.w > vw || b.y + b.h > vh) this.problems.push(`${what} is partly off screen: scroll or zoom so the whole element shows`)
+    // page captions sit at the bottom: a highlight under them cannot be read
+    if (this.layout.captions === 'page' && this.captionText) {
+      const capTop = vh - (30 * u + this.layout.safe.bottom / this.layout.zoom) - 78 * u * this.theme.captionScale
+      const capHalf = Math.min(580 * u * this.theme.captionScale, vw - 40 * u) / 2
+      if (b.y + b.h > capTop && b.x < vw / 2 + capHalf && b.x + b.w > vw / 2 - capHalf) this.problems.push(`the caption covers ${what}: zoom in, or highlight it earlier in the line`)
+    }
+    if (!label) return
+    // 16u type at about 0.56 em a character, in a box at most 340u wide
+    const textW = label.length * 16 * u * 0.56
+    const lw = Math.min(340 * u, textW + 28 * u)
+    const lh = Math.ceil(textW / (340 * u - 28 * u)) * 21 * u + 17 * u
+    const lx = side === 'right' ? b.x + b.w + 14 * u : side === 'left' ? b.x - 14 * u - lw : b.x
+    const ly = side === 'below' ? b.y + b.h + 12 * u : side === 'above' ? b.y - 12 * u - lh : b.y
+    if (lx < 0 || ly < 0 || lx + lw > vw || ly + lh > vh) {
+      this.problems.push(`the label "${label}" would be drawn partly off screen on the ${side} side: choose another "side", or a shorter label`)
+    }
   }
 
   async clearSpot(): Promise<void> {

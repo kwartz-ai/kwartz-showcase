@@ -11,11 +11,13 @@ FFmpeg encodes. The command is `showcase`. Open source under Apache-2.0.
   checks, presets, plan, script, work order), `render/` (runner, encoder, captions,
   framed layouts, make), `capture/` (recorder, stage, read-only mode, session, explore),
   `graphics/` (cards, motion scenes), `audio/` (voice, effects, soundcn palette),
-  `verify/`, `setup/`, `video/` (defineVideo), `core/` (types, theme, paths, util).
+  `verify/`, `setup/`, `video/` (defineVideo), `core/` (types, theme, paths, util),
+  `auto/` (the only code that calls an AI API; nothing else may depend on it).
   `docs/architecture.md` has the full map; `docs/tech-stack.md` the tools and versions.
 - `python/kokoro_tts.py`: the voice script. `schema/`: the JSON schema for the config.
 - `examples/hello/`: a hand-written video on a made-up app in `site/`.
   `examples/tour/`: the same app from a config, in three shapes.
+  `examples/motion/`: motion graphics alone, no product filmed.
 - `templates/starter/` and `templates/brief/`: what `showcase init` copies into a project.
 - `skills/kwartz-showcase/SKILL.md`: the editor skill that ships to users.
 - `docs/`: user docs. `docs/research.md` records what was compared and learned.
@@ -28,6 +30,8 @@ FFmpeg encodes. The command is `showcase`. Open source under Apache-2.0.
   Node and npm. `bun run check` (type-check and tests) must pass.
 - Files that ship but are not TypeScript live at the package root and are found with
   `asset()` from `src/core/paths.ts`, never with a path relative to a source file.
+- Font families and their weights live only in `src/brief/fonts.ts`. Add a family only
+  after requesting it from Google Fonts with those weights, and update the date.
 - Platform sizes and safe areas live only in `src/brief/presets.ts`. A new config
   setting changes the type, `validateBrief`, the schema and the docs together.
 - A change in behaviour comes with a test. After adding tests for something that

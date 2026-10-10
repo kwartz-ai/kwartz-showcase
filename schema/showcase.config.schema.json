@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/kwartz-ai/kwartz-showcase/blob/main/schema/showcase.config.schema.json",
   "title": "Kwartz Showcase config",
-  "description": "The brief for a video: what to film and how the result should look. Only \"url\" (or \"serve\") is required.",
+  "description": "The brief for a video: what to film and how the result should look. Only \"url\" (or \"serve\", or \"motionOnly\") is required.",
   "type": "object",
   "required": [],
   "additionalProperties": false,
@@ -199,14 +199,65 @@
           "description": "rounded: the picture is set a little smaller on a soft backdrop, with rounded corners and a shadow. none: the picture fills the frame."
         },
         "backdrop": {
-          "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
-          "items": {
-            "type": "string",
-            "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
-          },
-          "description": "The three colours of the backdrop behind a rounded picture: from, to, and the glow at the sides."
+          "description": "The backdrop behind the rounded picture: a preset name, \"brand\" (made from the accent colour), three hex colours (from, to, glow), or the path of a picture.",
+          "oneOf": [
+            {
+              "enum": [
+                "brand",
+                "indigo",
+                "aurora",
+                "ocean",
+                "forest",
+                "sunset",
+                "rose",
+                "graphite",
+                "paper"
+              ]
+            },
+            {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+              }
+            },
+            {
+              "type": "string",
+              "pattern": "\\.(png|jpe?g|webp)$"
+            }
+          ]
+        },
+        "fontPreset": {
+          "enum": [
+            "modern",
+            "geometric",
+            "technical",
+            "minimal",
+            "bold",
+            "editorial",
+            "elegant",
+            "friendly",
+            "playful",
+            "poster",
+            "corporate"
+          ],
+          "default": "modern",
+          "description": "A ready pairing of display, text and mono faces from Google Fonts, chosen for video. \"fonts\" overrides single faces."
+        },
+        "backdropPattern": {
+          "enum": [
+            "glow",
+            "waves",
+            "plain"
+          ],
+          "description": "What is drawn in the backdrop: soft glows at the sides, flowing ribbons, or the plain slope of colour."
+        },
+        "match": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use the product's own font and button colour, found by \"showcase explore\", for anything not set in \"style\"."
         }
       }
     },
@@ -328,6 +379,10 @@
           "description": "Names that must never appear on screen. Required for a hosted address; use [] if there are none."
         }
       }
+    },
+    "motionOnly": {
+      "type": "boolean",
+      "description": "A video of motion graphics and clips only. No product is filmed, so \"url\" and \"serve\" are not needed."
     }
   },
   "anyOf": [
@@ -339,6 +394,11 @@
     {
       "required": [
         "serve"
+      ]
+    },
+    {
+      "required": [
+        "motionOnly"
       ]
     }
   ]

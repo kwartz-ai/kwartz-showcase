@@ -1,6 +1,6 @@
 // showcase: the command line for Kwartz Showcase.
 import { parseArgs } from './args.ts'
-import { cmdDoctor, cmdExplore, cmdInit, cmdLogin, cmdMake, cmdPlan, cmdRemix, cmdRender, cmdSetup, cmdSounds, cmdVerify } from './commands.ts'
+import { cmdAuto, cmdDoctor, cmdExplore, cmdInit, cmdLogin, cmdMake, cmdPlan, cmdRemix, cmdRender, cmdSetup, cmdSounds, cmdVerify } from './commands.ts'
 
 const HELP = `showcase: narrated product demo videos, rendered from a script
 
@@ -12,6 +12,8 @@ From a config (showcase.config.json): describe the video, and let scenes be writ
   showcase make [config]          render every shape the config asks for, then check each
       --draft                     no voice, music or effects: check the picture first
       --remix                     rebuild from the last takes, without recording
+  showcase auto [config]          beta: explore, have Claude write the scenes through the API, draft, render
+                                  (needs ANTHROPIC_API_KEY; --model <id>, --tries <n>, --force, --draft)
   showcase login [config]         sign in once in a visible browser and save the session
   showcase sounds                 list sound candidates (--role click|callout|transition, --mood "calm")
 
@@ -41,6 +43,7 @@ const COMMANDS: Record<string, () => boolean | Promise<boolean>> = {
   remix: () => cmdRemix(args),
   verify: () => cmdVerify(args),
   make: () => cmdMake(args),
+  auto: () => cmdAuto(args),
   plan: () => cmdPlan(args),
   explore: () => cmdExplore(args),
   login: () => cmdLogin(args),

@@ -2,6 +2,7 @@
 // check passing; the entry point turns false into exit code 1.
 import fs from 'node:fs'
 import path from 'node:path'
+import { auto } from '../auto/auto.ts'
 import { candidates, loadRegistry, type Role } from '../audio/palette.ts'
 import { DEFAULT_CONFIG, isHosted, loadBrief } from '../brief/brief.ts'
 import { workOrder } from '../brief/workorder.ts'
@@ -54,7 +55,11 @@ export async function cmdVerify(a: Args): Promise<boolean> {
 // ── A video described by a config ────────────────────────────────────────────
 
 export async function cmdMake(a: Args): Promise<boolean> {
-  const result = await make(configArg(a), { ...renderOptions(a), remix: a.flag('remix') })
+  return report(await make(configArg(a), { ...renderOptions(a), remix: a.flag('remix') }))
+}
+
+/** Print what was made, shape by shape, with its checks. */
+function report(result: Awaited<ReturnType<typeof make>>): boolean {
   let ok = true
   for (const m of result.made) {
     log(`\n${m.format}: ${m.file}`)
@@ -64,6 +69,17 @@ export async function cmdMake(a: Args): Promise<boolean> {
   }
   if (result.creditsFile) log(`\nsound credits: ${result.creditsFile}`)
   return ok
+}
+
+export async function cmdAuto(a: Args): Promise<boolean> {
+  const done = await auto({
+    ...renderOptions(a), configFile: configArg(a), model: a.opt('model'),
+    tries: a.opt('tries') ? Number(a.opt('tries')) : undefined,
+    force: a.flag('force'), draftOnly: a.flag('draft'), draft: undefined,
+  })
+  log(`\nscenes written by ${done.model} in ${done.tries} attempt(s): ${done.scenesFile}`)
+  log('Read that file before you share the video: it is the script, and it was not written by a person.')
+  return report(done.result)
 }
 
 export async function cmdPlan(a: Args): Promise<boolean> {

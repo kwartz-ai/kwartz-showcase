@@ -28,8 +28,8 @@ The type-check and all unit tests. Must pass before every commit.
 bun run test:mutate
 ```
 
-Breaks the code in 37 known places, one at a time, and confirms a test fails each time.
-It must end with `37 of 37 mutations caught`.
+Breaks the code in 50 known places, one at a time, and confirms a test fails each time.
+It must end with `50 of 50 mutations caught`.
 
 ## 3. Clean copy
 

@@ -78,6 +78,7 @@ this list, never from the ones above.
 bin/showcase.js            the launcher: runs src/ under Bun, dist/ under Node
 src/
   cli/                the showcase command: parse the words, call one function, print
+  auto/               showcase auto: the scenes written through the Claude API
   brief/              showcase.config.json: checks, presets, plan, script, work order
   render/             the runner, the encoder, captions, framed layouts, make
   verify/             the checks
@@ -154,6 +155,7 @@ The rules that keep it that way:
 | `video/define.ts` | `defineVideo`; fill defaults; refuse mistakes early | file system (import) |
 | `brief/brief.ts` | The config type; every check on it; local or hosted | file system |
 | `brief/presets.ts` | Shapes, platforms, safe areas, motion feels; the layout for a shape | none |
+| `brief/fonts.ts` | The Google Fonts table, the pairings, the stylesheet address, the check before a render | network |
 | `brief/plan.ts` | From a length to scenes and a word budget; advice when a render misses | none |
 | `brief/script.ts` | Read a person's script and place its paragraphs on scenes | none |
 | `brief/resolve.ts` | From a config to one video config per shape, with notes | file system (import) |
@@ -171,10 +173,12 @@ The rules that keep it that way:
 | `capture/session.ts` | `showcase login`: save a sign-in and keep it out of git | Chromium |
 | `capture/explore.ts` | `showcase explore`: the product map | Chromium |
 | `graphics/cards.ts` | HTML for hook, title, steps and end cards | none (returns strings) |
+| `graphics/clip.ts` | Clip scenes: a video file made into frames on the canvas, with captions | FFmpeg, Chromium |
 | `graphics/motion.ts` | Render a motion scene frame by frame, with motion blur | Chromium, FFmpeg |
 | `audio/tts.ts` | Cache key per line; run Kokoro; measure clips; draft estimates | Python, ffprobe |
 | `audio/sound.ts` | Effects per event kind; the generated music bed | FFmpeg |
 | `audio/palette.ts` | Choose, measure and gate soundcn sounds for a project | FFmpeg, soundcn |
+| `auto/auto.ts` | `showcase auto`: ask Claude for the scenes, check the file, draft, fix, render | Claude API, render |
 | `verify/verify.ts` | The checks | ffprobe, FFmpeg |
 | `setup/setup.ts` | `showcase setup` and `showcase doctor` | Playwright CLI, Python, network |
 | `python/kokoro_tts.py` | Text to WAV with kokoro-onnx | Kokoro model |

@@ -8,10 +8,41 @@ It is on by default.
 
 **Keep it as it is:** do nothing.
 
-**Change the backdrop colours** (from, to, and the glow at the sides):
+**Pick a ready backdrop:**
+
+```json
+{ "style": { "backdrop": "aurora" } }
+```
+
+| Name | Look |
+|---|---|
+| `indigo` (default) | Blue to violet, soft glows at the sides |
+| `aurora` | The same colours with flowing ribbons of light |
+| `ocean` | Deep teal with ribbons |
+| `forest` | Dark green with glows |
+| `sunset` | Warm orange with ribbons |
+| `rose` | Deep pink with glows |
+| `graphite` | Plain dark grey |
+| `paper` | Plain light grey |
+| `brand` | Made from your accent colour: two dark shades of it and a light glow |
+
+**Use your own colours** (from, to, and the glow):
 
 ```json
 { "style": { "backdrop": ["#0F3D2E", "#1F8A5B", "#B6F2C8"] } }
+```
+
+**Use your own picture** (a `.png`, `.jpg` or `.webp` beside the config). It is scaled
+to cover the frame:
+
+```json
+{ "style": { "backdrop": "wallpaper.jpg" } }
+```
+
+**Choose what is drawn on the colours:** `glow`, `waves` or `plain`.
+
+```json
+{ "style": { "backdrop": "forest", "backdropPattern": "waves" } }
 ```
 
 **Turn it off**, so the picture fills the frame:
@@ -41,6 +72,8 @@ export default defineVideo({
 | `inset` | `0.022` | Space around the picture, as a share of the frame on each side |
 | `radius` | `0.034` | Corner radius, as a share of the frame's short side |
 | `colors` | blue to violet | The backdrop |
+| `pattern` | `glow` | `glow`, `waves` or `plain` |
+| `image` | none | A picture to use in place of the colours |
 | `shadow` | `0.45` | How dark the shadow is, 0 to 1 |
 
 ## Try a change in seconds
@@ -61,5 +94,8 @@ Open the video: the corners are round, the backdrop shows on all four sides, and
 
 - The picture inside is about 4 percent smaller than the frame. Keep anything
   important out of the outer 3 percent of your page, where the corner cuts.
+- `brand` follows the accent colour, including one matched from the product by
+  `showcase explore`.
+- Use a picture you have the right to use, and a calm one: the product is the subject.
 - Pick backdrop colours from your brand: two close shades of one colour, and a light
   tint of it for the glow.

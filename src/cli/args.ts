@@ -7,7 +7,7 @@ export interface Args {
 }
 
 /** Flags that are followed by a value. Every other --flag stands alone. */
-const WITH_VALUE = new Set(['base', 'music', 'max-pages', 'out', 'role', 'mood'])
+const WITH_VALUE = new Set(['base', 'music', 'max-pages', 'out', 'role', 'mood', 'model', 'tries'])
 
 export function parseArgs(argv: string[]): Args {
   const flags = new Set<string>()

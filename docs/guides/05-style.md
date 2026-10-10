@@ -5,7 +5,15 @@ fonts. With nothing set, the kit uses its own. Set `style` to match your brand.
 
 ## Steps
 
-1. Add `style` to the config. Every part is optional:
+1. The quickest way is a ready pairing of fonts. There are eleven, each chosen for
+   video: `modern` (the default), `geometric`, `technical`, `minimal`, `bold`,
+   `editorial`, `elegant`, `friendly`, `playful`, `poster`, `corporate`.
+   ```json
+   { "style": { "fontPreset": "technical" } }
+   ```
+   [Fonts for video](../fonts.md) shows what each one is and what it suits.
+
+   Or set the parts yourself. Every part is optional:
    ```json
    {
      "url": "http://localhost:3000",
@@ -29,11 +37,17 @@ fonts. With nothing set, the kit uses its own. Set `style` to match your brand.
    | `fontSource` | `google`: link the families from Google Fonts. `installed`: use fonts on the machine |
    | `captions` | `small`, `medium` or `large` |
 
-2. Not sure which font and colour your product uses? Ask the kit:
+2. Let the kit match the product. Explore it once:
    ```bash
    bunx showcase explore
    ```
-   The last line reports the product's own font and main button colour.
+   From then on, anything you have not set yourself follows the product: its button
+   colour becomes the highlight colour, and its font is used for captions and labels
+   (when that font is on Google Fonts). `showcase make` says so:
+   ```
+   note: accent colour #2fa8e0 taken from the product's own buttons (set "style.accent" to choose another)
+   ```
+   Turn this off with `"style": { "match": false }`.
 
 3. Render a draft and look:
    ```bash
@@ -50,6 +64,11 @@ fonts. With nothing set, the kit uses its own. Set `style` to match your brand.
 ## Good to know
 
 - Use fonts you have the right to use. Google Fonts are free to use in video.
+- Any Google Fonts family can be named in `fonts`. The kit asks only for weights the
+  family has, and before a render it checks that Google really gave every family. A
+  name Google does not have stops the run and is named.
+- A button colour that is too dark to show on the dark cards is not used as the
+  highlight; the note says so.
 - With `google`, a render needs the internet. With `installed`, it does not.
 - Use one accent colour only. A second highlight colour splits the viewer's attention.
 - Colours are hex values. A font name is a plain family name, such as `Roboto`.

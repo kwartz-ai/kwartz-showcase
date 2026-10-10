@@ -1,6 +1,6 @@
 # Testing
 
-The kit has 797 unit tests, run with [Vitest](https://vitest.dev). They take about ten
+The kit has 962 unit tests, run with [Vitest](https://vitest.dev). They take about ten
 seconds and need no browser, no FFmpeg, no voice model and no network.
 
 ```bash
@@ -21,6 +21,9 @@ layer.
 |---|---|---|
 | `audio/palette.test.ts` | 43 | Choosing sounds from soundcn: licence, blocked sets, mood, the measurements and the gate, the saved choice, credits |
 | `audio/sound-voice.test.ts` | 43 | Effects, the music bed, narration and its cache |
+| `auto/auto.test.ts` | 44 | `showcase auto`: reading the reply, the checks on a generated file, the API call, the draft and fix loop |
+| `brief/fonts-style.test.ts` | 52 | The font table and pairings, the stylesheet address and its check, the product's own look, backdrops |
+| `graphics/clip.test.ts` | 28 | Clip scenes: trimming, fitting, length, captions, sound; backdrop patterns and pictures |
 | `brief/brief.test.ts` | 38 | The config: what passes, every refusal, local or hosted, loading the file |
 | `brief/plan-script.test.ts` | 33 | Length to scenes and words, advice when a render misses, reading and placing a person's script |
 | `brief/presets-resolve.test.ts` | 57 | Shapes, platforms, safe areas, every layout, the theme from the config, one video per shape, the work order |
@@ -33,6 +36,7 @@ layer.
 | `cli/config.test.ts` | 23 | Argument parsing; `init --config`, `plan`, `make`, `explore` and `login` up to the point a browser opens |
 | `core/theme-util.test.ts` | 29 | Theme merging, HTML escaping, starting processes, the cache folder |
 | `graphics/cards.test.ts` | 32 | Every card: content, timing with the voice, theme, escaping, intact styles |
+| `graphics/motion-only.test.ts` | 18 | A video with no product: the config, the blank page, the caption band, and the motion example in every shape |
 | `graphics/motion-compose.test.ts` | 31 | Which frames a motion scene needs, its document, framed frames, the caption track |
 | `render/border.test.ts` | 27 | The rounded border: where the picture sits, the mask and backdrop, the encoder inputs, turning it off |
 | `render/captions.test.ts` | 34 | Splitting lines into captions, timing them, WebVTT |
@@ -40,6 +44,7 @@ layer.
 | `render/render.test.ts` | 58 | The order of work, what scenes receive, the take, drafts, failures, remix |
 | `render/shapes.test.ts` | 12 | Encoding at canvas size, the caption overlay, checks for framed videos and read-only mode |
 | `setup/setup.test.ts` | 23 | `showcase doctor` and `showcase setup` on machines with and without each tool |
+| `verify/layout.test.ts` | 23 | The layout check: graphics cut off or covered in a motion scene, highlights and labels off screen, the check in the report |
 | `verify/verify.test.ts` | 56 | Every check, passing and failing, at its limits |
 | `video/define.test.ts` | 38 | Defaults, overrides, the mistakes refused early, loading a video file |
 
@@ -135,7 +140,7 @@ Some tests exist because of a specific bug. Each has a comment saying so.
 
 ## Checking that the tests can fail
 
-A test that cannot fail proves nothing. `tests/mutate.py` breaks the code in 37 places,
+A test that cannot fail proves nothing. `tests/mutate.py` breaks the code in 50 places,
 one at a time, runs the suite, and reports whether a test caught each:
 
 ```
@@ -144,7 +149,7 @@ caught   14 failing   overlays ignore the page zoom
 caught    4 failing   any sound licence is accepted
 caught    1 failing   files outside the folder are served
 ...
-37 of 37 mutations caught
+50 of 50 mutations caught
 ```
 
 It restores each file before moving on. When you add a rule that matters, add a line

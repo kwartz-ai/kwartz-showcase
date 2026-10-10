@@ -42,7 +42,7 @@ ${theme.fontsCss ? `<link rel="stylesheet" href="${esc(theme.fontsCss)}">` : ''}
 }
 
 /** Draw each caption as a transparent image the size of the caption band. */
-export async function renderCaptionImages(context: BrowserContext, cues: Cue[], layout: Layout, theme: Theme, dir: string): Promise<CaptionImage[]> {
+export async function renderCaptionImages(context: BrowserContext, cues: Cue[], layout: Layout, theme: Theme, dir: string, problems: string[] = []): Promise<CaptionImage[]> {
   fs.rmSync(dir, { recursive: true, force: true })
   fs.mkdirSync(dir, { recursive: true })
   const page = await context.newPage()
@@ -52,6 +52,9 @@ export async function renderCaptionImages(context: BrowserContext, cues: Cue[], 
     for (const [i, cue] of cues.entries()) {
       await page.setContent(captionDocument(cue.text, layout, theme), { waitUntil: 'load' })
       await page.evaluate(() => document.fonts.ready.then(() => undefined))
+      // a caption taller than its band would be cut top and bottom
+      const tall = await page.evaluate(() => document.getElementById('cap')!.getBoundingClientRect().height)
+      if (tall > layout.captionBand.height - 8) problems.push(`the caption "${cue.text.slice(0, 40)}" is ${Math.round(tall)} px tall and does not fit the ${layout.captionBand.height} px caption band: shorten the line`)
       const file = path.join(dir, `c${String(i).padStart(4, '0')}.png`)
       await page.screenshot({ path: file, omitBackground: true })
       out.push({ file, start: cue.start, end: cue.end })

@@ -18,7 +18,9 @@ export function workOrder(brief: Brief, dir: string): string {
   const mapFile = path.join(dir, '.showcase', 'explore', 'map.md')
   const lines: string[] = [
     `# Work order: ${brief.name ?? 'video'}`, '',
-    `Product: ${brief.url ?? `the static folder ${brief.serve}`} (${isHosted(brief.url) ? 'hosted' : 'local'})`,
+    brief.motionOnly && !brief.url && !brief.serve
+      ? 'Product: none is filmed. Every scene is a motion scene or a clip.'
+      : `Product: ${brief.url ?? `the static folder ${brief.serve}`} (${isHosted(brief.url) ? 'hosted' : 'local'})`,
     `Length: ${length} seconds (passes between ${plan.minSec} and ${plan.maxSec})`,
     `Audience: ${brief.audience ?? 'not given. Propose one and say which you chose.'}`,
     `Promise: ${brief.promise ?? 'not given. Propose the one thing the video should prove, and say which you chose.'}`,

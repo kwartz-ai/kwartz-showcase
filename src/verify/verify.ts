@@ -95,6 +95,17 @@ export async function verify(video: ResolvedVideo): Promise<Check[]> {
         : 'on, and nothing tried to change data',
     })
   }
+  if (take.layout) {
+    const n = take.layout.length
+    checks.push({
+      name: 'layout',
+      ok: n === 0,
+      detail: n === 0
+        ? 'every graphic, label and caption sits inside its area'
+        : `${n} thing(s) cut off, off screen or covered: `
+          + take.layout.slice(0, 3).map((i) => `in "${i.scene}", ${i.problem}`).join('; ') + (n > 3 ? `; and ${n - 3} more (see the render log)` : ''),
+    })
+  }
   checks.push({
     name: 'fonts',
     ok: take.missingFonts.length === 0,

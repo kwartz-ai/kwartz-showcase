@@ -68,7 +68,8 @@
     "build": "tsc -p tsconfig.build.json",
     "clean": "bun -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "prepack": "bun run clean && bun run build",
-    "example:tour": "bun bin/showcase.js make examples/tour/showcase.config.json --draft"
+    "example:tour": "bun bin/showcase.js make examples/tour/showcase.config.json --draft",
+    "example:motion": "bun bin/showcase.js make examples/motion/showcase.config.json --draft"
   },
   "dependencies": {
     "playwright": "1.64.0"

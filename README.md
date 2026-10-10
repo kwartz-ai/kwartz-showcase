@@ -58,13 +58,17 @@ showcase render video.ts
 | **No blank screens** | Every change of screen is a cross-dissolve. Loading states are filmed and then dropped. |
 | **Chapter cards** | Structure for longer videos, and a place to hide a slow load. |
 | **Sound** | Soft click, callout and dissolve sounds placed from logged times; a music bed that drops under the voice; the mix levelled to -16 LUFS. |
-| **Checks** | After every render: picture, length, loudness, captions, holds, banned text, fonts. |
+| **Checks** | After every render: picture, length, loudness, captions, holds, banned text, fonts, and layout: anything cut off, off screen or covered by a caption fails the render and is named. |
 | **Config** | `showcase.config.json`: address, length, platforms, style. A word budget for the length, and advice in words when a render misses it. |
 | **Shapes** | Landscape, vertical, square, portrait and more from one script, with a named copy per platform (YouTube, Shorts, Reels, TikTok, LinkedIn and others). |
 | **Motion scenes** | Hook, steps and end cards rendered frame by frame with motion blur: the same frames on any machine. |
 | **Sounds per project** | Effects chosen from soundcn (CC0), measured, and refused when they would squeak. |
 | **Safe on a live product** | Read-only mode refuses every request that could change data; sign in once with `showcase login`; banned names are required. |
-| **Rounded border** | The picture sits on a soft backdrop with rounded corners and a shadow. On by default; your colours, or off. |
+| **Rounded border and backdrop** | The picture sits on a backdrop with rounded corners and a shadow. Eight backdrops, one made from your brand colour, your own colours or your own picture. |
+| **Fonts chosen for video** | Eleven pairings from Google Fonts, each with its own title weight and tracking; any Google family by name, checked before the render. |
+| **Matches your product** | After `showcase explore`, captions use the product's own font and the highlight uses its button colour. |
+| **Clip scenes** | Put a finished video file on the timeline, with narration and captions. |
+| **showcase auto** (beta) | With an API key, Claude writes the scenes and the kit drafts, fixes and renders. |
 | **Remix** | Change the sound mix or the border without recording again. |
 
 Every tool in the pipeline is free: Playwright, FFmpeg, Kokoro.
@@ -86,6 +90,7 @@ bun run showcase doctor        # what is installed, what is missing
 bun run showcase setup         # one-time: Chromium and the voice (about 350 MB)
 bun run example           # renders examples/hello/out/hello.mp4
 bun run example:tour      # one script in three shapes, from a config (draft)
+bun run example:motion    # motion graphics alone: no product filmed (draft)
 ```
 
 The example films a tiny made-up app that ships with the repo, so it needs nothing else
@@ -134,6 +139,7 @@ files are written there.
 | `showcase init --config` | Start a config-driven video: `showcase.config.json`, `video.ts`, the skill |
 | `showcase explore [config or address]` | Map the product's screens into `.showcase/explore/` |
 | `showcase plan [config]` | Print the work order: scenes, word budget, shapes, safety |
+| `showcase auto [config]` | Beta. Explore, have Claude write the scenes through the API, draft, render (needs `ANTHROPIC_API_KEY`) |
 | `showcase make [config]` | Render every shape the config asks for, then check each (`--draft`, `--remix`) |
 | `showcase login [config or address]` | Sign in once in a visible browser and save the session |
 | `showcase sounds` | List sound candidates (`--role`, `--mood`) |
@@ -164,13 +170,14 @@ Start at the [docs index](docs/README.md), which lists these in reading order.
 - **[User guide](docs/user-guide.md): make a video of your product, step by step, and how to use the skills**
 - [Getting started](docs/getting-started.md): from an empty folder to a first video
 - [Writing a video](docs/writing-a-video.md): the video file and everything a scene can do
-- **[Feature guides](docs/guides/README.md): one short guide per feature (length, platforms, script, style, border, motion, sounds, hosted products, explore, Claude Code, Node)**
+- **[Feature guides](docs/guides/README.md): one short guide per feature (length, platforms, script, style, border and backdrop, motion, clips, sounds, hosted products, explore, Claude Code, auto, Node)**
+- [Fonts for video](docs/fonts.md): which Google Fonts work on video and why, and the eleven pairings
 - [A video from a config](docs/config-driven-video.md): length, platforms and shapes, style, your own script, sounds, a hosted product
 - [Craft guide](docs/craft-guide.md): what a senior editor works on, with working numbers
 - [How it works](docs/how-it-works.md): the pipeline, and why it is built this way
 - [Architecture](docs/architecture.md): processes, modules, data flow, diagrams, where to extend
 - [Tech stack](docs/tech-stack.md): every tool, its version, licence and role, and what was not chosen
-- [Testing](docs/testing.md): how the 797 unit tests are organised, and how to add one
+- [Testing](docs/testing.md): how the 962 unit tests are organised, and how to add one
 - [Release checklist](docs/release-checklist.md): how to know it works before you commit, push or release
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research notes](docs/research.md): the tools and skills we compared before building this
