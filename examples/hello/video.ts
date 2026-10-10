@@ -1,8 +1,8 @@
 // A complete small video, filmed on the made-up app in ./site. It needs nothing
 // running: `bun run example:draft` (no voice) or `bun run example` (full render).
-// It uses every part of the kit once: hook, pointer, camera, callout, a dissolve
-// that hides a loading state, a chapter card and an end card.
-import { defineVideo, endCard, hookCard } from '../../src/index.ts'
+// It uses every part of the kit once: a motion scene for the hook and the end card,
+// pointer, camera, callout, a chapter card that hides a loading state.
+import { defineVideo, endCard, hookCard } from 'kwartz-showcase'
 
 export default defineVideo({
   name: 'hello',
@@ -20,16 +20,13 @@ export default defineVideo({
     {
       id: 'hook',
       say: 'The shipment file came in again this morning. Six lines, and nothing to say which of them changed.',
-      run: async ({ stage, theme, sayMs, untilSaid }) => {
-        await stage.showFull(hookCard(theme, {
-          overline: 'EVERY MORNING',
-          title: 'The file. Again.',
-          sub: 'No list of what changed.',
-          questions: ['Which dates moved?'],
-        }, sayMs), { dissolve: false })
-        await untilSaid(1.03)
-        await stage.clearFull()
-      },
+      // a motion scene: full-screen graphics, rendered frame by frame
+      motion: ({ theme, sayMs }) => hookCard(theme, {
+        overline: 'EVERY MORNING',
+        title: 'The file. Again.',
+        sub: 'No list of what changed.',
+        questions: ['Which dates moved?'],
+      }, sayMs),
     },
     {
       id: 'moved',
@@ -74,17 +71,14 @@ export default defineVideo({
     {
       id: 'end',
       say: 'Tideline. Every change found, and kept. Everything shown here is made up.',
-      run: async ({ stage, theme, sayMs, untilSaid }) => {
-        await stage.showFull(endCard(theme, {
-          title: 'Tideline',
-          overline: 'AN EXAMPLE VIDEO',
-          chips: ['Found', 'Kept'],
-          cta: 'Now film your own app.',
-          ctaSub: 'kav init',
-          note: 'Every company and number shown is fictional.',
-        }, sayMs))
-        await untilSaid(1.06)
-      },
+      motion: ({ theme, sayMs }) => endCard(theme, {
+        title: 'Tideline',
+        overline: 'AN EXAMPLE VIDEO',
+        chips: ['Found', 'Kept'],
+        cta: 'Now film your own app.',
+        ctaSub: 'showcase init',
+        note: 'Every company and number shown is fictional.',
+      }, sayMs),
     },
   ],
 })

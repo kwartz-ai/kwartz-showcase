@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Start with `kav doctor`. It shows what is installed and what is missing.
+Start with `showcase doctor`. It shows what is installed and what is missing.
 
 ## The render stopped in a scene
 
@@ -17,7 +17,7 @@ page at that moment. Run with `--headed` to watch. The usual causes:
 ## "no frames were captured"
 
 Seen once on a cold start, when the browser had not finished starting. Render again.
-If it repeats, run `kav doctor`.
+If it repeats, run `showcase doctor`.
 
 ## The camera says it cannot find the app's root element
 
@@ -49,14 +49,14 @@ For example `say: 'as E.D.I.'` with `caption: 'as EDI'`.
 
 ## "The voice is not set up"
 
-Run `kav setup`. It needs Python 3.10 to 3.13. Until then, `--draft` works.
+Run `showcase setup`. It needs Python 3.10 to 3.13. Until then, `--draft` works.
 
 ## The music or an effect is wrong
 
 - No music: `--no-music`. Your own track: `--music track.mp3`.
 - No effects: `--no-sfx`.
 - Quieter music: lower `sound.musicGain` in the video file.
-- After any of these, `kav remix video.ts` rebuilds the file without recording.
+- After any of these, `showcase remix video.ts` rebuilds the file without recording.
 
 ## The picture is too small or too big
 

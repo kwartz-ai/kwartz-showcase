@@ -5,7 +5,8 @@
     "moduleResolution": "bundler",
     "lib": [
       "ESNext",
-      "DOM"
+      "DOM",
+      "DOM.Iterable"
     ],
     "types": [
       "bun"
@@ -16,7 +17,10 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "customConditions": [
+      "bun"
+    ]
   },
   "include": [
     "src",

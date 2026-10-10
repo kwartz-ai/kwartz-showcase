@@ -1,6 +1,10 @@
 node_modules/
 # every render writes here: frames, audio, takes and the videos themselves
 out/
+# a project's working files: chosen sounds, saved session, product map
+.showcase/
+# the build for npm
+dist/
 *.log
 .DS_Store
 .env

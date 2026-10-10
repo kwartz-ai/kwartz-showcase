@@ -16,6 +16,8 @@ what you need.
 | 0 | **[User guide](user-guide.md)** | The whole journey in 15 steps, plus skills. Start here | 30 min |
 | 1 | [Getting started](getting-started.md) | Install the tools, start a video, draft it, render it | 10 min |
 | 2 | [Writing a video](writing-a-video.md) | The video file, and everything a scene can do: pointer, cuts, spotlight, camera, cards, theme | 20 min |
+| 2a | **[Feature guides](guides/README.md)** | Twelve short guides, one per feature, each with steps and how to check it worked | 5 min each |
+| 2b | [A video from a config](config-driven-video.md) | `showcase.config.json`: length and word budget, platforms and shapes, style, your own script, motion scenes, sounds, a hosted product | 15 min |
 
 The user guide alone is enough to make a complete video. Docs 1 and 2 are the shorter
 version and the full reference.
@@ -30,7 +32,7 @@ version and the full reference.
 ### Part 3: Understand how it is built
 
 Read these if you want to change the kit, or just want to know what happens when you
-run `kav render`.
+run `showcase render`.
 
 | # | Doc | What you learn | Time |
 |---|---|---|---|
@@ -59,6 +61,11 @@ run `kav render`.
 | Change screens without showing a loading state | [Writing a video: changes of screen](writing-a-video.md#changes-of-screen) |
 | Make an opening or closing card | [Writing a video: cards](writing-a-video.md#cards) |
 | Use my own colours and fonts | [Writing a video: theme](writing-a-video.md#theme) |
+| Make a vertical video for Shorts, Reels or TikTok | [A video from a config: shapes and platforms](config-driven-video.md#shapes-and-platforms) |
+| Set how long the video is | [A video from a config: length](config-driven-video.md#length) |
+| Use my own script | [A video from a config: your own script](config-driven-video.md#your-own-script) |
+| Film a hosted product safely | [A video from a config: a hosted product](config-driven-video.md#a-hosted-product) |
+| Choose the sound effects | [A video from a config: sound effects](config-driven-video.md#sound-effects) |
 | Fix a render that stopped | [Troubleshooting](troubleshooting.md#the-render-stopped-in-a-scene) |
 | Fix a failed `holds` check | [Troubleshooting](troubleshooting.md#the-holds-check-fails) |
 | Change the music or effects | [Troubleshooting](troubleshooting.md#the-music-or-an-effect-is-wrong) |
@@ -72,6 +79,7 @@ run `kav render`.
 ## Other places
 
 - [Project README](../README.md): what the kit is, quick start, commands
-- [The editor skill](../skills/kwartz-ai-video/SKILL.md): the brief an AI agent follows when it makes a video
+- [The editor skill](../skills/kwartz-showcase/SKILL.md): the brief an AI agent follows when it makes a video
 - [The example](../examples/hello/video.ts): a complete small video you can render and copy from
+- [The config example](../examples/tour/showcase.config.json): one script rendered in three shapes
 - [Changelog](../CHANGELOG.md)

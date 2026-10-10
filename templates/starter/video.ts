@@ -1,8 +1,8 @@
-// Your video. Render it with:  kav render video.ts --draft   (picture only)
-//                              kav render video.ts           (voice, music, effects)
+// Your video. Render it with:  showcase render video.ts --draft   (picture only)
+//                              showcase render video.ts           (voice, music, effects)
 // Each scene is one spoken line (`say`, also the captions) plus the steps it shows.
 // The scene lasts as long as its line takes to say, so voice and picture stay in step.
-import { defineVideo, endCard, hookCard } from 'kwartz-ai-video'
+import { defineVideo, endCard, hookCard } from 'kwartz-showcase'
 
 export default defineVideo({
   name: 'demo',

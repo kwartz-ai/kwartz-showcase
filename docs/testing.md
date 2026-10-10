@@ -1,6 +1,6 @@
 # Testing
 
-The kit has 495 unit tests, run with [Vitest](https://vitest.dev). They take about ten
+The kit has 797 unit tests, run with [Vitest](https://vitest.dev). They take about ten
 seconds and need no browser, no FFmpeg, no voice model and no network.
 
 ```bash
@@ -14,27 +14,38 @@ bun run test:clean      # install, check and render from exactly what git holds
 
 ## What is tested
 
-One test file per module.
+The tests live in `tests/unit/`, in the same folders as the source: one folder per
+layer.
 
 | File | Tests | Covers |
 |---|---|---|
-| `captions.test.ts` | 34 | Splitting lines into captions, timing them, WebVTT |
-| `config.test.ts` | 38 | Defaults, overrides, the mistakes refused early, loading a video file |
-| `theme-util.test.ts` | 29 | Theme merging, HTML escaping, starting processes, the cache folder |
-| `encode.test.ts` | 45 | Planning and blending dissolves, the frame list, the sound graph, loudness gain |
-| `sound-voice.test.ts` | 43 | Effects, the licence check on downloaded sounds, the music bed, narration and its cache |
-| `cards.test.ts` | 32 | Every card: content, timing with the voice, theme, escaping, intact styles |
-| `serve.test.ts` | 16 | The static server: types, single-page routes, 404, staying inside its folder |
-| `verify.test.ts` | 56 | Every check, passing and failing, at its limits |
-| `stage.test.ts` | 80 | Pointer, click, dissolve, cut, captions, spotlight, camera, cards, chapters |
-| `recorder.test.ts` | 19 | Page zoom, fonts, frame capture and timing |
-| `render.test.ts` | 58 | The order of work, what scenes receive, the take, drafts, failures, remix |
-| `setup.test.ts` | 23 | `kav doctor` and `kav setup` on machines with and without each tool |
-| `cli.test.ts` | 22 | The `kav` command: help, exit codes, messages, `init` |
+| `audio/palette.test.ts` | 43 | Choosing sounds from soundcn: licence, blocked sets, mood, the measurements and the gate, the saved choice, credits |
+| `audio/sound-voice.test.ts` | 43 | Effects, the music bed, narration and its cache |
+| `brief/brief.test.ts` | 38 | The config: what passes, every refusal, local or hosted, loading the file |
+| `brief/plan-script.test.ts` | 33 | Length to scenes and words, advice when a render misses, reading and placing a person's script |
+| `brief/presets-resolve.test.ts` | 57 | Shapes, platforms, safe areas, every layout, the theme from the config, one video per shape, the work order |
+| `capture/recorder.test.ts` | 19 | Page zoom, fonts, frame capture and timing |
+| `capture/safety.test.ts` | 23 | Read-only mode, the saved session, which pages explore visits, the product map |
+| `capture/serve.test.ts` | 16 | The static server: types, single-page routes, 404, staying inside its folder |
+| `capture/stage.test.ts` | 80 | Pointer, click, dissolve, cut, captions, spotlight, camera, cards, chapters |
+| `capture/timeline.test.ts` | 15 | Pausing the recorder for a motion scene, inserted frames, overlays in other shapes |
+| `cli/cli.test.ts` | 22 | The `showcase` command: help, exit codes, messages, `init` |
+| `cli/config.test.ts` | 23 | Argument parsing; `init --config`, `plan`, `make`, `explore` and `login` up to the point a browser opens |
+| `core/theme-util.test.ts` | 29 | Theme merging, HTML escaping, starting processes, the cache folder |
+| `graphics/cards.test.ts` | 32 | Every card: content, timing with the voice, theme, escaping, intact styles |
+| `graphics/motion-compose.test.ts` | 31 | Which frames a motion scene needs, its document, framed frames, the caption track |
+| `render/border.test.ts` | 27 | The rounded border: where the picture sits, the mask and backdrop, the encoder inputs, turning it off |
+| `render/captions.test.ts` | 34 | Splitting lines into captions, timing them, WebVTT |
+| `render/encode.test.ts` | 45 | Planning and blending dissolves, the frame list, the sound graph, loudness gain |
+| `render/render.test.ts` | 58 | The order of work, what scenes receive, the take, drafts, failures, remix |
+| `render/shapes.test.ts` | 12 | Encoding at canvas size, the caption overlay, checks for framed videos and read-only mode |
+| `setup/setup.test.ts` | 23 | `showcase doctor` and `showcase setup` on machines with and without each tool |
+| `verify/verify.test.ts` | 56 | Every check, passing and failing, at its limits |
+| `video/define.test.ts` | 38 | Defaults, overrides, the mistakes refused early, loading a video file |
 
-Coverage is about 92% of statements. `src/cli.ts` shows as 0% in the report because
+Coverage is about 92% of statements. `src/cli/` shows as 0% in the report because
 its tests start a real `bun` process, which the coverage tool cannot see into; it is
-covered by `cli.test.ts`.
+covered by `cli.test.ts` and `config.test.ts`.
 
 ## What is not tested here
 
@@ -54,15 +65,15 @@ lists every level of real-use testing, from the example to a trial on a real pro
 | Real thing | In tests | Where |
 |---|---|---|
 | The Playwright page | `fakePage()`: records overlays and page scripts, hands out locators with a chosen box | `tests/helpers.ts` |
-| FFmpeg, ffprobe, Python | `run` from `src/util.ts` is mocked; tests read the command lines it was given | `vi.mock('../src/util.ts', ...)` |
+| FFmpeg, ffprobe, Python | `run` from `src/core/util.ts` is mocked; tests read the command lines it was given | `vi.mock('../../../src/core/util.ts', ...)` |
 | The browser launch | `playwright` is mocked to return the fake page | `render.test.ts` |
 | Time | Vitest fake timers; `settle()` runs a stage call to its end | `tests/helpers.ts` |
-| The cache folder | `KAV_HOME` points at a temporary folder | `vi.stubEnv` |
+| The cache folder | `SHOWCASE_HOME` points at a temporary folder | `vi.stubEnv` |
 | The network | `fetch` is stubbed | `vi.stubGlobal` |
 | The document inside the page | A small stand-in object; the script sent to the page is run against it | `stage.test.ts`, `recorder.test.ts` |
 
 Two things are real on purpose: `serve.test.ts` starts the real server on a free local
-port, and `cli.test.ts` starts a real `bun` process. Both are fast and both would be
+port, and `cli.test.ts` and `config.test.ts` start a real `bun` process. Both are fast and both would be
 easy to fake wrongly.
 
 ### Mocking `run`
@@ -71,11 +82,11 @@ Every program the kit starts goes through one function, so one mock replaces the
 
 ```ts
 const run = vi.fn<(cmd: string, args: string[]) => Promise<string>>()
-vi.mock('../src/util.ts', async (original) => ({
-  ...(await original<typeof import('../src/util.ts')>()),
+vi.mock('../../../src/core/util.ts', async (original) => ({
+  ...(await original<typeof import('../../../src/core/util.ts')>()),
   run,
 }))
-const { encode } = await import('../src/encode.ts')     // import after the mock
+const { encode } = await import('../../../src/render/encode.ts')     // import after the mock
 ```
 
 A test then makes `run` answer like the tool would, and asserts on the arguments:
@@ -124,7 +135,7 @@ Some tests exist because of a specific bug. Each has a comment saying so.
 
 ## Checking that the tests can fail
 
-A test that cannot fail proves nothing. `tests/mutate.py` breaks the code in 18 places,
+A test that cannot fail proves nothing. `tests/mutate.py` breaks the code in 37 places,
 one at a time, runs the suite, and reports whether a test caught each:
 
 ```
@@ -133,7 +144,7 @@ caught   14 failing   overlays ignore the page zoom
 caught    4 failing   any sound licence is accepted
 caught    1 failing   files outside the folder are served
 ...
-18 of 18 mutations caught
+37 of 37 mutations caught
 ```
 
 It restores each file before moving on. When you add a rule that matters, add a line

@@ -1,0 +1,13 @@
+{
+  "$schema": "../../schema/showcase.config.schema.json",
+  "name": "tour",
+  "serve": "../hello/site",
+  "length": 30,
+  "formats": ["landscape", "square"],
+  "platforms": ["instagram-reel", "youtube-shorts"],
+  "audience": "someone who has never seen the product",
+  "promise": "It shows which shipments changed since yesterday",
+  "cta": { "text": "Now film your own app.", "sub": "showcase init --config" },
+  "motion": { "feel": "calm" },
+  "sound": { "effects": "auto", "mood": "calm soft light" }
+}

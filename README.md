@@ -1,4 +1,4 @@
-# Kwartz AI Video
+# Kwartz Showcase
 
 Narrated product demo videos, rendered from a script.
 
@@ -8,12 +8,16 @@ voice, adds captions, pointer, zoom, callouts, music and soft sound effects, and
 a 1080p MP4. Nobody records a screen and nobody opens a video editor. To change what is
 said, edit a line and render again.
 
+Or describe the video in a small config file (what to film, how long, for which
+platforms) and let the scenes be written for it: see
+[A video from a config](docs/config-driven-video.md).
+
 It was built so an AI coding agent such as Claude Code can be the video editor: the
 repo ships a skill that tells the agent how a senior editor would cut the video, and
 the checks it must pass.
 
 ```ts
-import { defineVideo } from 'kwartz-ai-video'
+import { defineVideo } from 'kwartz-showcase'
 
 export default defineVideo({
   name: 'demo',
@@ -35,10 +39,10 @@ export default defineVideo({
 ```
 
 ```
-kav render video.ts
+showcase render video.ts
 ```
 
-> Version 1.0.0. Source: [github.com/kwartz-ai/kwartz-ai-video](https://github.com/kwartz-ai/kwartz-ai-video).
+> Version 2.0.0. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
 > It is not on npm; install it from GitHub as shown below.
 
 ## What you get
@@ -55,13 +59,19 @@ kav render video.ts
 | **Chapter cards** | Structure for longer videos, and a place to hide a slow load. |
 | **Sound** | Soft click, callout and dissolve sounds placed from logged times; a music bed that drops under the voice; the mix levelled to -16 LUFS. |
 | **Checks** | After every render: picture, length, loudness, captions, holds, banned text, fonts. |
-| **Remix** | Change the sound mix without recording again. |
+| **Config** | `showcase.config.json`: address, length, platforms, style. A word budget for the length, and advice in words when a render misses it. |
+| **Shapes** | Landscape, vertical, square, portrait and more from one script, with a named copy per platform (YouTube, Shorts, Reels, TikTok, LinkedIn and others). |
+| **Motion scenes** | Hook, steps and end cards rendered frame by frame with motion blur: the same frames on any machine. |
+| **Sounds per project** | Effects chosen from soundcn (CC0), measured, and refused when they would squeak. |
+| **Safe on a live product** | Read-only mode refuses every request that could change data; sign in once with `showcase login`; banned names are required. |
+| **Rounded border** | The picture sits on a soft backdrop with rounded corners and a shadow. On by default; your colours, or off. |
+| **Remix** | Change the sound mix or the border without recording again. |
 
 Every tool in the pipeline is free: Playwright, FFmpeg, Kokoro.
 
 ## Requirements
 
-- [Bun](https://bun.sh) 1.2 or later
+- [Bun](https://bun.sh) 1.2 or later (Node 22.18 or later also works, from a build)
 - [FFmpeg](https://ffmpeg.org) on your PATH (with `ffprobe`)
 - Python 3.10 to 3.13, only to install the voice (draft renders work without it)
 - Developed and tested on Windows 11. macOS and Linux should work but are untested so far.
@@ -69,12 +79,13 @@ Every tool in the pipeline is free: Playwright, FFmpeg, Kokoro.
 ## Quick start
 
 ```bash
-git clone https://github.com/kwartz-ai/kwartz-ai-video.git
-cd kwartz-ai-video
+git clone https://github.com/kwartz-ai/kwartz-showcase.git
+cd kwartz-showcase
 bun install
-bun run kav doctor        # what is installed, what is missing
-bun run kav setup         # one-time: Chromium and the voice (about 350 MB)
+bun run showcase doctor        # what is installed, what is missing
+bun run showcase setup         # one-time: Chromium and the voice (about 350 MB)
 bun run example           # renders examples/hello/out/hello.mp4
+bun run example:tour      # one script in three shapes, from a config (draft)
 ```
 
 The example films a tiny made-up app that ships with the repo, so it needs nothing else
@@ -86,48 +97,65 @@ Chromium.
 Clone the kit once (see Quick start), then link it into any project on the machine:
 
 ```bash
-cd kwartz-ai-video && bun link            # once, in the kit
-cd ../your-project && bun link kwartz-ai-video
+cd kwartz-showcase && bun link            # once, in the kit
+cd ../your-project && bun link kwartz-showcase
 ```
 
 Then, in your project:
 
 ```bash
-bunx kav init                       # adds video.ts and the editor skill
-bunx kav render video.ts --draft    # check the picture
-bunx kav render video.ts            # voice, music, effects, checks
+bunx showcase init                       # adds video.ts and the editor skill
+bunx showcase render video.ts --draft    # check the picture
+bunx showcase render video.ts            # voice, music, effects, checks
 ```
 
-Add `out/` to your `.gitignore`: frames, takes and the videos are written there.
+Or, from a config:
+
+```bash
+bunx showcase init --config              # adds showcase.config.json, video.ts and the skill
+bunx showcase explore                    # map the product's screens
+bunx showcase plan                       # the work order: scenes, words, shapes
+bunx showcase make --draft               # every shape, picture only
+bunx showcase make                       # every shape, with sound and checks
+```
+
+Add `out/` and `.showcase/` to your `.gitignore`: frames, takes, the videos and working
+files are written there.
 
 ## Commands
 
 | Command | Does |
 |---|---|
-| `kav render <video.ts>` | Record every scene and build `out/<name>.mp4`, then run the checks |
-| `kav render <video.ts> --draft` | Picture only: no voice, music or effects |
-| `kav remix <video.ts>` | Rebuild from the last take without recording |
-| `kav verify <video.ts>` | Measure the last render again |
-| `kav init [dir]` | Start a video in a project |
-| `kav setup` | One-time: Chromium and the Kokoro voice |
-| `kav doctor` | Show what is installed and what is missing |
+| `showcase render <video.ts>` | Record every scene and build `out/<name>.mp4`, then run the checks |
+| `showcase render <video.ts> --draft` | Picture only: no voice, music or effects |
+| `showcase remix <video.ts>` | Rebuild from the last take without recording |
+| `showcase verify <video.ts>` | Measure the last render again |
+| `showcase init [dir]` | Start a video in a project |
+| `showcase init --config` | Start a config-driven video: `showcase.config.json`, `video.ts`, the skill |
+| `showcase explore [config or address]` | Map the product's screens into `.showcase/explore/` |
+| `showcase plan [config]` | Print the work order: scenes, word budget, shapes, safety |
+| `showcase make [config]` | Render every shape the config asks for, then check each (`--draft`, `--remix`) |
+| `showcase login [config or address]` | Sign in once in a visible browser and save the session |
+| `showcase sounds` | List sound candidates (`--role`, `--mood`) |
+| `showcase setup` | One-time: Chromium and the Kokoro voice |
+| `showcase doctor` | Show what is installed and what is missing |
 
-Options for `render` and `remix`: `--music <file>`, `--no-music`, `--no-sfx`. For
+Options for `render` and `remix`: `--music <file>`, `--no-music`, `--no-sfx`, `--no-border`. For
 `render` only: `--headed` (watch the browser), `--base <url>` (film another instance).
 
 ## With Claude Code
 
-`kav init` copies the skill to `.claude/skills/kwartz-ai-video/`. Then, in Claude Code:
+`showcase init` copies the skill to `.claude/skills/kwartz-showcase/`. Then, in Claude Code:
 
 ```
-/kwartz-ai-video a 90 second walkthrough for new users, focus on the dashboard
+/kwartz-showcase a 90 second walkthrough for new users, focus on the dashboard
 ```
 
 The skill makes the agent work like an editor: script first, draft, render, verify with
 numbers, and say plainly what it could not check. It cannot hear, so it always asks you
 to listen once before the video is shared.
 
-To install only the skill: `npx skills add kwartz-ai/kwartz-ai-video`.
+To install only the skill: `npx skills add kwartz-ai/kwartz-showcase`.
 
 ## Docs
 
@@ -136,11 +164,13 @@ Start at the [docs index](docs/README.md), which lists these in reading order.
 - **[User guide](docs/user-guide.md): make a video of your product, step by step, and how to use the skills**
 - [Getting started](docs/getting-started.md): from an empty folder to a first video
 - [Writing a video](docs/writing-a-video.md): the video file and everything a scene can do
+- **[Feature guides](docs/guides/README.md): one short guide per feature (length, platforms, script, style, border, motion, sounds, hosted products, explore, Claude Code, Node)**
+- [A video from a config](docs/config-driven-video.md): length, platforms and shapes, style, your own script, sounds, a hosted product
 - [Craft guide](docs/craft-guide.md): what a senior editor works on, with working numbers
 - [How it works](docs/how-it-works.md): the pipeline, and why it is built this way
 - [Architecture](docs/architecture.md): processes, modules, data flow, diagrams, where to extend
 - [Tech stack](docs/tech-stack.md): every tool, its version, licence and role, and what was not chosen
-- [Testing](docs/testing.md): how the 495 unit tests are organised, and how to add one
+- [Testing](docs/testing.md): how the 797 unit tests are organised, and how to add one
 - [Release checklist](docs/release-checklist.md): how to know it works before you commit, push or release
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research notes](docs/research.md): the tools and skills we compared before building this

@@ -5,24 +5,43 @@ import re
 import subprocess
 
 MUTATIONS = [
-    ('src/encode.ts', 'const gain = lufs - measured.lufs', 'const gain = measured.lufs - lufs', 'loudness gain has the wrong sign'),
-    ('src/encode.ts', "if (music) {\n    args.push('-stream_loop', '-1', '-i', music)", "if (music) {\n    args.push('-i', music)", 'music no longer loops'),
-    ('src/encode.ts', 'out.filter((f) => f.t <= d.t1 || f.t > d.t2)', 'out.filter(() => true)', 'loading frames are no longer dropped'),
-    ('src/stage.ts', 'return { x: b.x / z, y: b.y / z, w: b.width / z, h: b.height / z }', 'return { x: b.x, y: b.y, w: b.width, h: b.height }', 'overlays ignore the page zoom'),
-    ('src/stage.ts', "    await this.setCaption(this.captionText)\n    if (label)", '    if (label)', 'caption is left under the spotlight'),
-    ('src/stage.ts', 'await sleep(Math.max(160, t1 + ms - this.clock()))', 'await sleep(0)', 'dissolve does not wait for the new screen to paint'),
-    ('src/sound.ts', "if (item.meta?.license !== 'CC0')", "if (item.meta?.license === 'NEVER')", 'any sound licence is accepted'),
-    ('src/captions.ts', 'export const CAPTION_MAX = 92', 'export const CAPTION_MAX = 140', 'captions may run to three lines'),
-    ('src/captions.ts', "if (last >= 0 && sentences[last]!.length < 16)", 'if (false)', 'very short sentences flash by'),
-    ('src/verify.ts', '.filter((h) => h.overrunMs > 300)', '.filter((h) => h.overrunMs > 30000)', 'late holds are never flagged'),
-    ('src/verify.ts', 's.text.toLowerCase().includes(b.toLowerCase())', 's.text.includes(b)', 'banned text check is case-sensitive'),
-    ('src/render.ts', '    await server?.close()\n', '', 'static server is never stopped'),
-    ('src/render.ts', "const sfx = take.draft || !wantFx ? []", 'const sfx = !wantFx ? []', 'a draft gets sound effects'),
-    ('src/config.ts', "if (!s.say?.trim())", 'if (false)', 'a scene with no spoken line is accepted'),
-    ('src/serve.ts', "if (!path.resolve(file).startsWith(path.resolve(root)))", 'if (false)', 'files outside the folder are served'),
-    ('src/voice/tts.ts', 'const todo = clips.filter((c) => !fs.existsSync(c.out))', 'const todo = clips', 'every line is voiced again on every render'),
-    ('src/setup.ts', 'if (!fs.existsSync(file)) await download(', 'await download(', 'the model is downloaded again every time'),
-    ('src/cards.ts', "<div style=\"${rise(200)};font:800 76px/1.05 ${theme.type.display};letter-spacing:-.035em\">${esc(title)}</div>", "<div style=\"${rise(200)};font:800 76px/1.05 ${theme.type.display};letter-spacing:-.035em\">${title}</div>", 'title card no longer escapes its text'),
+    ('src/render/encode.ts', 'const gain = lufs - measured.lufs', 'const gain = measured.lufs - lufs', 'loudness gain has the wrong sign'),
+    ('src/render/encode.ts', "if (music) {\n    args.push('-stream_loop', '-1', '-i', music)", "if (music) {\n    args.push('-i', music)", 'music no longer loops'),
+    ('src/render/encode.ts', 'out.filter((f) => f.t <= d.t1 || f.t > d.t2)', 'out.filter(() => true)', 'loading frames are no longer dropped'),
+    ('src/capture/stage.ts', 'return { x: b.x / z, y: b.y / z, w: b.width / z, h: b.height / z }', 'return { x: b.x, y: b.y, w: b.width, h: b.height }', 'overlays ignore the page zoom'),
+    ('src/capture/stage.ts', "    await this.setCaption(this.captionText)\n    if (label)", '    if (label)', 'caption is left under the spotlight'),
+    ('src/capture/stage.ts', 'await sleep(Math.max(160, t1 + ms - this.clock()))', 'await sleep(0)', 'dissolve does not wait for the new screen to paint'),
+    ('src/audio/palette.ts', "if (item.meta?.license !== 'CC0')", "if (item.meta?.license === 'NEVER')", 'any sound licence is downloaded'),
+    ('src/audio/palette.ts', "    && !cats.some((c) => BLOCKED_CATEGORIES.includes(c))\n", '', 'sounds from a blocked set are candidates'),
+    ('src/audio/palette.ts', 'else if (m.centroidHz > rule.maxCentroidHz)', 'else if (false)', 'a squeaky sound passes the gate'),
+    ('src/capture/readonly.ts', 'return READS.has(method.toUpperCase()) || allowed(url)', 'return true', 'read-only mode lets writes through'),
+    ('src/brief/brief.ts', "isHosted(b.url) && !Array.isArray(b.safety?.banned)", 'false', 'a hosted product needs no banned list'),
+    ('src/brief/resolve.ts', 'const readOnly = brief.safety?.readOnly ?? hosted', 'const readOnly = brief.safety?.readOnly ?? false', 'a hosted product is not read-only by default'),
+    ('src/brief/plan.ts', 'export const SPEECH_SHARE = 0.92', 'export const SPEECH_SHARE = 1.4', 'the word budget overfills the length'),
+    ('src/brief/script.ts', 'if (need.length !== inOrder.length) {', 'if (false) {', 'a script with the wrong number of paragraphs is accepted'),
+    ('src/brief/presets.ts', "captionBand: { y: top + h, height: CAPTION_BAND }", "captionBand: { y: 0, height: CAPTION_BAND }", 'framed captions are drawn over the product'),
+    ('src/render/encode.ts', "const video = ['-reinit_filter', '0', '-f'", "const video = ['-f'", 'captions are lost where frame sources meet'),
+    ('src/render/encode.ts', 'let audioAt = captionImages.length ? 2 : 1', 'let audioAt = 1', 'sound is read from the caption track'),
+    ('src/render/compose.ts', 'add(img.file, img.end - Math.max(t, img.start))', 'add(img.file, img.end - img.start)', 'overlapping captions push the track out of time'),
+    ('src/capture/recorder.ts', "if (this.pausedAt !== null) return       // the app", "if (false) return       // the app", 'app frames leak into a motion scene'),
+    ('src/capture/recorder.ts', 'this.skipped += skipMs', 'this.skipped += 0', 'a motion scene takes no time on the timeline'),
+    ('src/graphics/motion.ts', 'if (t > times.at(-1)! && t < durationMs) times.push(t)', '', 'captions never change in a still motion scene'),
+    ('src/capture/session.ts', "if (!fs.existsSync(ignore)) fs.writeFileSync(", 'if (false) fs.writeFileSync(', 'a saved session can be committed'),
+    ('src/render/encode.ts', '    audioAt += 2\n', '', 'sound is read from the border pictures'),
+    ('src/render/border.ts', 'const scale = 1 - 2 * border.inset', 'const scale = 1 + 2 * border.inset', 'the bordered picture is larger than the frame'),
+    ('src/video/define.ts', "if (input === false) return { ...DEFAULT_BORDER, on: false }", 'if (input === false) return { ...DEFAULT_BORDER }', 'the border cannot be turned off'),
+    ('src/capture/explore.ts', '&& !/log-?out|sign-?out/i.test(u)', '', 'explore follows the sign-out link'),
+    ('src/render/captions.ts', 'export const CAPTION_MAX = 92', 'export const CAPTION_MAX = 140', 'captions may run to three lines'),
+    ('src/render/captions.ts', "if (last >= 0 && sentences[last]!.length < 16)", 'if (false)', 'very short sentences flash by'),
+    ('src/verify/verify.ts', '.filter((h) => h.overrunMs > 300)', '.filter((h) => h.overrunMs > 30000)', 'late holds are never flagged'),
+    ('src/verify/verify.ts', 's.text.toLowerCase().includes(b.toLowerCase())', 's.text.includes(b)', 'banned text check is case-sensitive'),
+    ('src/render/render.ts', '    await server?.close()\n', '', 'static server is never stopped'),
+    ('src/render/render.ts', "const sfx = take.draft || !wantFx ? []", 'const sfx = !wantFx ? []', 'a draft gets sound effects'),
+    ('src/video/define.ts', "if (!s.say?.trim())", 'if (false)', 'a scene with no spoken line is accepted'),
+    ('src/capture/serve.ts', "if (!path.resolve(file).startsWith(path.resolve(root)))", 'if (false)', 'files outside the folder are served'),
+    ('src/audio/tts.ts', 'const todo = clips.filter((c) => !fs.existsSync(c.out))', 'const todo = clips', 'every line is voiced again on every render'),
+    ('src/setup/setup.ts', 'if (!fs.existsSync(file)) await download(', 'await download(', 'the model is downloaded again every time'),
+    ('src/graphics/cards.ts', "<div style=\"${rise(200)};font:800 76px/1.05 ${theme.type.display};letter-spacing:-.035em\">${esc(title)}</div>", "<div style=\"${rise(200)};font:800 76px/1.05 ${theme.type.display};letter-spacing:-.035em\">${title}</div>", 'title card no longer escapes its text'),
 ]
 
 caught = 0
@@ -31,7 +50,7 @@ for path, old, new, what in MUTATIONS:
     assert old in src, f'mutation target not found in {path}: {old[:50]}'
     open(path, 'w', encoding='utf-8', newline='\n').write(src.replace(old, new, 1))
     try:
-        r = subprocess.run('bunx vitest run --exclude tests/cli.test.ts', shell=True, capture_output=True, text=True, encoding='utf-8', errors='replace')
+        r = subprocess.run('bunx vitest run --exclude tests/unit/cli/cli.test.ts', shell=True, capture_output=True, text=True, encoding='utf-8', errors='replace')
         failed = re.search(r'Tests\s+(\d+) failed', r.stdout + r.stderr)
         n = int(failed.group(1)) if failed else 0
         caught += n > 0

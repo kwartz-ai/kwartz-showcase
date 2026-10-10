@@ -1,29 +1,41 @@
-# Kwartz AI Video: project context
+# Kwartz Showcase: project context
 
 A kit that renders narrated product demo videos from a TypeScript script. Playwright
 drives a real web app and captures frames, Kokoro (a local voice) reads the narration,
-FFmpeg encodes. The command is `kav`. Open source under Apache-2.0.
+FFmpeg encodes. The command is `showcase`. Open source under Apache-2.0.
 
 ## Layout
 
-- `src/`: the kit. `cli.ts` (commands), `render.ts` (the runner), `stage.ts` (pointer,
-  spotlight, camera, dissolves), `encode.ts` (blending, sound mix), `verify.ts` (checks).
+- `bin/showcase.js`: the launcher. Runs `src/` under Bun, `dist/` under Node.
+- `src/`: the kit, one folder per layer: `cli/` (commands), `brief/` (the config:
+  checks, presets, plan, script, work order), `render/` (runner, encoder, captions,
+  framed layouts, make), `capture/` (recorder, stage, read-only mode, session, explore),
+  `graphics/` (cards, motion scenes), `audio/` (voice, effects, soundcn palette),
+  `verify/`, `setup/`, `video/` (defineVideo), `core/` (types, theme, paths, util).
   `docs/architecture.md` has the full map; `docs/tech-stack.md` the tools and versions.
-- `examples/hello/`: a self-contained example on a made-up app in `site/`.
-- `templates/starter/`: what `kav init` copies into a project.
-- `skills/kwartz-ai-video/SKILL.md`: the editor skill that ships to users.
+- `python/kokoro_tts.py`: the voice script. `schema/`: the JSON schema for the config.
+- `examples/hello/`: a hand-written video on a made-up app in `site/`.
+  `examples/tour/`: the same app from a config, in three shapes.
+- `templates/starter/` and `templates/brief/`: what `showcase init` copies into a project.
+- `skills/kwartz-showcase/SKILL.md`: the editor skill that ships to users.
 - `docs/`: user docs. `docs/research.md` records what was compared and learned.
-- `tests/`: Vitest, one file per module. The browser, FFmpeg, the voice and the network
-  are replaced by stand-ins, so the suite needs none of them. See `docs/testing.md`.
+- `tests/unit/<layer>/`: Vitest. The browser, FFmpeg, the voice and the network are
+  replaced by stand-ins, so the suite needs none of them. See `docs/testing.md`.
 
 ## Working here
 
-- Bun and TypeScript, no build step. `bun run check` (type-check and tests) must pass.
+- Bun and TypeScript. No build step to work here; `bun run build` makes `dist/` for
+  Node and npm. `bun run check` (type-check and tests) must pass.
+- Files that ship but are not TypeScript live at the package root and are found with
+  `asset()` from `src/core/paths.ts`, never with a path relative to a source file.
+- Platform sizes and safe areas live only in `src/brief/presets.ts`. A new config
+  setting changes the type, `validateBrief`, the schema and the docs together.
 - A change in behaviour comes with a test. After adding tests for something that
   matters, break the code on purpose once and confirm a test fails (`tests/mutate.py`
   does this for the known cases).
 - After a change to the stage, encoder or sound: `bun run example:draft`, then
-  `bun run example`, and look at frames from the result.
+  `bun run example`, and look at frames from the result. After a change to layouts,
+  motion scenes or the config: `bun run example:tour`, and look at the vertical video.
 - You cannot hear the output. Say so, and ask a person to listen, whenever sound changed.
 - Overlay HTML goes inside `style="..."` attributes: single quotes only in font stacks
   and other values. A double quote silently cuts the style short.

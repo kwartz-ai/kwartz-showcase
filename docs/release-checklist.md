@@ -28,8 +28,8 @@ The type-check and all unit tests. Must pass before every commit.
 bun run test:mutate
 ```
 
-Breaks the code in 18 known places, one at a time, and confirms a test fails each time.
-It must end with `18 of 18 mutations caught`.
+Breaks the code in 37 known places, one at a time, and confirms a test fails each time.
+It must end with `37 of 37 mutations caught`.
 
 ## 3. Clean copy
 
@@ -45,7 +45,7 @@ a dependency that is installed but not listed.
 ## 4. Example render
 
 ```bash
-bun run kav doctor
+bun run showcase doctor
 bun run example
 ```
 
@@ -59,21 +59,35 @@ watch it with the sound on**:
 - [ ] music is quiet under the voice; click and transition sounds are soft
 - [ ] no white flash, no frozen stretch that feels stuck
 
+## 4b. Shapes, config and the Node build
+
+```bash
+bun run showcase make examples/tour/showcase.config.json      # one script, three shapes
+bun run build && node bin/showcase.js make examples/tour/showcase.config.json --draft
+```
+
+- [ ] every shape passes every check, and the length is inside its range
+- [ ] in the vertical video the captions show under the product for the whole video,
+      not only during the first card
+- [ ] the "sound," lines name a sound for each role, or say why the kit's own was used
+- [ ] `out/tour.credits.txt` exists and names each sound's source
+- [ ] the draft under Node finishes: the built package works without Bun
+
 ## 5. Real product trial
 
 Use the kit the way a stranger would, on a product it was not written for.
 
 1. Make a new folder **outside** the kit. In it:
    ```bash
-   bun link kwartz-ai-video
-   bunx kav init
+   bun link kwartz-showcase
+   bunx showcase init            # and, in a second folder, bunx showcase init --config
    ```
 2. Follow the [user guide](user-guide.md) from Step 5, using only the docs. Note every
    place you had to look at the kit's source to continue: each is a gap in the docs.
 3. Write five to seven scenes that between them use `click`, `focus`, a drawer or
    dialog, `cut` to another tab, `chapter` over a slow screen, a hook card and an end
    card. Put a real name in `banned`.
-4. `bunx kav render video.ts --draft`, then a full render.
+4. `bunx showcase render video.ts --draft`, then a full render.
 5. Break it on purpose once, to see the failure path: use a selector that matches
    nothing, and check that the message names the scene and `out/failed.png` shows the
    page.
@@ -88,7 +102,7 @@ not cover. Fix those before release; they are worth more than new features.
    building the kit.
 2. Give it one brief and nothing else:
    ```
-   /kwartz-ai-video make a 60 second walkthrough of this app for a first-time user.
+   /kwartz-showcase make a 60 second walkthrough of this app for a first-time user.
    It runs on http://localhost:3000 with demo data.
    ```
 3. Watch what it does, without helping.

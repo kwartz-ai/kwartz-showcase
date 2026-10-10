@@ -7,6 +7,11 @@ product, one step at a time. It has two parts:
 - **Part B** is about skills: how to let an AI agent such as Claude Code do most of
   Part A for you.
 
+> **A shorter way.** This guide writes the video by hand, which teaches every part.
+> If you would rather describe the video in a config file (length, platforms such as
+> YouTube Shorts or Instagram Reels, your fonts and colours) and have the scenes
+> written for it, read [A video from a config](config-driven-video.md) after Step 4.
+
 You do not need video editing experience. You do need to be comfortable running
 commands in a terminal and reading a little TypeScript.
 
@@ -55,8 +60,8 @@ Close and reopen the terminal afterwards so the new commands are found.
 ## Step 2. Get the kit
 
 ```bash
-git clone https://github.com/kwartz-ai/kwartz-ai-video.git
-cd kwartz-ai-video
+git clone https://github.com/kwartz-ai/kwartz-showcase.git
+cd kwartz-showcase
 bun install
 bun link
 ```
@@ -66,21 +71,21 @@ bun link
 ## Step 3. Set up the browser and the voice
 
 ```bash
-bun run kav doctor
+bun run showcase doctor
 ```
 
 This lists what is installed. On a new machine it will say `chromium` and `voice` are
 missing. Fix both with one command:
 
 ```bash
-bun run kav setup
+bun run showcase setup
 ```
 
 It installs a browser for the kit to drive and downloads the voice model (about
-350 MB, once per machine). Run `bun run kav doctor` again: every row should say `ok`.
+350 MB, once per machine). Run `bun run showcase doctor` again: every row should say `ok`.
 
 > You can skip the voice for now. Draft renders work without it, and you can run
-> `kav setup` later.
+> `showcase setup` later.
 
 ## Step 4. Render the example
 
@@ -124,16 +129,16 @@ account. Never put its password in the video file; Step 9 shows how to pass it i
 In your product's own folder:
 
 ```bash
-bun link kwartz-ai-video
-bunx kav init
+bun link kwartz-showcase
+bunx showcase init
 ```
 
-`kav init` adds two files:
+`showcase init` adds two files:
 
 | File | What it is |
 |---|---|
 | `video.ts` | A starter video with three scenes for you to rewrite |
-| `.claude/skills/kwartz-ai-video/SKILL.md` | The editor skill for Claude Code (see Part B) |
+| `.claude/skills/kwartz-showcase/SKILL.md` | The editor skill for Claude Code (see Part B) |
 
 Add this line to your `.gitignore`. Frames and videos are large and can show private
 screens:
@@ -194,7 +199,7 @@ caption: 'Files arrive by email, or as EDI.',
 Open `video.ts`. The top of the file describes the video as a whole.
 
 ```ts
-import { defineVideo, endCard, hookCard } from 'kwartz-ai-video'
+import { defineVideo, endCard, hookCard } from 'kwartz-showcase'
 
 export default defineVideo({
   name: 'demo',                                  // names the files: out/demo.mp4
@@ -226,7 +231,7 @@ export default defineVideo({
 Pass secrets through the environment, never in the file:
 
 ```bash
-DEMO_USER=demo@example.com DEMO_PASSWORD=... bunx kav render video.ts --draft
+DEMO_USER=demo@example.com DEMO_PASSWORD=... bunx showcase render video.ts --draft
 ```
 
 **Optional: match your brand.** Add a `theme` to use your own colours and fonts.
@@ -366,7 +371,7 @@ run: async ({ page, stage, untilSaid }) => {
 ## Step 11. Draft until it runs
 
 ```bash
-bunx kav render video.ts --draft
+bunx showcase render video.ts --draft
 ```
 
 A draft has no voice, music or effects. It takes about as long as the video itself and
@@ -385,7 +390,7 @@ wrong, or the element is not on screen yet. Fix the scene and run again.
 **To watch it happen**, add `--headed`:
 
 ```bash
-bunx kav render video.ts --draft --headed
+bunx showcase render video.ts --draft --headed
 ```
 
 Repeat until the draft finishes. Then watch `out/demo.mp4` once and check that each
@@ -394,7 +399,7 @@ scene shows what its line says.
 ## Step 12. Render the real thing
 
 ```bash
-bunx kav render video.ts
+bunx showcase render video.ts
 ```
 
 This adds the voice, the captions, the music and the sound effects. It ends with a
@@ -447,15 +452,15 @@ Then ask one other person to watch it. They will notice what you no longer can.
 
 | To change | Do this | Then |
 |---|---|---|
-| What is said | Edit the `say` line | `kav render video.ts` (only changed lines are voiced again) |
-| What is shown | Edit the scene's `run` | `kav render video.ts --draft`, then a full render |
-| The music | | `kav remix video.ts --music my-track.mp3` |
-| Remove the music | | `kav remix video.ts --no-music` |
-| Remove the sound effects | | `kav remix video.ts --no-sfx` |
-| The voice | Add `voice: { voice: 'bf_emma' }` to the settings | `kav render video.ts` |
-| Colours and fonts | Add or edit `theme` | `kav render video.ts` |
+| What is said | Edit the `say` line | `showcase render video.ts` (only changed lines are voiced again) |
+| What is shown | Edit the scene's `run` | `showcase render video.ts --draft`, then a full render |
+| The music | | `showcase remix video.ts --music my-track.mp3` |
+| Remove the music | | `showcase remix video.ts --no-music` |
+| Remove the sound effects | | `showcase remix video.ts --no-sfx` |
+| The voice | Add `voice: { voice: 'bf_emma' }` to the settings | `showcase render video.ts` |
+| Colours and fonts | Add or edit `theme` | `showcase render video.ts` |
 
-`kav remix` rebuilds the file in seconds from the last recording. Use it for anything
+`showcase remix` rebuilds the file in seconds from the last recording. Use it for anything
 that only touches sound.
 
 > Use only music you have the right to use. The built-in music is generated by the kit
@@ -488,14 +493,14 @@ because the agent acts on it with your permissions.
 
 ## The skill that ships with this kit
 
-`kav init` put it in your project at `.claude/skills/kwartz-ai-video/SKILL.md`.
+`showcase init` put it in your project at `.claude/skills/kwartz-showcase/SKILL.md`.
 
 It makes the agent work as a **senior video editor** on your video. In short it tells
 the agent:
 
 - **the rules it must not break:** film only data that may be shown; never show a real
   customer; free and clean licences only; do not commit or publish unless asked
-- **the commands:** `kav doctor`, `init`, `render --draft`, `render`, `remix`, `verify`
+- **the commands:** `showcase doctor`, `init`, `render --draft`, `render`, `remix`, `verify`
 - **what a scene can do:** the same table as Step 10
 - **the craft standard:** seven areas an editor works through (story, pacing and
   transitions, motion, camera, type, sound, finish), each with working numbers
@@ -512,7 +517,7 @@ command, followed by what you want in plain words.
 **To make a first video:**
 
 ```
-/kwartz-ai-video make a 90 second walkthrough for new users. The promise: it shows
+/kwartz-showcase make a 90 second walkthrough for new users. The promise: it shows
 what changed in a customer's order file. The app runs on localhost:3000 with demo data.
 Never show the names in docs/real-customers.txt.
 ```
@@ -520,17 +525,17 @@ Never show the names in docs/real-customers.txt.
 **To improve one you have:**
 
 ```
-/kwartz-ai-video the highlight in scene 3 lands on the wrong column, and the ending
+/kwartz-showcase the highlight in scene 3 lands on the wrong column, and the ending
 needs a clearer next step: "Book a walkthrough".
 ```
 
 **To make another cut:**
 
 ```
-/kwartz-ai-video a 45 second version for a sales email, only the first two proofs.
+/kwartz-showcase a 45 second version for a sales email, only the first two proofs.
 ```
 
-**With no brief**, `/kwartz-ai-video` alone improves the current video by the next
+**With no brief**, `/kwartz-showcase` alone improves the current video by the next
 unfinished item in its craft standard.
 
 ### What to tell it
@@ -571,7 +576,7 @@ describes *your* product. Create `.claude/skills/<your-product>-video/SKILL.md`:
 ---
 name: acme-video
 description: Facts about filming the Acme app for its demo video. Use together with
-  kwartz-ai-video whenever the Acme demo video is made or changed.
+  kwartz-showcase whenever the Acme demo video is made or changed.
 ---
 
 # Filming Acme
@@ -633,14 +638,14 @@ would check.
 # Quick reference
 
 ```bash
-bunx kav doctor                       # what is installed
-bunx kav setup                        # once per machine: browser and voice
-bunx kav init                         # once per project: video.ts and the skill
-bunx kav render video.ts --draft      # picture only; use until every scene runs
-bunx kav render video.ts --headed     # watch the browser while it records
-bunx kav render video.ts              # the real thing, then the checks
-bunx kav remix video.ts --no-music    # change the sound without recording again
-bunx kav verify video.ts              # run the checks again
+bunx showcase doctor                       # what is installed
+bunx showcase setup                        # once per machine: browser and voice
+bunx showcase init                         # once per project: video.ts and the skill
+bunx showcase render video.ts --draft      # picture only; use until every scene runs
+bunx showcase render video.ts --headed     # watch the browser while it records
+bunx showcase render video.ts              # the real thing, then the checks
+bunx showcase remix video.ts --no-music    # change the sound without recording again
+bunx showcase verify video.ts              # run the checks again
 ```
 
 ```ts

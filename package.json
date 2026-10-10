@@ -1,57 +1,74 @@
 {
-  "name": "kwartz-ai-video",
-  "version": "1.0.0",
+  "name": "kwartz-showcase",
+  "version": "2.0.0",
   "description": "Narrated product demo videos rendered from a script: Playwright drives your real app, a local voice reads the narration, FFmpeg joins them. No recording, no editing, no paid tools.",
   "license": "Apache-2.0",
   "author": "Kwartz",
-  "homepage": "https://github.com/kwartz-ai/kwartz-ai-video#readme",
+  "homepage": "https://github.com/kwartz-ai/kwartz-showcase#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kwartz-ai/kwartz-ai-video.git"
+    "url": "git+https://github.com/kwartz-ai/kwartz-showcase.git"
   },
   "bugs": {
-    "url": "https://github.com/kwartz-ai/kwartz-ai-video/issues"
+    "url": "https://github.com/kwartz-ai/kwartz-showcase/issues"
   },
   "type": "module",
   "keywords": [
-    "demo-video",
-    "product-video",
-    "playwright",
-    "screen-recording",
-    "tts",
-    "kokoro",
-    "ffmpeg",
-    "motion-graphics",
+    "agent-skills",
     "claude-code",
-    "agent-skills"
+    "demo-video",
+    "ffmpeg",
+    "kokoro",
+    "motion-graphics",
+    "playwright",
+    "product-video",
+    "screen-recording",
+    "showcase",
+    "tts",
+    "vertical-video"
   ],
   "bin": {
-    "kav": "src/cli.ts"
+    "showcase": "bin/showcase.js"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "bun": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./schema": "./schema/showcase.config.schema.json",
+    "./package.json": "./package.json"
   },
   "files": [
+    "bin",
+    "dist",
     "src",
+    "python",
+    "schema",
     "skills",
     "templates",
     "docs",
     "NOTICE"
   ],
   "engines": {
-    "bun": ">=1.2.0"
+    "bun": ">=1.2.0",
+    "node": ">=22.18.0"
   },
   "scripts": {
-    "kav": "bun src/cli.ts",
+    "showcase": "bun bin/showcase.js",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "bun run typecheck && bun run test",
-    "example": "bun src/cli.ts render examples/hello/video.ts",
-    "example:draft": "bun src/cli.ts render examples/hello/video.ts --draft",
+    "example": "bun bin/showcase.js render examples/hello/video.ts",
+    "example:draft": "bun bin/showcase.js render examples/hello/video.ts --draft",
     "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "test:mutate": "python tests/mutate.py",
-    "test:clean": "bun scripts/clean-copy.ts"
+    "test:clean": "bun scripts/clean-copy.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "bun -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "prepack": "bun run clean && bun run build",
+    "example:tour": "bun bin/showcase.js make examples/tour/showcase.config.json --draft"
   },
   "dependencies": {
     "playwright": "1.64.0"
