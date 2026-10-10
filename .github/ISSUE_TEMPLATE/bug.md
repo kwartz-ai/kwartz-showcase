@@ -9,7 +9,7 @@ about: A render failed or the result is wrong
 
 **To reproduce** (the smallest video file that shows it, and the command)
 
-**Output of `kav doctor`**
+**Output of `showcase doctor`**
 
 **OS, Bun version**
 

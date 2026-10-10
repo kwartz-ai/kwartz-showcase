@@ -1,0 +1,405 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kwartz-ai/kwartz-showcase/blob/main/schema/showcase.config.schema.json",
+  "title": "Kwartz Showcase config",
+  "description": "The brief for a video: what to film and how the result should look. Only \"url\" (or \"serve\", or \"motionOnly\") is required.",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[\\w-]+$",
+      "default": "video",
+      "description": "Names the output files: out/<name>.mp4."
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https?://",
+      "description": "The product to film: a local address such as http://localhost:3000, or a hosted one. A hosted address also needs \"safety.banned\"."
+    },
+    "serve": {
+      "type": "string",
+      "description": "A folder of static files to serve and film, beside the config. Use this instead of \"url\" for a static site or a built front end."
+    },
+    "length": {
+      "type": "number",
+      "minimum": 10,
+      "maximum": 600,
+      "default": 30,
+      "description": "How long the video should be, in seconds. 30, 60, 90 and 180 have ready-made structures; any other length works too."
+    },
+    "platforms": {
+      "type": "array",
+      "description": "Where the video will be posted. Each platform maps to a shape; platforms that share a shape share one render and each get a named copy.",
+      "items": {
+        "enum": [
+          "youtube",
+          "youtube-shorts",
+          "instagram-reel",
+          "instagram-story",
+          "instagram-feed",
+          "facebook",
+          "facebook-reel",
+          "tiktok",
+          "linkedin",
+          "x",
+          "whatsapp-status",
+          "snapchat",
+          "pinterest",
+          "website",
+          "share"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "formats": {
+      "type": "array",
+      "description": "Shapes to render, by name or as a width and height. Default: landscape.",
+      "items": {
+        "oneOf": [
+          {
+            "enum": [
+              "landscape",
+              "vertical",
+              "square",
+              "portrait",
+              "classic",
+              "wide",
+              "tall"
+            ]
+          },
+          {
+            "type": "object",
+            "required": [
+              "width",
+              "height"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "width": {
+                "type": "integer",
+                "minimum": 240,
+                "maximum": 4096,
+                "multipleOf": 2
+              },
+              "height": {
+                "type": "integer",
+                "minimum": 240,
+                "maximum": 4096,
+                "multipleOf": 2
+              }
+            }
+          }
+        ]
+      }
+    },
+    "layout": {
+      "enum": [
+        "fill",
+        "framed",
+        "fit",
+        "responsive"
+      ],
+      "description": "How the product is placed in the frame. fill: the page is the whole video. framed: a desktop page in a window, with large captions below (the default for tall shapes). fit: the whole landscape page, small. responsive: the page at phone width, for products with a mobile layout."
+    },
+    "audience": {
+      "type": "string",
+      "description": "Who the video is for."
+    },
+    "promise": {
+      "type": "string",
+      "description": "The one thing the video should prove."
+    },
+    "cta": {
+      "type": "object",
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "The closing line. Default: the product's own address when it is hosted; none when it is local.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "For example: Book a walkthrough"
+        },
+        "sub": {
+          "type": "string",
+          "description": "Where to go: an address or a contact."
+        }
+      }
+    },
+    "script": {
+      "type": "string",
+      "description": "A text file with your own narration, one paragraph per scene. A \"## scene-id\" heading ties a paragraph to a scene."
+    },
+    "scenes": {
+      "type": "string",
+      "default": "video.ts",
+      "description": "The scenes file, beside the config."
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ink": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "The dark colour: cards, caption box."
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "The one highlight colour."
+        },
+        "fonts": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Font family names. Use fonts you have the right to use.",
+          "properties": {
+            "display": {
+              "type": "string",
+              "description": "Titles and cards. Default: Plus Jakarta Sans."
+            },
+            "text": {
+              "type": "string",
+              "description": "Captions and labels. Best set to the font your product uses. Default: Inter."
+            },
+            "mono": {
+              "type": "string",
+              "description": "Small labels and data. Default: JetBrains Mono."
+            }
+          }
+        },
+        "fontSource": {
+          "enum": [
+            "google",
+            "installed"
+          ],
+          "default": "google",
+          "description": "google: link the families from Google Fonts at render time. installed: use fonts already on the machine or loaded by the product."
+        },
+        "captions": {
+          "enum": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "default": "medium"
+        },
+        "border": {
+          "enum": [
+            "rounded",
+            "none"
+          ],
+          "default": "rounded",
+          "description": "rounded: the picture is set a little smaller on a soft backdrop, with rounded corners and a shadow. none: the picture fills the frame."
+        },
+        "backdrop": {
+          "description": "The backdrop behind the rounded picture: a preset name, \"brand\" (made from the accent colour), three hex colours (from, to, glow), or the path of a picture.",
+          "oneOf": [
+            {
+              "enum": [
+                "brand",
+                "indigo",
+                "aurora",
+                "ocean",
+                "forest",
+                "sunset",
+                "rose",
+                "graphite",
+                "paper"
+              ]
+            },
+            {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "string",
+                "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+              }
+            },
+            {
+              "type": "string",
+              "pattern": "\\.(png|jpe?g|webp)$"
+            }
+          ]
+        },
+        "fontPreset": {
+          "enum": [
+            "modern",
+            "geometric",
+            "technical",
+            "minimal",
+            "bold",
+            "editorial",
+            "elegant",
+            "friendly",
+            "playful",
+            "poster",
+            "corporate"
+          ],
+          "default": "modern",
+          "description": "A ready pairing of display, text and mono faces from Google Fonts, chosen for video. \"fonts\" overrides single faces."
+        },
+        "backdropPattern": {
+          "enum": [
+            "glow",
+            "waves",
+            "plain"
+          ],
+          "description": "What is drawn in the backdrop: soft glows at the sides, flowing ribbons, or the plain slope of colour."
+        },
+        "match": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use the product's own font and button colour, found by \"showcase explore\", for anything not set in \"style\"."
+        }
+      }
+    },
+    "voice": {
+      "type": "string",
+      "default": "af_heart",
+      "description": "A Kokoro voice name."
+    },
+    "music": {
+      "description": "\"generated\" for the built-in bed, false for none, or a path to a track you have the right to use.",
+      "oneOf": [
+        {
+          "const": "generated"
+        },
+        {
+          "const": false
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "default": "generated"
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "feel": {
+          "enum": [
+            "calm",
+            "crisp",
+            "lively"
+          ],
+          "default": "calm",
+          "description": "calm: slow, soft landings. crisp: quick, exact. lively: springy, a little overshoot."
+        },
+        "blur": {
+          "type": "boolean",
+          "default": true,
+          "description": "Blur moving things in motion scenes, as a camera would."
+        },
+        "fps": {
+          "enum": [
+            30,
+            60
+          ],
+          "default": 30
+        }
+      }
+    },
+    "sound": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "effects": {
+          "description": "auto: pick a set from soundcn that suits the product and passes the measurements. generated: the kit's own soft sounds. none: no effects. Or name a soundcn sound for each role.",
+          "oneOf": [
+            {
+              "enum": [
+                "auto",
+                "generated",
+                "none"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "click": {
+                  "type": "string"
+                },
+                "callout": {
+                  "type": "string"
+                },
+                "transition": {
+                  "type": "string"
+                }
+              }
+            }
+          ],
+          "default": "auto"
+        },
+        "mood": {
+          "type": "string",
+          "description": "A few words that describe how the product should sound, for example: calm, professional."
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session": {
+          "type": "string",
+          "description": "A session saved by \"showcase login\", for example .showcase/session.json. Never commit it."
+        }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "readOnly": {
+          "type": "boolean",
+          "description": "Refuse every request that could change data. Default: on for a hosted address, off for a local one."
+        },
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Parts of addresses that may still be sent in read-only mode, for products that read with POST. * matches anything."
+        },
+        "banned": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Names that must never appear on screen. Required for a hosted address; use [] if there are none."
+        }
+      }
+    },
+    "motionOnly": {
+      "type": "boolean",
+      "description": "A video of motion graphics and clips only. No product is filmed, so \"url\" and \"serve\" are not needed."
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "url"
+      ]
+    },
+    {
+      "required": [
+        "serve"
+      ]
+    },
+    {
+      "required": [
+        "motionOnly"
+      ]
+    }
+  ]
+}

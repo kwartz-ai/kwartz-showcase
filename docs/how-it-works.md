@@ -84,22 +84,28 @@ target; loudness; caption length; holds that run into the next line; banned text
 | Save the take | Sound can be reworked in seconds without recording again |
 | A local voice | Free, private, no quota; a render never fails on someone else's API |
 | One fixed loudness gain | An automatic leveller raises the music in every pause |
-| Bun and TypeScript | The video file is type-checked and runs with no build step |
+| Bun and TypeScript | The video file is type-checked and runs with no build step under Bun |
 
 ## Files
 
 | File | What it does |
 |---|---|
-| `src/cli.ts` | The `kav` command |
-| `src/config.ts` | `defineVideo`, defaults, validation |
-| `src/render.ts` | The runner: narration, browser, scenes, take, finish |
-| `src/recorder.ts` | Page zoom, fonts, frame capture |
-| `src/stage.ts` | Pointer, captions, spotlight, camera, dissolves, chapters |
-| `src/cards.ts` | Hook, title, steps and end cards |
-| `src/captions.ts` | Splitting lines into captions; WebVTT |
-| `src/encode.ts` | Dissolve blending, the sound mix, the final file |
-| `src/sound.ts` | Sound effects and the generated music bed |
-| `src/voice/` | Kokoro: the TypeScript side and the small Python script it runs |
-| `src/verify.ts` | The checks |
-| `src/setup.ts` | `kav setup` and `kav doctor` |
-| `src/serve.ts` | Static file server for `serve` |
+| `bin/showcase.js` | The launcher for the `showcase` command |
+| `src/cli/` | The commands |
+| `src/video/define.ts` | `defineVideo`, defaults, validation |
+| `src/brief/` | `showcase.config.json`: checks, shapes, platforms, plan, script, work order |
+| `src/render/render.ts` | The runner: narration, browser, scenes, take, finish |
+| `src/render/make.ts` | Every shape a config asks for |
+| `src/render/encode.ts` | Dissolve blending, the sound mix, the final file |
+| `src/render/compose.ts` | Framed layouts: the page as a window, captions on the frame |
+| `src/render/captions.ts` | Splitting lines into captions; WebVTT |
+| `src/capture/recorder.ts` | Page zoom, fonts, frame capture |
+| `src/capture/stage.ts` | Pointer, captions, spotlight, camera, dissolves, chapters |
+| `src/capture/readonly.ts`, `session.ts`, `explore.ts` | Read-only mode, saved sign-in, the product map |
+| `src/graphics/cards.ts` | Hook, title, steps and end cards |
+| `src/graphics/motion.ts` | Motion scenes, rendered frame by frame |
+| `src/audio/` | The voice, the effects, the music bed, the soundcn palette |
+| `python/kokoro_tts.py` | The small Python script that runs the voice |
+| `src/verify/verify.ts` | The checks |
+| `src/setup/setup.ts` | `showcase setup` and `showcase doctor` |
+| `src/capture/serve.ts` | Static file server for `serve` |

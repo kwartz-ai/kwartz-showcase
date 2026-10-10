@@ -9,12 +9,12 @@ PATH. Python 3.10 to 3.13 is needed once, to install the voice.
 
 ```bash
 # get the kit once, and make it available to your projects
-git clone https://github.com/kwartz-ai/kwartz-ai-video.git
-cd kwartz-ai-video && bun install && bun link
+git clone https://github.com/kwartz-ai/kwartz-showcase.git
+cd kwartz-showcase && bun install && bun link
 
 # in your own project
-cd ../your-project && bun link kwartz-ai-video
-bunx kav doctor
+cd ../your-project && bun link kwartz-showcase
+bunx showcase doctor
 ```
 
 (Installing the folder with `file:` failed with a permissions error on Windows; use
@@ -23,18 +23,18 @@ bunx kav doctor
 `doctor` lists what is there and what is missing. Then:
 
 ```bash
-bunx kav setup
+bunx showcase setup
 ```
 
 This installs Chromium for Playwright, creates a Python environment for the voice, and
 downloads the Kokoro model (about 350 MB). It all goes into a cache shared by every
-project on the machine (`~/.cache/kwartz-ai-video`, or `KAV_HOME` if you set it), so it
+project on the machine (`~/.cache/kwartz-showcase`, or `SHOWCASE_HOME` if you set it), so it
 happens once. You can skip the voice at first: draft renders work without it.
 
 ## 2. Start a video
 
 ```bash
-bunx kav init
+bunx showcase init
 ```
 
 This adds `video.ts`, a starter with three scenes, and the editor skill for Claude Code.
@@ -61,7 +61,7 @@ scene will last as long as its line.
 ## 4. Draft until it runs
 
 ```bash
-bunx kav render video.ts --draft
+bunx showcase render video.ts --draft
 ```
 
 A draft has no voice, music or effects and uses estimated line lengths. Use it to get
@@ -71,7 +71,7 @@ shows the page at that moment. Add `--headed` to watch the browser.
 ## 5. Render
 
 ```bash
-bunx kav render video.ts
+bunx showcase render video.ts
 ```
 
 The file is `out/demo.mp4`, with `out/demo.vtt` beside it. The checks print after it:
@@ -92,7 +92,7 @@ Watch it once with the sound on. The checks cannot do that for you.
 ## 6. Change it
 
 - What is said: edit a `say` line and render again. Only changed lines are voiced again.
-- The sound mix only: `bunx kav remix video.ts --music track.mp3` rebuilds the file in
+- The sound mix only: `bunx showcase remix video.ts --music track.mp3` rebuilds the file in
   seconds from the last take.
 - The look: set `theme` in the video file (see [Writing a video](writing-a-video.md)).
 

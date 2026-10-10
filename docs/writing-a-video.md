@@ -127,13 +127,23 @@ new one", not "Date column". Zoom out before a click that opens a drawer or dial
 
 ### Cards
 
+A card can be shown two ways. In a hand-written video, `stage.showFull` lays it over
+the app, as below. A scene can also be a **motion scene**: give it `motion` in place of
+`run`, returning the card's HTML, and it is rendered frame by frame with motion blur
+and never filmed. See [A video from a config: motion scenes](config-driven-video.md#motion-scenes);
+motion scenes work in a hand-written video too.
+
+```ts
+{ id: 'hook', say: 'The file came in again.', motion: ({ theme, sayMs }) => hookCard(theme, { title: 'The file. Again.' }, sayMs) }
+```
+
 `stage.showFull(html)` puts a full-screen layer over the app and `stage.clearFull()`
 removes it; both dissolve. For the very first frame of the video pass
 `{ dissolve: false }`. The kit has four cards, each taking the theme and, where they
 animate with the voice, the narration length:
 
 ```ts
-import { hookCard, stepsCard, endCard, titleCard } from 'kwartz-ai-video'
+import { hookCard, stepsCard, endCard, titleCard } from 'kwartz-showcase'
 
 await stage.showFull(hookCard(theme, {
   overline: 'EVERY MORNING',
@@ -175,10 +185,36 @@ Set `text` to the face your app uses, so captions and labels read as part of the
 product. Set `ink` and `accent` from your brand. If all your fonts are installed or
 loaded by the app itself, set `fontsCss: null` and renders need no internet.
 
+## The rounded border
+
+Every video is set a little smaller on a soft backdrop, with rounded corners and a
+shadow, the way a screen recording is presented in a product video. It is on by
+default.
+
+```ts
+export default defineVideo({
+  // ...
+  border: false,                                   // the picture fills the frame
+  // or change parts of it:
+  border: { inset: 0.03, radius: 0.04, shadow: 0.5, colors: ['#1B2A8F', '#3D5AF1', '#B9A5FF'] },
+})
+```
+
+| Part | Default | Meaning |
+|---|---|---|
+| `inset` | `0.022` | Space around the picture, as a share of the frame on each side |
+| `radius` | `0.034` | Corner radius, as a share of the frame's short side |
+| `colors` | blue to violet | The backdrop: from, to, and the glow at the sides |
+| `shadow` | `0.45` | How dark the shadow under the picture is, 0 to 1 |
+
+The border is added when the file is built, not when it is recorded: `showcase remix`
+applies a change to it in seconds, and `--no-border` leaves it off for one run. The
+video keeps its full size; the picture inside is about 4 percent smaller.
+
 ## Using the API directly
 
 ```ts
-import { loadVideo, render, verify } from 'kwartz-ai-video'
+import { loadVideo, render, verify } from 'kwartz-showcase'
 
 const video = await loadVideo('video.ts')
 const { file } = await render(video, { draft: true })

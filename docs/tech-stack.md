@@ -32,13 +32,17 @@ your machine or downloaded into the cache. See [NOTICE](../NOTICE).
 
 ## Runtime: Bun
 
-**What it does.** Runs `src/cli.ts` directly, with no compile step. Installs
+**What it does.** Runs the TypeScript in `src/` directly, with no compile step. Installs
 dependencies (`bun install`, `bun.lock`). Provides `fetch` for the two downloads the
 kit makes. The tests run on Vitest, started with `bun run test`.
 
 **Why.** A video file is TypeScript, and with Bun the user's `video.ts` just runs. The
-package can export its source (`"exports": "./src/index.ts"`), so there is no `dist/`
-to build, publish or get out of date.
+package exports its source to Bun, so a clone needs no build.
+
+**Node.** The kit also runs under Node 22.18 or later, from `dist/`, which
+`bun run build` compiles with the TypeScript compiler (no bundler). The launcher
+`bin/showcase.js` picks `src/` under Bun and `dist/` under Node. This is what an npm
+install uses. Node reads a project's own `video.ts` by stripping its types.
 
 **What to know.**
 - The kit uses only Node-compatible APIs (`node:fs`, `node:child_process`,
@@ -85,8 +89,8 @@ is the minimum version.
 
 ## Voice: Kokoro
 
-**What it does.** `voice/tts.ts` sends the lines that are not yet cached to
-`voice/kokoro_tts.py` as JSON on standard input. The script loads the model once and
+**What it does.** `audio/tts.ts` sends the lines that are not yet cached to
+`python/kokoro_tts.py` as JSON on standard input. The script loads the model once and
 writes a 24 kHz mono WAV per line.
 
 **Why.** It is free, runs on a laptop CPU in about three seconds per line, needs no
@@ -96,8 +100,8 @@ and not on the voice.
 
 **Why Python, in a TypeScript project.** kokoro-onnx is a Python package. Rather than
 reimplement its text-to-phoneme pipeline, the kit keeps a 25-line script and runs it in
-its own virtual environment (`~/.cache/kwartz-ai-video/kokoro-venv`), created by
-`kav setup`. Python is needed for the voice and nothing else; draft renders work
+its own virtual environment (`~/.cache/kwartz-showcase/kokoro-venv`), created by
+`showcase setup`. Python is needed for the voice and nothing else; draft renders work
 without it.
 
 **Model files.** `kokoro-v1.0.onnx` (about 325 MB) and `voices-v1.0.bin` (about 28 MB),
@@ -151,7 +155,7 @@ devDependencies
 ```
 
 One runtime dependency is on purpose. FFmpeg, Python and the voice are programs on the
-machine, checked by `kav doctor`, not packages.
+machine, checked by `showcase doctor`, not packages.
 
 ## Considered and not chosen
 

@@ -7,7 +7,7 @@ makes a real video better or easier to make.
 
 ```bash
 bun install
-bun run kav setup        # Chromium and the voice; skip the voice if you only need drafts
+bun run showcase setup        # Chromium and the voice; skip the voice if you only need drafts
 bun run check            # type-check and tests (Vitest)
 bun run example:draft    # renders the example with no voice
 ```
@@ -22,7 +22,7 @@ bun run example:draft    # renders the example with no voice
   [release checklist](docs/release-checklist.md).
 - If the picture or the sound changed, you watched and listened to the result. Say so
   in the pull request. A reviewer who is an AI agent cannot hear, and must say that too.
-- Behaviour changes are reflected in `docs/` and in `skills/kwartz-ai-video/SKILL.md`.
+- Behaviour changes are reflected in `docs/` and in `skills/kwartz-showcase/SKILL.md`.
 - A new rule in the craft guide or the skill comes with the reason: what went wrong
   without it.
 

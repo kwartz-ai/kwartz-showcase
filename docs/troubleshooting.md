@@ -1,6 +1,28 @@
 # Troubleshooting
 
-Start with `kav doctor`. It shows what is installed and what is missing.
+Start with `showcase doctor`. It shows what is installed and what is missing.
+
+## The layout check fails
+
+The report names the scene, the thing, and by how much:
+
+```
+FAIL  layout       1 thing(s) cut off, off screen or covered: in "pipeline", the box around "Video" is cut off or too close at the bottom, by 24 px
+```
+
+| It says | Do this |
+|---|---|
+| cut off or too close at the bottom, or the top | In a motion scene: make the graphic smaller or put less in it. On a tall frame graphics must sit between `layout.safe.top` and `layout.captionBand.y` |
+| runs off the left or right side | Narrow the row, or stack it in a column on a tall frame |
+| the caption covers ... | Move the graphic up, or leave about 120 px clear at the bottom of a wide frame |
+| a highlight is partly off screen | Scroll the element into view, or zoom so all of it shows, before `stage.spotlight` |
+| a label would be drawn partly off screen | Choose another `side`, or a shorter label |
+| a caption does not fit the caption band | Shorten that line of narration, or set `caption` to a shorter text |
+
+A thing counts as too close when it is within about 1 percent of the frame from the
+edge of its area: something that touches the edge looks cut even when it is not.
+The check measures every shape separately, so a scene can pass in landscape and fail
+in vertical.
 
 ## The render stopped in a scene
 
@@ -17,7 +39,7 @@ page at that moment. Run with `--headed` to watch. The usual causes:
 ## "no frames were captured"
 
 Seen once on a cold start, when the browser had not finished starting. Render again.
-If it repeats, run `kav doctor`.
+If it repeats, run `showcase doctor`.
 
 ## The camera says it cannot find the app's root element
 
@@ -49,14 +71,14 @@ For example `say: 'as E.D.I.'` with `caption: 'as EDI'`.
 
 ## "The voice is not set up"
 
-Run `kav setup`. It needs Python 3.10 to 3.13. Until then, `--draft` works.
+Run `showcase setup`. It needs Python 3.10 to 3.13. Until then, `--draft` works.
 
 ## The music or an effect is wrong
 
 - No music: `--no-music`. Your own track: `--music track.mp3`.
 - No effects: `--no-sfx`.
 - Quieter music: lower `sound.musicGain` in the video file.
-- After any of these, `kav remix video.ts` rebuilds the file without recording.
+- After any of these, `showcase remix video.ts` rebuilds the file without recording.
 
 ## The picture is too small or too big
 
