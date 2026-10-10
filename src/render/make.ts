@@ -9,7 +9,7 @@ import { workingFontsUrl } from '../brief/fonts.ts'
 import { fitAdvice, type Plan } from '../brief/plan.ts'
 import { loadScenes, resolveBrief, type BriefVideo } from '../brief/resolve.ts'
 import { PLATFORMS } from '../brief/presets.ts'
-import { themeNamed } from '../brief/themes.ts'
+import { findTheme } from '../brief/custom-theme.ts'
 import { verify, type Check } from '../verify/verify.ts'
 import { outFiles, remix, render, type RenderOptions } from './render.ts'
 
@@ -34,7 +34,7 @@ export async function loadProject(configFile?: string, theme?: string): Promise<
   const { brief, dir } = loadBrief(configFile)
   // a theme named for one run: its files carry the theme's name, so looks can be compared
   if (theme) {
-    const named = themeNamed(theme)
+    const named = findTheme(theme, dir)
     brief.theme = named?.name
     brief.name = `${brief.name ?? 'video'}-${named?.name ?? 'classic'}`
   }
@@ -53,7 +53,7 @@ export async function make(configFile: string | undefined, opts: RenderOptions &
   let palette: Palette | null = null
   if (choice !== 'none' && !opts.draft) {
     // a theme has a sound of its own, unless the person described another
-    const mood = brief.sound?.mood ?? (brief.theme ? themeNamed(brief.theme)?.preset.mood : undefined) ?? ''
+    const mood = brief.sound?.mood ?? (brief.theme ? findTheme(brief.theme, dir)?.preset.mood : undefined) ?? ''
     palette = await resolvePalette(choice, mood, path.join(workDir(dir), 'sounds.json'))
     for (const role of ['click', 'callout', 'transition'] as const) log(`sound, ${role}: ${palette[role].name} (${palette[role].why})`)
   }

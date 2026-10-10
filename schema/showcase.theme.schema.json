@@ -1,0 +1,241 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/kwartz-ai/kwartz-showcase/blob/main/schema/showcase.theme.schema.json",
+  "title": "Kwartz Showcase theme",
+  "description": "A theme of your own: a built-in theme to start from, and what to change. Keep it in \"themes/<name>.json\" beside the config, and use it with \"theme\": \"<name>\".",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "description": "What the theme is for."
+    },
+    "extends": {
+      "enum": [
+        "classic",
+        "minimal",
+        "glass",
+        "liquid",
+        "soft",
+        "clay",
+        "brutal",
+        "maximal",
+        "bento",
+        "real",
+        "spatial",
+        "editorial",
+        "terminal"
+      ],
+      "default": "classic",
+      "description": "The built-in theme to start from."
+    },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ink": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "The dark colour."
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "The one highlight colour."
+        },
+        "mist": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "Quieter text on the dark colour."
+        },
+        "paper": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "The light colour."
+        },
+        "band": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "The solid colour behind captions on a tall frame."
+        },
+        "bandText": {
+          "type": "string",
+          "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "The colour of those captions. Must contrast at least 7 to 1 with \"band\"."
+        }
+      }
+    },
+    "fontPreset": {
+      "enum": [
+        "modern",
+        "geometric",
+        "technical",
+        "minimal",
+        "bold",
+        "editorial",
+        "elegant",
+        "friendly",
+        "playful",
+        "poster",
+        "corporate"
+      ]
+    },
+    "fonts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "display": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "mono": {
+          "type": "string"
+        },
+        "displayWeight": {
+          "type": "number",
+          "minimum": 400,
+          "maximum": 900
+        },
+        "tracking": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.5
+        }
+      }
+    },
+    "feel": {
+      "enum": [
+        "calm",
+        "crisp",
+        "lively"
+      ]
+    },
+    "backdrop": {
+      "description": "Behind the rounded picture: a backdrop by name, or three hex colours (from, to, glow).",
+      "oneOf": [
+        {
+          "enum": [
+            "indigo",
+            "aurora",
+            "ocean",
+            "forest",
+            "sunset",
+            "rose",
+            "graphite",
+            "paper"
+          ]
+        },
+        {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+          }
+        }
+      ]
+    },
+    "backdropPattern": {
+      "enum": [
+        "glow",
+        "waves",
+        "plain"
+      ]
+    },
+    "radius": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.2,
+      "description": "Corner of the picture, as a share of the frame's short side. 0 is square."
+    },
+    "mood": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "A few words for how it should sound."
+    },
+    "look": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How surfaces are drawn. Each is CSS for a box: background, border, radius, shadow, colour, blur. Use single quotes only. \"{accent}\" and \"{ink}\" stand for those colours.",
+      "properties": {
+        "canvas": {
+          "type": "string",
+          "maxLength": 900,
+          "description": "Background of a dark card: a colour or a gradient."
+        },
+        "fg": {
+          "type": "string",
+          "description": "Text on the canvas."
+        },
+        "muted": {
+          "type": "string",
+          "description": "Quieter text on the canvas."
+        },
+        "paper": {
+          "type": "string",
+          "maxLength": 900,
+          "description": "Background of a light card."
+        },
+        "paperFg": {
+          "type": "string"
+        },
+        "panel": {
+          "type": "string",
+          "maxLength": 900,
+          "description": "A card within a card."
+        },
+        "panelFg": {
+          "type": "string"
+        },
+        "chip": {
+          "type": "string",
+          "maxLength": 900,
+          "description": "A small tag. Include its text colour."
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 900,
+          "description": "The callout label. Include its text colour."
+        },
+        "ring": {
+          "type": "string",
+          "maxLength": 900,
+          "description": "The highlight ring: border and radius."
+        },
+        "caption": {
+          "type": "string",
+          "maxLength": 900,
+          "description": "The caption box. Include its text colour; it must contrast at least 7 to 1."
+        },
+        "enter": {
+          "enum": [
+            "rise",
+            "pop",
+            "cut",
+            "float",
+            "type",
+            "depth"
+          ]
+        },
+        "upper": {
+          "type": "boolean"
+        },
+        "wall": {
+          "type": "boolean"
+        },
+        "steps": {
+          "enum": [
+            "row",
+            "grid"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { FONT_PRESETS } from './fonts.ts'
-import { THEME_NAMES, isTheme } from './themes.ts'
+import { findTheme } from './custom-theme.ts'
 import { BACKDROPS, FORMATS, MOTION_FEELS, PLATFORMS, type LayoutMode, type MotionFeel } from './presets.ts'
 
 export type EffectsChoice = 'auto' | 'generated' | 'none' | { click?: string; callout?: string; transition?: string }
@@ -81,7 +81,7 @@ const KNOWN = new Set(['$schema', 'name', 'url', 'serve', 'motionOnly', 'length'
   'script', 'scenes', 'style', 'voice', 'music', 'motion', 'sound', 'auth', 'safety'])
 
 /** Check a brief and say everything that is wrong with it at once. */
-export function validateBrief(input: unknown): Brief {
+export function validateBrief(input: unknown, dir?: string): Brief {
   const problems: string[] = []
   const bad = (m: string) => { problems.push(m) }
   if (!input || typeof input !== 'object' || Array.isArray(input)) throw new Error('the config must be a JSON object, for example { "url": "http://localhost:3000" }')
@@ -107,7 +107,17 @@ export function validateBrief(input: unknown): Brief {
     else if (f.width % 2 || f.height % 2) bad('a custom shape needs an even "width" and "height"')
   }
   if (b.layout !== undefined && !['fill', 'framed', 'fit', 'responsive'].includes(b.layout)) bad('"layout" must be fill, framed, fit or responsive')
-  if (b.theme !== undefined && !isTheme(b.theme)) bad(`unknown theme "${String(b.theme)}". Themes: classic, ${THEME_NAMES.join(', ')}`)
+  // a theme is a built-in one, or a file the project keeps in its themes folder
+  if (b.theme !== undefined) {
+    if (typeof b.theme !== 'string') bad('"theme" must be the name of a theme')
+    else {
+      try {
+        findTheme(b.theme, dir)
+      } catch (e) {
+        bad((e as Error).message)
+      }
+    }
+  }
   if (b.cta !== undefined && (typeof b.cta?.text !== 'string' || !b.cta.text.trim())) bad('"cta" needs a "text", for example { "text": "Book a walkthrough" }')
   for (const c of [b.style?.ink, b.style?.accent]) if (c !== undefined && !HEX.test(c)) bad(`a colour must be a hex value such as #0B1D35 (got ${c})`)
   for (const [role, name] of Object.entries(b.style?.fonts ?? {})) {
@@ -150,5 +160,5 @@ export function loadBrief(file = DEFAULT_CONFIG): { brief: Brief; dir: string; f
   } catch (e) {
     throw new Error(`${path.basename(abs)} is not valid JSON: ${(e as Error).message}`)
   }
-  return { brief: validateBrief(json), dir: path.dirname(abs), file: abs }
+  return { brief: validateBrief(json, path.dirname(abs)), dir: path.dirname(abs), file: abs }
 }

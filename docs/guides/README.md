@@ -24,6 +24,7 @@ Every setting mentioned here is listed in one place in
 | 13 | [Clip scenes](13-clip-scenes.md) | Put a finished video file on the timeline |
 | 14 | [showcase auto](14-showcase-auto.md) (beta) | Go from a config to a video with the scenes written through the API |
 | 15 | [Themes](15-themes.md) | Change the whole look with one word: glass, clay, brutal and the rest |
+| 16 | [Your own theme](16-your-own-theme.md) | Make a theme for your brand, by hand or from a description |
 
 All examples use the `showcase` command. In the kit's own folder, write
 `bun run showcase` in its place.

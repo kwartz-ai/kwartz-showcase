@@ -99,6 +99,13 @@ describe('readability, which no theme may give up', () => {
       if (HEX.test(look.canvas)) expect(contrast(look.canvas, t.accent), name).toBeGreaterThanOrEqual(3)
     }
   })
+  it('keeps text on a solid panel readable', () => {
+    // white on the coral clay panel was once 2.3 to 1
+    for (const [name, look] of looks()) {
+      const box = solid(look.panel, 'background')
+      if (box && HEX.test(look.panelFg)) expect(contrast(box, look.panelFg), name).toBeGreaterThanOrEqual(4.5)
+    }
+  })
   it('keeps label text apart from a solid label', () => {
     for (const [name, look] of looks()) {
       const box = solid(look.label, 'background'), text = solid(look.label, 'color')

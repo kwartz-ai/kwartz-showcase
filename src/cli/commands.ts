@@ -5,7 +5,10 @@ import path from 'node:path'
 import { auto } from '../auto/auto.ts'
 import { candidates, loadRegistry, type Role } from '../audio/palette.ts'
 import { DEFAULT_CONFIG, isHosted, loadBrief } from '../brief/brief.ts'
+import { themeFromPrompt } from '../auto/theme.ts'
+import { THEMES_DIR, checkThemeName, customThemes, findTheme, loadThemeFile, starterTheme, themeFile } from '../brief/custom-theme.ts'
 import { THEMES, themeNamed } from '../brief/themes.ts'
+import { previewTheme } from '../render/preview.ts'
 import { workOrder } from '../brief/workorder.ts'
 import { explore } from '../capture/explore.ts'
 import { DEFAULT_SESSION, login } from '../capture/session.ts'
@@ -98,8 +101,84 @@ export async function cmdPlan(a: Args): Promise<boolean> {
 export function cmdThemes(): boolean {
   log('classic      The kit\'s own look: dark navy cards, an amber highlight. The default.')
   for (const [name, t] of Object.entries(THEMES)) log(`${name.padEnd(12)} ${t.style}: ${t.use}`)
+  const own = customThemes(process.cwd())
+  if (own.length) {
+    log('\nYour own, in the themes folder:')
+    for (const name of own) {
+      try {
+        const t = findTheme(name, process.cwd())!
+        log(`${name.padEnd(12)} from ${t.base}: ${t.preset.use}`)
+      } catch (e) {
+        log(`${name.padEnd(12)} has a problem: ${(e as Error).message.split('\n')[0]}`)
+      }
+    }
+  }
   log('\nSet one in the config:  "theme": "glass"')
   log('Try one for a single run, beside the others:  showcase make --theme glass --draft')
+  log('Make your own:  showcase theme new my-brand --from glass')
+  return true
+}
+
+/** A theme of your own: start one, check it, or look at it. */
+export async function cmdTheme(a: Args): Promise<boolean> {
+  const [action, name] = a.rest
+  const dir = process.cwd()
+  const usage = 'showcase theme new <name> [--from glass] [--accent "#FF5A1F"] [--ink "#0B1D35"] [--prompt "describe the brand"]\n'
+    + 'showcase theme check <name>\nshowcase theme preview <name>'
+  if (!action || !['new', 'check', 'preview'].includes(action)) throw new Error(`what should be done with a theme?\n${usage}`)
+  if (!name) throw new Error(`which theme?\n${usage}`)
+  const previewFile = (n: string) => path.join(workDir(dir), 'themes', `${n}-preview.jpg`)
+
+  if (action === 'new') {
+    const wrong = checkThemeName(name)
+    if (wrong) throw new Error(wrong)
+    const file = path.join(dir, THEMES_DIR, `${name}.json`)
+    if (fs.existsSync(file) && !a.flag('force')) throw new Error(`${file} already exists. Edit it, or pass --force to replace it.`)
+    if (a.opt('prompt')) {
+      // by description: Claude writes the file, and it is checked before it is saved
+      let url: string | undefined
+      try { url = loadBrief(DEFAULT_CONFIG).brief.url } catch { /* no config here: the description alone is used */ }
+      const made = await themeFromPrompt({ prompt: a.opt('prompt')!, name, dir, model: a.opt('model'), tries: a.opt('tries') ? Number(a.opt('tries')) : undefined, url })
+      log(`created  ${path.relative(dir, made.file)}  (from ${made.base}, by ${made.model} in ${made.tries} attempt(s))`)
+      for (const w of made.warnings) log(`note: ${w}`)
+    } else {
+      // by hand: a file that starts from a built-in theme, ready to edit
+      const from = a.opt('from') ?? 'classic'
+      const base = from === 'classic' ? 'classic' : themeNamed(from)?.name ?? 'classic'
+      const starter = starterTheme(base, { accent: a.opt('accent'), ink: a.opt('ink') })
+      fs.mkdirSync(path.dirname(file), { recursive: true })
+      fs.writeFileSync(file, JSON.stringify(starter, null, 2) + '\n')
+      // a wrong colour on the command line is found now, not at the first render
+      try {
+        loadThemeFile(file)
+      } catch (e) {
+        fs.rmSync(file)
+        throw e
+      }
+      log(`created  ${path.relative(dir, file)}  (from ${base})`)
+    }
+    if (!a.flag('no-preview')) log(`preview  ${path.relative(dir, await previewTheme(name, dir, previewFile(name)))}  (open it to see the theme)`)
+    log(`\nnext: look at the preview, edit ${THEMES_DIR}/${name}.json if needed, then use it:\n  "theme": "${name}"   in showcase.config.json, or:  showcase make --theme ${name} --draft`)
+    return true
+  }
+
+  const file = themeFile(name, dir)
+  if (!file) {
+    // a built-in theme can be looked at too
+    if (action === 'preview' && (name === 'classic' || THEMES[name])) {
+      log(`preview  ${path.relative(dir, await previewTheme(name === 'classic' ? undefined : name, dir, previewFile(name)))}`)
+      return true
+    }
+    throw new Error(`no theme file at ${path.join(THEMES_DIR, `${name}.json`)}. Make it with: showcase theme new ${name}`)
+  }
+  const { warnings, raw } = loadThemeFile(file)          // throws, with every problem, when the theme may not be used
+  if (action === 'check') {
+    log(`ok    ${path.relative(dir, file)}: from ${raw.extends ?? 'classic'}, safe to place in a page, and readable on video`)
+    for (const w of warnings) log(`note  ${w}`)
+    return true
+  }
+  log(`preview  ${path.relative(dir, await previewTheme(name, dir, previewFile(name)))}`)
+  for (const w of warnings) log(`note: ${w}`)
   return true
 }
 
@@ -175,15 +254,19 @@ export function cmdInit(a: Args): boolean {
   const copy = (from: string, to: string) => put(to, () => fs.copyFileSync(from, to))
   if (withConfig) {
     const url = a.opt('base') ?? 'http://localhost:3000'
-    const theme = a.opt('theme') ? themeNamed(a.opt('theme')!)?.name : undefined
+    const picked = a.opt('theme') ? findTheme(a.opt('theme')!, path.resolve(dir)) : null
+    const theme = picked?.name
     put(path.resolve(dir, DEFAULT_CONFIG), () => fs.writeFileSync(path.resolve(dir, DEFAULT_CONFIG), STARTER_CONFIG(url, theme)))
     // the skill that teaches an agent how this theme is used well
-    if (theme) copy(asset('skills', `showcase-theme-${theme}`, 'SKILL.md'), path.resolve(dir, '.claude', 'skills', `showcase-theme-${theme}`, 'SKILL.md'))
+    const styleOf = picked?.custom ? picked.base : theme
+    if (styleOf && styleOf !== 'classic') copy(asset('skills', `showcase-theme-${styleOf}`, 'SKILL.md'), path.resolve(dir, '.claude', 'skills', `showcase-theme-${styleOf}`, 'SKILL.md'))
     copy(asset('templates', 'brief', 'video.ts'), path.resolve(dir, 'video.ts'))
   } else {
     copy(asset('templates', 'starter', 'video.ts'), path.resolve(dir, 'video.ts'))
   }
   copy(asset('skills', 'kwartz-showcase', 'SKILL.md'), path.resolve(dir, '.claude', 'skills', 'kwartz-showcase', 'SKILL.md'))
+  // with it, an agent can make a theme for the brand from a description
+  if (withConfig) copy(asset('skills', 'showcase-theme-new', 'SKILL.md'), path.resolve(dir, '.claude', 'skills', 'showcase-theme-new', 'SKILL.md'))
   log(withConfig
     ? '\nnext: set "url" in showcase.config.json, then "showcase explore", "showcase plan" and "showcase make --draft". Add "out/" and ".showcase/" to .gitignore.'
     : '\nnext: edit video.ts, then "showcase render video.ts --draft". Add "out/" to .gitignore.')

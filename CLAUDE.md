@@ -21,6 +21,7 @@ FFmpeg encodes. The command is `showcase`. Open source under Apache-2.0.
 - `templates/starter/` and `templates/brief/`: what `showcase init` copies into a project.
 - `skills/kwartz-showcase/SKILL.md`: the editor skill that ships to users.
   `skills/showcase-theme-<name>/SKILL.md`: one per theme, on how that style is used.
+  `skills/showcase-theme-new/SKILL.md`: how to make a theme for a brand.
 - `docs/`: user docs. `docs/research.md` records what was compared and learned.
 - `tests/unit/<layer>/`: Vitest. The browser, FFmpeg, the voice and the network are
   replaced by stand-ins, so the suite needs none of them. See `docs/testing.md`.
@@ -35,6 +36,9 @@ FFmpeg encodes. The command is `showcase`. Open source under Apache-2.0.
   in a `look`; cards and overlays must read them from `theme.look` and never hardcode a
   colour. After changing a look, render `examples/motion` with `--theme <name>` in both
   shapes and look at the frames.
+- A user's theme file is untrusted input: its CSS goes into a page the kit renders.
+  `unsafeCss` in `src/brief/custom-theme.ts` is the gate. Never place a value from a
+  theme file in HTML without it having passed `checkThemeFile`.
 - Font families and their weights live only in `src/brief/fonts.ts`. Add a family only
   after requesting it from Google Fonts with those weights, and update the date.
 - Platform sizes and safe areas live only in `src/brief/presets.ts`. A new config
