@@ -42,7 +42,7 @@ export default defineVideo({
 showcase render video.ts
 ```
 
-> Version 2.1.0 (in progress on this branch; 2.0.0 is the last release). Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
+> Version 2.1.1. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
 > It is not on npm; install it from GitHub as shown below.
 
 ## What you get
