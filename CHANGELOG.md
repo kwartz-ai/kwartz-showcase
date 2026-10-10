@@ -1,6 +1,14 @@
 # Changelog
 
-## 2.1.0 (not released)
+## 2.1.1 (2026-10-10)
+
+Corrects the release itself. The code is the same as 2.1.0.
+
+Fixed
+- `package.json` said version 2.0.0 in the 2.1.0 release. It now says 2.1.1.
+- The changelog said 2.1.0 was not released, and a line in the README said the same.
+
+## 2.1.0 (2026-10-10)
 
 Themes: one word sets the whole look of a video.
 

@@ -1,6 +1,6 @@
 {
   "name": "kwartz-showcase",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "description": "Narrated product demo videos rendered from a script: Playwright drives your real app, a local voice reads the narration, FFmpeg joins them. No recording, no editing, no paid tools.",
   "license": "Apache-2.0",
   "author": "Kwartz",
@@ -18,12 +18,14 @@
     "claude-code",
     "demo-video",
     "ffmpeg",
+    "glassmorphism",
     "kokoro",
     "motion-graphics",
     "playwright",
     "product-video",
     "screen-recording",
     "showcase",
+    "themes",
     "tts",
     "vertical-video"
   ],
