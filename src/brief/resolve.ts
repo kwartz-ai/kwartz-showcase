@@ -10,6 +10,7 @@ import { planFor, type Plan } from './plan.ts'
 import { FONT_PRESETS, GOOGLE_FONTS, facesToLoad, googleFontsUrl } from './fonts.ts'
 import { BACKDROPS, FORMATS, KIND_ADVICE, MOTION_FEELS, PLATFORMS, layoutFor } from './presets.ts'
 import { applyScript, parseScript, scriptFit } from './script.ts'
+import { themeNamed, type ThemePreset } from './themes.ts'
 
 /** What a scenes file exports: the scenes, and optionally how to reach the first
  *  screen. A scene may leave out `say` when the brief names a script file. */
@@ -97,13 +98,18 @@ const SETTING = { sans: 1, serif: 0.35, condensed: 0, rounded: 0.6, mono: 0.5 }
  *  taken from the product, so the person is told. */
 export function themeFor(brief: Brief, explored: Explored | null = null, notes: string[] = []): ThemeInput {
   const s = brief.style ?? {}
-  const feel = MOTION_FEELS[brief.motion?.feel ?? 'calm']
+  // the order: what the person set, then the theme, then the product's own look
+  const picked = brief.theme ? themeNamed(brief.theme) : null
+  const preset: ThemePreset | null = picked?.preset ?? null
+  const feel = MOTION_FEELS[brief.motion?.feel ?? preset?.feel ?? 'calm']
   const match = s.match !== false ? explored : null
   const theme: ThemeInput = { ease: feel.ease, speed: feel.speed, captionScale: CAPTION_SCALE[s.captions ?? 'medium'] }
   const type: ThemeInput['type'] = {}
+  if (preset) Object.assign(theme, { name: picked!.name, ink: preset.ink, accent: preset.accent, mist: preset.mist, paper: preset.paper, band: preset.band, bandText: preset.bandText })
 
   if (s.ink) theme.ink = s.ink
   if (s.accent) theme.accent = s.accent
+  else if (preset) { /* a theme's highlight is part of its look */ }
   else if (match?.accent) {
     // a highlight must stand out on the dark cards it is drawn on
     const ink = s.ink ?? defaultTheme.ink
@@ -113,33 +119,38 @@ export function themeFor(brief: Brief, explored: Explored | null = null, notes: 
     } else notes.push(`the product's button colour ${match.accent} is too dark to use as the highlight on cards; the default is kept`)
   }
 
-  const named = s.fonts ?? {}
-  const preset = FONT_PRESETS[s.fontPreset ?? 'modern']!
+  if (preset) theme.look = preset.look(theme.accent ?? preset.accent)
+
+  const named: { display?: string; text?: string; mono?: string } = { ...(s.fontPreset ? {} : preset?.fonts ? { display: preset.fonts.display, text: preset.fonts.text, mono: preset.fonts.mono } : {}), ...s.fonts }
+  const pairing = FONT_PRESETS[s.fontPreset ?? preset?.fontPreset ?? 'modern']!
   // the product's own face is used for captions and labels, unless the person chose
   let matchedText: string | undefined
-  if (match?.font && !named.text && !s.fontPreset && s.fontSource !== 'installed') {
+  if (match?.font && !named.text && !s.fontPreset && !preset && s.fontSource !== 'installed') {
     if (match.fontOnGoogle) {
       matchedText = match.font
-      if (match.font !== preset.text) notes.push(`caption font "${match.font}" taken from the product (set "style.fonts.text" or "style.fontPreset" to choose another)`)
+      if (match.font !== pairing.text) notes.push(`caption font "${match.font}" taken from the product (set "style.fonts.text" or "style.fontPreset" to choose another)`)
     } else if (match.fontOnGoogle === false) {
-      notes.push(`the product's font "${match.font}" is not on Google Fonts, so captions use ${preset.text}. Set "style.fontSource" to "installed" if it is on this machine.`)
+      notes.push(`the product's font "${match.font}" is not on Google Fonts, so captions use ${pairing.text}. Set "style.fontSource" to "installed" if it is on this machine.`)
     }
   }
-  const fonts = { display: named.display ?? preset.display, text: named.text ?? matchedText ?? preset.text, mono: named.mono ?? preset.mono }
-  const chosen = !!s.fontPreset || Object.keys(named).length > 0 || (!!matchedText && matchedText !== preset.text)
+  const fonts = { display: named.display ?? pairing.display, text: named.text ?? matchedText ?? pairing.text, mono: named.mono ?? pairing.mono }
+  const chosen = !!s.fontPreset || !!preset || Object.keys(named).length > 0 || (!!matchedText && matchedText !== pairing.text)
   if (chosen) {
     type.display = `'${fonts.display}', ${defaultTheme.type.text}`
     type.text = `'${fonts.text}', 'Segoe UI', system-ui, sans-serif`
     type.mono = `'${fonts.mono}', Consolas, monospace`
     const known = GOOGLE_FONTS[fonts.display]
-    if (named.display && known) {
+    if (preset?.fonts && !s.fonts?.display && !s.fontPreset) {
+      theme.displayWeight = preset.fonts.displayWeight
+      theme.tracking = preset.fonts.tracking
+    } else if (named.display && known) {
       theme.displayWeight = Math.min(800, Math.max(...known.weights))
       theme.tracking = SETTING[known.kind]
       theme.titleScale = known.kind === 'condensed' ? 1.28 : 1
     } else if (!named.display) {
-      theme.displayWeight = preset.displayWeight
-      theme.tracking = preset.tracking
-      theme.titleScale = preset.titleScale ?? 1
+      theme.displayWeight = pairing.displayWeight
+      theme.tracking = pairing.tracking
+      theme.titleScale = pairing.titleScale ?? 1
     }
   }
   theme.type = type
@@ -158,14 +169,16 @@ export function borderFor(brief: Brief, dir: string, accent: string): VideoConfi
   const s = brief.style ?? {}
   if (s.border === 'none') return false
   const bd = s.backdrop
-  let border: Exclude<VideoConfig['border'], boolean | undefined> = {}
-  if (Array.isArray(bd)) border = { colors: bd as [string, string, string] }
-  else if (bd === 'brand') border = { colors: [mix(accent, '#000000', 0.62), mix(accent, '#000000', 0.18), mix(accent, '#ffffff', 0.62)], pattern: 'glow' }
-  else if (typeof bd === 'string' && BACKDROPS[bd]) border = { ...BACKDROPS[bd] }
+  // a theme brings its own backdrop and corner; the person's choice goes over it
+  const preset = brief.theme ? themeNamed(brief.theme)?.preset : null
+  let border: Exclude<VideoConfig['border'], boolean | undefined> = preset ? { ...preset.backdrop, radius: preset.radius } : {}
+  if (Array.isArray(bd)) border = { ...border, colors: bd as [string, string, string] }
+  else if (bd === 'brand') border = { ...border, colors: [mix(accent, '#000000', 0.62), mix(accent, '#000000', 0.18), mix(accent, '#ffffff', 0.62)], pattern: 'glow' }
+  else if (typeof bd === 'string' && BACKDROPS[bd]) border = { ...border, ...BACKDROPS[bd] }
   else if (typeof bd === 'string') {
     const image = path.resolve(dir, bd)
     if (!fs.existsSync(image)) throw new Error(`"style.backdrop" points at ${image}, which does not exist`)
-    border = { image }
+    border = { ...border, image }
   }
   if (s.backdropPattern) border.pattern = s.backdropPattern
   return Object.keys(border).length ? border : true

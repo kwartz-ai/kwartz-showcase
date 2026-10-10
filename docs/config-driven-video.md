@@ -54,6 +54,7 @@ at it and your editor completes and checks the file as you type.
 | `length` | `30` | Seconds, 10 to 600. 30, 60, 90 and 180 have ready structures |
 | `platforms` | none | Where it will be posted, by name. See the table below |
 | `formats` | `["landscape"]` | Shapes to render, by name or `{ "width", "height" }` |
+| `theme` | `classic` | One word for the whole look: `minimal`, `glass`, `liquid`, `soft`, `clay`, `brutal`, `maximal`, `bento`, `real`, `spatial`, `editorial`, `terminal`. See [Themes](themes.md) |
 | `layout` | by shape | `fill`, `framed`, `fit` or `responsive`. See Layouts |
 | `audience` | asked for | Who the video is for |
 | `promise` | asked for | The one thing the video should prove |

@@ -1,6 +1,6 @@
 # Testing
 
-The kit has 962 unit tests, run with [Vitest](https://vitest.dev). They take about ten
+The kit has 1013 unit tests, run with [Vitest](https://vitest.dev). They take about ten
 seconds and need no browser, no FFmpeg, no voice model and no network.
 
 ```bash
@@ -27,6 +27,7 @@ layer.
 | `brief/brief.test.ts` | 38 | The config: what passes, every refusal, local or hosted, loading the file |
 | `brief/plan-script.test.ts` | 33 | Length to scenes and words, advice when a render misses, reading and placing a person's script |
 | `brief/presets-resolve.test.ts` | 57 | Shapes, platforms, safe areas, every layout, the theme from the config, one video per shape, the work order |
+| `brief/themes.test.ts` | 50 | Themes: every look complete and safe as CSS, contrast rules, names, what a theme sets, cards in each theme, the skills, the commands |
 | `capture/recorder.test.ts` | 19 | Page zoom, fonts, frame capture and timing |
 | `capture/safety.test.ts` | 23 | Read-only mode, the saved session, which pages explore visits, the product map |
 | `capture/serve.test.ts` | 16 | The static server: types, single-page routes, 404, staying inside its folder |
@@ -38,7 +39,7 @@ layer.
 | `graphics/cards.test.ts` | 32 | Every card: content, timing with the voice, theme, escaping, intact styles |
 | `graphics/motion-only.test.ts` | 18 | A video with no product: the config, the blank page, the caption band, and the motion example in every shape |
 | `graphics/motion-compose.test.ts` | 31 | Which frames a motion scene needs, its document, framed frames, the caption track |
-| `render/border.test.ts` | 27 | The rounded border: where the picture sits, the mask and backdrop, the encoder inputs, turning it off |
+| `render/border.test.ts` | 28 | The rounded border: where the picture sits, the mask and backdrop, the encoder inputs, turning it off |
 | `render/captions.test.ts` | 34 | Splitting lines into captions, timing them, WebVTT |
 | `render/encode.test.ts` | 45 | Planning and blending dissolves, the frame list, the sound graph, loudness gain |
 | `render/render.test.ts` | 58 | The order of work, what scenes receive, the take, drafts, failures, remix |

@@ -76,6 +76,10 @@ describe('the pictures the border is made from', () => {
     expect(f).toContain(`nullsrc=s=${box.width}x${box.height},format=gray`)
     expect(f).toContain(`255*clip(${box.radius}+0.5-hypot(`)
   })
+  it('draws a plain white mask for square corners, so the picture is not dimmed', () => {
+    // a radius of zero once left the whole picture half see-through
+    expect(maskFilter({ ...box, radius: 0 })).toBe(`color=c=white:s=${box.width}x${box.height},format=gray`)
+  })
   it('keeps the mask expression inside quotes, so its commas are not read as filters', () => {
     expect(maskFilter(box)).toMatch(/geq=lum='[^']+'$/)
   })

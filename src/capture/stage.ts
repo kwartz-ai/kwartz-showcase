@@ -1,5 +1,5 @@
 import type { Locator, Page } from 'playwright'
-import { EASE_IN_OUT, EASE_OUT, type Theme } from '../core/theme.ts'
+import { EASE_IN_OUT, EASE_OUT, type Theme, scaleCss } from '../core/theme.ts'
 import type { Dissolve, EventKind, Layout, StageEvent } from '../core/types.ts'
 import { esc, sleep } from '../core/util.ts'
 
@@ -138,11 +138,11 @@ export class Stage {
    *  `fn` runs behind it, and the card dissolves to the loaded screen. */
   async chapter(overline: string, title: string, fn: () => Promise<void> = async () => {}, { hold = 1900 } = {}): Promise<void> {
     const t = this.clock()
-    const { ink, accent, type, scale: k } = this.theme
+    const { accent, type, look, scale: k } = this.theme
     await this.showFull(
       `<style>@keyframes showcasechap{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}</style>
-       <div style="position:absolute;inset:0;background:${ink}"></div>
-       <div style="position:absolute;left:0;right:0;top:40%;text-align:center;color:#fff">
+       <div style="position:absolute;inset:0;background:${look.canvas}"></div>
+       <div style="position:absolute;left:0;right:0;top:40%;padding:0 7%;text-align:center;text-wrap:balance;color:${look.fg}${look.upper ? ';text-transform:uppercase' : ''}">
          <div style="font:600 ${17 * k}px/1 ${type.mono};letter-spacing:.18em;color:${accent};animation:showcasechap 480ms ${EASE_OUT} 250ms both">${esc(overline)}</div>
          <div style="margin-top:${20 * k}px;font:${this.theme.displayWeight} ${60 * k}px/1.08 ${type.display};letter-spacing:${+(-0.03 * this.theme.tracking).toFixed(4)}em;animation:showcasechap 520ms ${EASE_OUT} 380ms both">${esc(title)}</div>
        </div>`)
@@ -158,16 +158,15 @@ export class Stage {
   async setCaption(text: string | null): Promise<void> {
     this.captionText = text
     if (this.layout.captions === 'composite') return
-    const { ink, type, captionScale } = this.theme
+    const { type, look, captionScale } = this.theme
     const u = this.u * captionScale
     const vw = this.layout.width / this.layout.zoom
     const old = this.caption
     this.caption = text ? await this.overlay(
       `<div style="position:fixed;left:50%;bottom:${30 * this.u + this.layout.safe.bottom / this.layout.zoom}px;transform:translateX(-50%);
         width:max-content;max-width:${Math.min(580 * u, vw - 40 * this.u)}px;
-        background:${ink};opacity:.94;color:#fff;padding:${11 * u}px ${22 * u}px ${12 * u}px;border-radius:${11 * u}px;text-align:center;
-        font:500 ${19.5 * u}px/1.34 ${type.text};letter-spacing:.003em;text-wrap:balance;
-        box-shadow:0 8px 28px rgba(0,0,0,.28)">${esc(text)}</div>`) : null
+        ${scaleCss(look.caption, u)};padding:${11 * u}px ${22 * u}px ${12 * u}px;text-align:center;
+        font:500 ${19.5 * u}px/1.34 ${type.text};letter-spacing:.003em;text-wrap:balance">${esc(text)}</div>`) : null
     await old?.dispose()
   }
 
@@ -185,17 +184,17 @@ export class Stage {
       left: `right:${vw - x + 14 * u}px;top:${y}px`,
     }[side]
     this.checkSpot({ x, y, w, h }, label, side, vw, vh)
-    const { ink, accent, type } = this.theme
+    const { type, look } = this.theme
     const old = this.spot
     this.spot = await this.overlay(
       `<style>@keyframes showcasering{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:none}}
         @keyframes showcaselabel{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}</style>
-       <div style="position:fixed;left:${x}px;top:${y}px;width:${w}px;height:${h}px;border-radius:${8 * u}px;
-        border:${2.5 * u}px solid ${accent};box-shadow:0 0 0 9999px rgba(8,16,30,.5);pointer-events:none;
+       <div style="position:fixed;left:${x}px;top:${y}px;width:${w}px;height:${h}px;${scaleCss(look.ring, u)};
+        box-shadow:0 0 0 9999px rgba(8,16,30,.5);pointer-events:none;box-sizing:border-box;
         animation:showcasering 260ms ${EASE_OUT} both"></div>
-       ${label ? `<div style="position:fixed;${place};max-width:${340 * u}px;background:${accent};color:${ink};
-        font:700 ${16 * u}px/1.3 ${type.text};letter-spacing:.005em;padding:${8 * u}px ${14 * u}px ${9 * u}px;border-radius:${8 * u}px;pointer-events:none;
-        box-shadow:0 8px 24px rgba(0,0,0,.28);animation:showcaselabel 280ms ${EASE_OUT} 180ms both">${esc(label)}</div>` : ''}`)
+       ${label ? `<div style="position:fixed;${place};max-width:${340 * u}px;${scaleCss(look.label, u)};
+        font:700 ${16 * u}px/1.3 ${type.text};letter-spacing:.005em;padding:${8 * u}px ${14 * u}px ${9 * u}px;pointer-events:none;
+        animation:showcaselabel 280ms ${EASE_OUT} 180ms both">${esc(label)}</div>` : ''}`)
     await old?.dispose()
     // overlays stack in the order they were made, and the spotlight dims everything
     // under it: the caption is drawn again so that it stays on top and fully lit

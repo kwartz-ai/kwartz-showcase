@@ -3,11 +3,21 @@
   "name": "motion",
   "motionOnly": true,
   "length": 45,
-  "formats": ["landscape", "vertical"],
+  "formats": [
+    "landscape",
+    "vertical"
+  ],
   "audience": "someone who makes product demo videos by hand",
   "promise": "A demo video can be written, not recorded",
-  "cta": { "text": "Write your first video.", "sub": "showcase init --config" },
-  "style": { "fontPreset": "bold", "backdrop": "aurora" },
-  "motion": { "feel": "crisp", "blur": true },
-  "sound": { "effects": "auto", "mood": "calm soft light" }
+  "cta": {
+    "text": "Write your first video.",
+    "sub": "showcase init --config"
+  },
+  "motion": {
+    "blur": true
+  },
+  "sound": {
+    "effects": "auto",
+    "mood": "calm soft light"
+  }
 }

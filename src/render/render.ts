@@ -112,7 +112,7 @@ export async function render(video: ResolvedVideo, opts: RenderOptions = {}): Pr
   try {
     await preparePage(page, layout, theme)
     // with no product to film, the page is a blank one in the video's dark colour
-    await page.goto(baseUrl || blankPage(theme.ink), { waitUntil: 'networkidle' })
+    await page.goto(baseUrl || blankPage(theme.band), { waitUntil: 'networkidle' })
     const rec = new Recorder(page, files.frames, layout)
     const stage = new Stage(page, layout, theme, () => rec.now(), video.appRoot)
     if (video.prepare) await video.prepare({ page, baseUrl, theme })

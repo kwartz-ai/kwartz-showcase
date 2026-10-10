@@ -42,7 +42,7 @@ export default defineVideo({
 showcase render video.ts
 ```
 
-> Version 2.0.0. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
+> Version 2.1.0 (in progress on this branch; 2.0.0 is the last release). Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
 > It is not on npm; install it from GitHub as shown below.
 
 ## What you get
@@ -65,6 +65,7 @@ showcase render video.ts
 | **Sounds per project** | Effects chosen from soundcn (CC0), measured, and refused when they would squeak. |
 | **Safe on a live product** | Read-only mode refuses every request that could change data; sign in once with `showcase login`; banned names are required. |
 | **Rounded border and backdrop** | The picture sits on a backdrop with rounded corners and a shadow. Eight backdrops, one made from your brand colour, your own colours or your own picture. |
+| **Themes** | One word sets the whole look: `glass`, `clay`, `brutal`, `minimal`, `bento`, `liquid`, `soft`, `maximal`, `real`, `spatial`, `editorial`, `terminal`. Cards, captions, labels, fonts, colours, backdrop, movement and sound change together. |
 | **Fonts chosen for video** | Eleven pairings from Google Fonts, each with its own title weight and tracking; any Google family by name, checked before the render. |
 | **Matches your product** | After `showcase explore`, captions use the product's own font and the highlight uses its button colour. |
 | **Clip scenes** | Put a finished video file on the timeline, with narration and captions. |
@@ -142,6 +143,7 @@ files are written there.
 | `showcase auto [config]` | Beta. Explore, have Claude write the scenes through the API, draft, render (needs `ANTHROPIC_API_KEY`) |
 | `showcase make [config]` | Render every shape the config asks for, then check each (`--draft`, `--remix`) |
 | `showcase login [config or address]` | Sign in once in a visible browser and save the session |
+| `showcase themes` | List the themes; `showcase make --theme glass` renders in one |
 | `showcase sounds` | List sound candidates (`--role`, `--mood`) |
 | `showcase setup` | One-time: Chromium and the Kokoro voice |
 | `showcase doctor` | Show what is installed and what is missing |
@@ -171,13 +173,14 @@ Start at the [docs index](docs/README.md), which lists these in reading order.
 - [Getting started](docs/getting-started.md): from an empty folder to a first video
 - [Writing a video](docs/writing-a-video.md): the video file and everything a scene can do
 - **[Feature guides](docs/guides/README.md): one short guide per feature (length, platforms, script, style, border and backdrop, motion, clips, sounds, hosted products, explore, Claude Code, auto, Node)**
+- [Themes](docs/themes.md): twelve looks, what each sets, and how to build graphics that follow them
 - [Fonts for video](docs/fonts.md): which Google Fonts work on video and why, and the eleven pairings
 - [A video from a config](docs/config-driven-video.md): length, platforms and shapes, style, your own script, sounds, a hosted product
 - [Craft guide](docs/craft-guide.md): what a senior editor works on, with working numbers
 - [How it works](docs/how-it-works.md): the pipeline, and why it is built this way
 - [Architecture](docs/architecture.md): processes, modules, data flow, diagrams, where to extend
 - [Tech stack](docs/tech-stack.md): every tool, its version, licence and role, and what was not chosen
-- [Testing](docs/testing.md): how the 962 unit tests are organised, and how to add one
+- [Testing](docs/testing.md): how the 1013 unit tests are organised, and how to add one
 - [Release checklist](docs/release-checklist.md): how to know it works before you commit, push or release
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research notes](docs/research.md): the tools and skills we compared before building this

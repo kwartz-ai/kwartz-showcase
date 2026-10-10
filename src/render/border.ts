@@ -33,6 +33,9 @@ const rgb = (hex: string): [number, number, number] => {
 export function maskFilter(box: BorderBox): string {
   const { width: w, height: h, radius: r } = box
   const d = `hypot(max(0,abs(X-${(w - 1) / 2})-${w / 2 - r}),max(0,abs(Y-${(h - 1) / 2})-${h / 2 - r}))`
+  // square corners need no rounding at all: the formula below would leave the whole
+  // picture half see-through, and the video would come out dimmed
+  if (r <= 0) return `color=c=white:s=${w}x${h},format=gray`
   return `nullsrc=s=${w}x${h},format=gray,geq=lum='255*clip(${r}+0.5-${d},0,1)'`
 }
 

@@ -20,6 +20,7 @@ FFmpeg encodes. The command is `showcase`. Open source under Apache-2.0.
   `examples/motion/`: motion graphics alone, no product filmed.
 - `templates/starter/` and `templates/brief/`: what `showcase init` copies into a project.
 - `skills/kwartz-showcase/SKILL.md`: the editor skill that ships to users.
+  `skills/showcase-theme-<name>/SKILL.md`: one per theme, on how that style is used.
 - `docs/`: user docs. `docs/research.md` records what was compared and learned.
 - `tests/unit/<layer>/`: Vitest. The browser, FFmpeg, the voice and the network are
   replaced by stand-ins, so the suite needs none of them. See `docs/testing.md`.
@@ -30,6 +31,10 @@ FFmpeg encodes. The command is `showcase`. Open source under Apache-2.0.
   Node and npm. `bun run check` (type-check and tests) must pass.
 - Files that ship but are not TypeScript live at the package root and are found with
   `asset()` from `src/core/paths.ts`, never with a path relative to a source file.
+- A theme is one entry in `src/brief/themes.ts` plus its skill. Surfaces are CSS strings
+  in a `look`; cards and overlays must read them from `theme.look` and never hardcode a
+  colour. After changing a look, render `examples/motion` with `--theme <name>` in both
+  shapes and look at the frames.
 - Font families and their weights live only in `src/brief/fonts.ts`. Add a family only
   after requesting it from Google Fonts with those weights, and update the date.
 - Platform sizes and safe areas live only in `src/brief/presets.ts`. A new config
