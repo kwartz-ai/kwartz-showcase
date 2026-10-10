@@ -5,6 +5,7 @@ import path from 'node:path'
 import { auto } from '../auto/auto.ts'
 import { candidates, loadRegistry, type Role } from '../audio/palette.ts'
 import { DEFAULT_CONFIG, isHosted, loadBrief } from '../brief/brief.ts'
+import { THEMES, themeNamed } from '../brief/themes.ts'
 import { workOrder } from '../brief/workorder.ts'
 import { explore } from '../capture/explore.ts'
 import { DEFAULT_SESSION, login } from '../capture/session.ts'
@@ -55,7 +56,7 @@ export async function cmdVerify(a: Args): Promise<boolean> {
 // ── A video described by a config ────────────────────────────────────────────
 
 export async function cmdMake(a: Args): Promise<boolean> {
-  return report(await make(configArg(a), { ...renderOptions(a), remix: a.flag('remix') }))
+  return report(await make(configArg(a), { ...renderOptions(a), remix: a.flag('remix'), theme: a.opt('theme') }))
 }
 
 /** Print what was made, shape by shape, with its checks. */
@@ -90,6 +91,15 @@ export async function cmdPlan(a: Args): Promise<boolean> {
   fs.writeFileSync(file, text)
   log(text)
   log(`saved: ${file}`)
+  return true
+}
+
+/** The themes, with what each suits. */
+export function cmdThemes(): boolean {
+  log('classic      The kit\'s own look: dark navy cards, an amber highlight. The default.')
+  for (const [name, t] of Object.entries(THEMES)) log(`${name.padEnd(12)} ${t.style}: ${t.use}`)
+  log('\nSet one in the config:  "theme": "glass"')
+  log('Try one for a single run, beside the others:  showcase make --theme glass --draft')
   return true
 }
 
@@ -142,12 +152,13 @@ export async function cmdSounds(a: Args): Promise<boolean> {
 
 // ── Setting up ───────────────────────────────────────────────────────────────
 
-const STARTER_CONFIG = (url: string) => JSON.stringify({
+const STARTER_CONFIG = (url: string, theme?: string) => JSON.stringify({
   $schema: './node_modules/kwartz-showcase/schema/showcase.config.schema.json',
   name: 'demo',
   url,
   length: 30,
   formats: ['landscape'],
+  ...(theme ? { theme } : {}),
   ...(isHosted(url) ? { safety: { banned: [] } } : {}),
 }, null, 2) + '\n'
 
@@ -164,7 +175,10 @@ export function cmdInit(a: Args): boolean {
   const copy = (from: string, to: string) => put(to, () => fs.copyFileSync(from, to))
   if (withConfig) {
     const url = a.opt('base') ?? 'http://localhost:3000'
-    put(path.resolve(dir, DEFAULT_CONFIG), () => fs.writeFileSync(path.resolve(dir, DEFAULT_CONFIG), STARTER_CONFIG(url)))
+    const theme = a.opt('theme') ? themeNamed(a.opt('theme')!)?.name : undefined
+    put(path.resolve(dir, DEFAULT_CONFIG), () => fs.writeFileSync(path.resolve(dir, DEFAULT_CONFIG), STARTER_CONFIG(url, theme)))
+    // the skill that teaches an agent how this theme is used well
+    if (theme) copy(asset('skills', `showcase-theme-${theme}`, 'SKILL.md'), path.resolve(dir, '.claude', 'skills', `showcase-theme-${theme}`, 'SKILL.md'))
     copy(asset('templates', 'brief', 'video.ts'), path.resolve(dir, 'video.ts'))
   } else {
     copy(asset('templates', 'starter', 'video.ts'), path.resolve(dir, 'video.ts'))

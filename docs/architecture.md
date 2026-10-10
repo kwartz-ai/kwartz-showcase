@@ -155,6 +155,7 @@ The rules that keep it that way:
 | `video/define.ts` | `defineVideo`; fill defaults; refuse mistakes early | file system (import) |
 | `brief/brief.ts` | The config type; every check on it; local or hosted | file system |
 | `brief/presets.ts` | Shapes, platforms, safe areas, motion feels; the layout for a shape | none |
+| `brief/themes.ts` | The themes: colours, pairing, backdrop, sound mood, and the look of every surface | none |
 | `brief/fonts.ts` | The Google Fonts table, the pairings, the stylesheet address, the check before a render | network |
 | `brief/plan.ts` | From a length to scenes and a word budget; advice when a render misses | none |
 | `brief/script.ts` | Read a person's script and place its paragraphs on scenes | none |

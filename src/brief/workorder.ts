@@ -8,6 +8,8 @@ import { isHosted } from './brief.ts'
 import { planFor } from './plan.ts'
 import { FORMATS, PLATFORMS, layoutFor } from './presets.ts'
 import { ctaFor, targetsFor } from './resolve.ts'
+import { themeNamed } from './themes.ts'
+import { asset } from '../core/paths.ts'
 
 export function workOrder(brief: Brief, dir: string): string {
   const length = brief.length ?? 30
@@ -36,6 +38,14 @@ export function workOrder(brief: Brief, dir: string): string {
       + (l.mode !== 'fill' ? `. The product is filmed in a ${l.width}x${l.height} window; zoom closer than usual and keep labels short.` : ''))
   }
   if (targets.length > 1) lines.push('', 'One scenes file serves every shape. Give a scene `formats: [\'landscape\']` to leave it out of the others.')
+  const picked = brief.theme ? themeNamed(brief.theme) : null
+  if (picked) {
+    const skill = asset('skills', `showcase-theme-${picked.name}`, 'SKILL.md')
+    lines.push('', `## Theme: ${picked.name} (${picked.preset.style})`, '',
+      `Suits: ${picked.preset.use}.`,
+      'The theme already sets the surfaces, fonts, colours, backdrop, movement and sound. Build your own graphics from `theme.look` so they match.',
+      fs.existsSync(skill) ? `How a designer uses this style in a video: read ${skill}` : '')
+  }
   lines.push('', '## Script', '',
     hasScript
       ? `The person wrote their own script: ${brief.script}. Use their words as they are, one paragraph per scene. Do not rewrite them.`

@@ -1,5 +1,36 @@
 # Changelog
 
+## 2.1.0 (not released)
+
+Themes: one word sets the whole look of a video.
+
+Added
+- Twelve themes, set with `"theme"` in the config: `minimal`, `glass`, `liquid`,
+  `soft`, `clay`, `brutal`, `maximal`, `bento`, `real`, `spatial`, `editorial`,
+  `terminal`. Each sets how cards, chips, captions, callout labels and the highlight
+  ring are drawn, the font pairing, the colours, the backdrop and corner of the
+  picture, how things arrive, and the mood of the sounds. The design terms
+  (`glassmorphism`, `neumorphism`, `skeuomorphism` and so on) work as names too.
+- Six ways of arriving: rise, float, pop, cut, depth and typed text.
+- `showcase themes`, `showcase make --theme <name>` (renders into files named after
+  the theme, so looks can be compared), and `showcase init --config --theme <name>`.
+- A skill for each theme (`skills/showcase-theme-<name>`), on how a designer uses that
+  style in a video. The work order points at it.
+- `theme.look` for graphics of your own, with `arrive`, `CARD_KEYS` and `scaleCss`.
+  The motion example is built from it and renders in every theme.
+- `docs/themes.md` and guide 15.
+
+Changed
+- Cards, captions, labels and the highlight ring take their surfaces from the theme.
+  The kit's own look is unchanged and is now called `classic`.
+- On a tall frame the band behind the captions follows the theme.
+- The "how it works" card uses a grid of two on a narrow frame.
+
+Tests: 1013 unit tests, and a mutation run of 55 deliberate breaks.
+
+Rules checked by tests for every theme: caption contrast of at least 7 to 1, text on
+a solid ground at least 7 to 1, the highlight at least 3 to 1.
+
 ## 2.0.0 (2026-10-10)
 
 The project has a new name, **Kwartz Showcase**, and a video can now be described in

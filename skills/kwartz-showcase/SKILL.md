@@ -53,6 +53,8 @@ by the next unfinished item in "Craft standard". With no video yet, run
 | `showcase make --remix` | Rebuild every shape from the last takes (after a sound change) |
 | `showcase login` | The user signs in once in a visible browser; the session is saved |
 | `showcase sounds --role callout --mood "calm"` | List sound candidates |
+| `showcase themes` | List the themes |
+| `showcase make --theme glass --draft` | Render in a theme for one run, into files named after it |
 | `showcase init` | Adds a hand-written `video.ts` and this skill to a project |
 | `showcase render video.ts --draft` | Picture only, no voice: use until every scene runs |
 | `showcase render video.ts` | Full render to `out/<name>.mp4`, then the checks |
@@ -157,18 +159,25 @@ rendered file.
    (a bright highlight sound was heard by reviewers as a squeak). Read the "sound,"
    lines `showcase make` prints and report which sounds were used and which were refused.
    Never bypass the measurements by naming a sound you have not measured.
-7. **Type.** Choose one pairing for the product with `style.fontPreset` (`modern`,
+7. **Theme.** If the config has `"theme"`, read the skill for it
+   (`.claude/skills/showcase-theme-<name>/SKILL.md`, or the path the work order gives)
+   before writing any scene, and follow its rules. Build your own graphics from
+   `theme.look` and `arrive(theme)`, never from colours you typed in, so they match the
+   cards. If there is no theme, suggest one that suits the product (`showcase themes`
+   lists them) and say why; do not pick `maximal` or `brutal` for a serious product.
+   To compare looks, render with `showcase make --theme <name> --draft`.
+8. **Type.** Choose one pairing for the product with `style.fontPreset` (`modern`,
    `geometric`, `technical`, `minimal`, `bold`, `editorial`, `elegant`, `friendly`,
    `playful`, `poster`, `corporate`) and say why. Do not mix faces from two pairings.
    After `showcase explore`, the product's own font and button colour are used for
    what the config leaves unset: read the "note:" lines and report them.
-8. **Border.** Every video sits on a backdrop with rounded corners (on by
+9. **Border.** Every video sits on a backdrop with rounded corners (on by
    default). Keep it unless the user asks otherwise. `style.backdrop` takes a preset
    (`indigo`, `aurora`, `ocean`, `forest`, `sunset`, `rose`, `graphite`, `paper`),
    `brand` (made from the accent colour: the safe choice for a branded video), three
    colours, or a picture the user supplies.
    Nothing important may sit in the outer 3 percent of the page: the corner cuts it.
-9. **Finish.** The size of the shape (1920x1080 for landscape, 1080x1920 for
+10. **Finish.** The size of the shape (1920x1080 for landscape, 1080x1920 for
    vertical), 30 fps, H.264 with AAC, plus the caption file. Short vertical video must
    show the problem in the first 2 seconds and make sense with the sound off. Pick one
    frame that states the promise as the thumbnail.

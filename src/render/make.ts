@@ -9,6 +9,7 @@ import { workingFontsUrl } from '../brief/fonts.ts'
 import { fitAdvice, type Plan } from '../brief/plan.ts'
 import { loadScenes, resolveBrief, type BriefVideo } from '../brief/resolve.ts'
 import { PLATFORMS } from '../brief/presets.ts'
+import { themeNamed } from '../brief/themes.ts'
 import { verify, type Check } from '../verify/verify.ts'
 import { outFiles, remix, render, type RenderOptions } from './render.ts'
 
@@ -29,22 +30,31 @@ export interface MakeResult { plan: Plan; made: Made[]; notes: string[]; palette
 export const workDir = (dir: string) => path.join(dir, '.showcase')
 
 /** Resolve a config file into the videos it asks for, without rendering. */
-export async function loadProject(configFile?: string): Promise<{ dir: string; plan: Plan; videos: BriefVideo[]; notes: string[]; brief: ReturnType<typeof loadBrief>['brief'] }> {
+export async function loadProject(configFile?: string, theme?: string): Promise<{ dir: string; plan: Plan; videos: BriefVideo[]; notes: string[]; brief: ReturnType<typeof loadBrief>['brief'] }> {
   const { brief, dir } = loadBrief(configFile)
+  // a theme named for one run: its files carry the theme's name, so looks can be compared
+  if (theme) {
+    const named = themeNamed(theme)
+    brief.theme = named?.name
+    brief.name = `${brief.name ?? 'video'}-${named?.name ?? 'classic'}`
+  }
   const resolved = resolveBrief(brief, dir, await loadScenes(brief, dir))
   return { dir, brief, ...resolved }
 }
 
-export async function make(configFile: string | undefined, opts: RenderOptions & { remix?: boolean } = {}): Promise<MakeResult> {
+export async function make(configFile: string | undefined, opts: RenderOptions & { remix?: boolean; theme?: string } = {}): Promise<MakeResult> {
   const log = opts.log ?? console.log
-  const { dir, brief, plan, videos, notes } = await loadProject(configFile)
+  const { dir, brief, plan, videos, notes } = await loadProject(configFile, opts.theme)
+  if (brief.theme) log(`theme: ${brief.theme}`)
   for (const n of notes) log(`note: ${n}`)
 
   // one sound set for the whole project, chosen once and then kept
   const choice = brief.sound?.effects ?? 'auto'
   let palette: Palette | null = null
   if (choice !== 'none' && !opts.draft) {
-    palette = await resolvePalette(choice, brief.sound?.mood ?? '', path.join(workDir(dir), 'sounds.json'))
+    // a theme has a sound of its own, unless the person described another
+    const mood = brief.sound?.mood ?? (brief.theme ? themeNamed(brief.theme)?.preset.mood : undefined) ?? ''
+    palette = await resolvePalette(choice, mood, path.join(workDir(dir), 'sounds.json'))
     for (const role of ['click', 'callout', 'transition'] as const) log(`sound, ${role}: ${palette[role].name} (${palette[role].why})`)
   }
 

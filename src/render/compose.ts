@@ -24,7 +24,7 @@ export async function composeFrames(frames: Frame[], layout: Layout, theme: Them
   fs.mkdirSync(outDir, { recursive: true })
   // the recorder numbers its frames f000000.jpg onwards, so one run handles them all
   await run('ffmpeg', ['-y', '-v', 'error', '-start_number', '0', '-i', path.join(appDir, 'f%06d.jpg'),
-    '-vf', windowFilter(layout, theme.ink), '-q:v', '2', '-start_number', '0', path.join(outDir, 'f%06d.jpg')])
+    '-vf', windowFilter(layout, theme.band), '-q:v', '2', '-start_number', '0', path.join(outDir, 'f%06d.jpg')])
   return frames.map((f) => inApp(f) ? { ...f, file: path.join(outDir, path.basename(f.file)) } : f)
 }
 
@@ -36,7 +36,7 @@ export function captionDocument(text: string, layout: Layout, theme: Theme): str
 ${theme.fontsCss ? `<link rel="stylesheet" href="${esc(theme.fontsCss)}">` : ''}
 <style>html,body{margin:0;background:transparent}
 #band{width:${width}px;height:${layout.captionBand.height}px;display:flex;align-items:center;justify-content:center}
-#cap{max-width:${Math.round(width * 0.88)}px;color:#fff;text-align:center;text-wrap:balance;
+#cap{max-width:${Math.round(width * 0.88)}px;color:${theme.bandText};text-align:center;text-wrap:balance;
   font:600 ${size}px/1.28 ${theme.type.text};letter-spacing:.002em}</style>
 </head><body><div id="band"><div id="cap">${esc(text)}</div></div></body></html>`
 }

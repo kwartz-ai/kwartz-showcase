@@ -383,6 +383,25 @@
     "motionOnly": {
       "type": "boolean",
       "description": "A video of motion graphics and clips only. No product is filmed, so \"url\" and \"serve\" are not needed."
+    },
+    "theme": {
+      "enum": [
+        "classic",
+        "minimal",
+        "glass",
+        "liquid",
+        "soft",
+        "clay",
+        "brutal",
+        "maximal",
+        "bento",
+        "real",
+        "spatial",
+        "editorial",
+        "terminal"
+      ],
+      "default": "classic",
+      "description": "One word for the whole look: how cards, labels and captions are drawn, the fonts, colours, backdrop, movement and sound. \"style\" still overrides single parts."
     }
   },
   "anyOf": [

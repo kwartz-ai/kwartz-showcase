@@ -3,6 +3,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { FONT_PRESETS } from './fonts.ts'
+import { THEME_NAMES, isTheme } from './themes.ts'
 import { BACKDROPS, FORMATS, MOTION_FEELS, PLATFORMS, type LayoutMode, type MotionFeel } from './presets.ts'
 
 export type EffectsChoice = 'auto' | 'generated' | 'none' | { click?: string; callout?: string; transition?: string }
@@ -25,6 +26,9 @@ export interface Brief {
   formats?: (string | { width: number; height: number })[]
   /** How a desktop product is placed in a tall shape. Default depends on the shape. */
   layout?: LayoutMode
+  /** One word for the whole look: surfaces, fonts, colours, backdrop, movement and
+   *  sound. "style" still overrides single parts. Default: the kit's classic look. */
+  theme?: string
   audience?: string
   /** The one thing the video should prove. */
   promise?: string
@@ -73,7 +77,7 @@ export function isHosted(url: string | undefined): boolean {
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i
 export const IMAGE = /\.(png|jpe?g|webp)$/i
-const KNOWN = new Set(['$schema', 'name', 'url', 'serve', 'motionOnly', 'length', 'platforms', 'formats', 'layout', 'audience', 'promise', 'cta',
+const KNOWN = new Set(['$schema', 'name', 'url', 'serve', 'motionOnly', 'length', 'platforms', 'formats', 'layout', 'theme', 'audience', 'promise', 'cta',
   'script', 'scenes', 'style', 'voice', 'music', 'motion', 'sound', 'auth', 'safety'])
 
 /** Check a brief and say everything that is wrong with it at once. */
@@ -103,6 +107,7 @@ export function validateBrief(input: unknown): Brief {
     else if (f.width % 2 || f.height % 2) bad('a custom shape needs an even "width" and "height"')
   }
   if (b.layout !== undefined && !['fill', 'framed', 'fit', 'responsive'].includes(b.layout)) bad('"layout" must be fill, framed, fit or responsive')
+  if (b.theme !== undefined && !isTheme(b.theme)) bad(`unknown theme "${String(b.theme)}". Themes: classic, ${THEME_NAMES.join(', ')}`)
   if (b.cta !== undefined && (typeof b.cta?.text !== 'string' || !b.cta.text.trim())) bad('"cta" needs a "text", for example { "text": "Book a walkthrough" }')
   for (const c of [b.style?.ink, b.style?.accent]) if (c !== undefined && !HEX.test(c)) bad(`a colour must be a hex value such as #0B1D35 (got ${c})`)
   for (const [role, name] of Object.entries(b.style?.fonts ?? {})) {

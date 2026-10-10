@@ -67,7 +67,7 @@ async function captionPictures(context: BrowserContext, cues: Cue[], layout: Lay
   try {
     await page.setViewportSize(layout.canvas)
     // the motion document already has the caption box; only its background goes
-    await page.setContent(motionDocument('', layout, theme).replace(`background:${theme.ink}}`, 'background:transparent}'), { waitUntil: 'load' })
+    await page.setContent(motionDocument('', layout, theme).replace(`background:${theme.band}}`, 'background:transparent}'), { waitUntil: 'load' })
     await page.evaluate(() => document.fonts.ready.then(() => undefined))
     const files: string[] = []
     for (const [i, cue] of cues.entries()) {
@@ -109,7 +109,7 @@ export async function renderClip(context: BrowserContext, input: ClipInput): Pro
   const pictures = cues.length ? await captionPictures(context, cues, layout, theme, dir) : []
   const args = ['-y', '-v', 'error', '-ss', String(input.from), '-i', input.file]
   for (const p of pictures) args.push('-loop', '1', '-framerate', String(layout.fps), '-i', p)
-  await run('ffmpeg', [...args, '-filter_complex', clipGraph(layout, theme.ink, input.fit, cues), '-map', `[c${cues.length}]`,
+  await run('ffmpeg', [...args, '-filter_complex', clipGraph(layout, theme.band, input.fit, cues), '-map', `[c${cues.length}]`,
     '-t', (input.durationMs / 1000).toFixed(3), '-q:v', '2', '-start_number', '0', path.join(dir, 'k%05d.jpg')])
   const step = 1000 / layout.fps
   const frames = fs.readdirSync(dir).filter((f) => /^k\d{5}\.jpg$/.test(f)).sort()

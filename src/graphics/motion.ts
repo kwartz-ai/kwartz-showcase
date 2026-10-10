@@ -7,7 +7,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import type { BrowserContext, Page } from 'playwright'
-import type { Theme } from '../core/theme.ts'
+import { scaleCss, type Theme } from '../core/theme.ts'
 import type { Cue, Frame, Layout } from '../core/types.ts'
 import { esc, run } from '../core/util.ts'
 
@@ -40,18 +40,17 @@ export function motionDocument(html: string, layout: Layout, theme: Theme): stri
   // Where captions are drawn on the canvas, they are white on the dark colour. A
   // motion scene fills the whole canvas, so the band is kept dark under any scene.
   const band = layout.captions === 'composite'
-    ? `<div id="showcase-band" style="position:fixed;left:0;right:0;top:${layout.captionBand.y}px;bottom:0;background:${theme.ink}"></div>` : ''
+    ? `<div id="showcase-band" style="position:fixed;left:0;right:0;top:${layout.captionBand.y}px;bottom:0;background:${theme.band}"></div>` : ''
   return `<!doctype html><html><head><meta charset="utf-8">
 ${theme.fontsCss ? `<link rel="stylesheet" href="${esc(theme.fontsCss)}">` : ''}
-<style>html{zoom:${zoom}} html,body{margin:0;width:${width / zoom}px;height:${height / zoom}px;overflow:hidden;background:${theme.ink}}</style>
+<style>html{zoom:${zoom}} html,body{margin:0;width:${width / zoom}px;height:${height / zoom}px;overflow:hidden;background:${theme.band}}</style>
 </head><body>
 <div id="showcase-scene" style="position:fixed;inset:0;font-family:${theme.type.text}">${html}</div>
 ${band}
 <div id="showcase-caption" style="position:fixed;left:50%;bottom:${30 * u + layout.safe.bottom / zoom}px;transform:translateX(-50%);
   width:max-content;max-width:${Math.min(580 * u, width / zoom - 40 * u)}px;display:none;
-  background:${theme.ink};opacity:.94;color:#fff;padding:${11 * u}px ${22 * u}px ${12 * u}px;border-radius:${11 * u}px;text-align:center;
-  font:500 ${19.5 * u}px/1.34 ${theme.type.text};letter-spacing:.003em;text-wrap:balance;
-  box-shadow:0 8px 28px rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.14)"></div>
+  ${scaleCss(theme.look.caption, u)};padding:${11 * u}px ${22 * u}px ${12 * u}px;text-align:center;
+  font:500 ${19.5 * u}px/1.34 ${theme.type.text};letter-spacing:.003em;text-wrap:balance"></div>
 </body></html>`
 }
 

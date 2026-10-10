@@ -43,6 +43,11 @@ MUTATIONS = [
     ('src/graphics/motion.ts', 'return o > 0.15', 'return true', 'hidden things are reported as cut off'),
     ('src/verify/verify.ts', "      ok: n === 0,\n      detail: n === 0\n        ? 'every graphic", "      ok: true,\n      detail: n === 0\n        ? 'every graphic", 'a cut-off graphic does not fail the render'),
     ('src/capture/stage.ts', 'if (b.x < 0 || b.y < 0 || b.x + b.w > vw || b.y + b.h > vh) this.problems.push(', 'if (false) this.problems.push(', 'a highlight off screen is not noticed'),
+    ('src/brief/resolve.ts', "else if (preset) { /* a theme's highlight is part of its look */ }", 'else if (false) { }', 'the product colour overrides a theme'),
+    ('src/brief/themes.ts', "if (n === key || preset.aliases.includes(key)) return", "if (n === key) return", 'the design terms no longer name a theme'),
+    ('src/render/border.ts', "if (r <= 0) return `color=c=white", "if (false) return `color=c=white", 'square corners dim the whole picture'),
+    ('src/graphics/cards.ts', "cut: { keys: 'showcasecut', time: 0, ease: 'steps(1,end)' },", "cut: { keys: 'showcaserise', time: 1 },", 'a brutal card eases in softly'),
+    ('src/brief/themes.ts', "caption: 'background:#0E1320;color:#FFFFFF;border-radius:8px',", "caption: 'background:#E5E7EB;color:#FFFFFF;border-radius:8px',", 'a theme ships captions nobody can read'),
     ('src/capture/explore.ts', '&& !/log-?out|sign-?out/i.test(u)', '', 'explore follows the sign-out link'),
     ('src/render/captions.ts', 'export const CAPTION_MAX = 92', 'export const CAPTION_MAX = 140', 'captions may run to three lines'),
     ('src/render/captions.ts', "if (last >= 0 && sentences[last]!.length < 16)", 'if (false)', 'very short sentences flash by'),
@@ -54,7 +59,7 @@ MUTATIONS = [
     ('src/capture/serve.ts', "if (!path.resolve(file).startsWith(path.resolve(root)))", 'if (false)', 'files outside the folder are served'),
     ('src/audio/tts.ts', 'const todo = clips.filter((c) => !fs.existsSync(c.out))', 'const todo = clips', 'every line is voiced again on every render'),
     ('src/setup/setup.ts', 'if (!fs.existsSync(file)) await download(', 'await download(', 'the model is downloaded again every time'),
-    ('src/graphics/cards.ts', 'em">${esc(title)}</div>', 'em">${title}</div>', 'title card no longer escapes its text'),
+    ('src/graphics/cards.ts', '${caps(theme)}">${esc(title)}</div>', '${caps(theme)}">${title}</div>', 'title card no longer escapes its text'),
 ]
 
 caught = 0
