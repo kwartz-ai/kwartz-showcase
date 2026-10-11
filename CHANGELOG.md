@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.2 (2026-10-11)
+
+A small change to the website. Nothing in the kit's own code changed.
+
+Added
+- The website's footer says "Powered by Kwartz AI", with the Kwartz logo, and links to
+  kwartz.ai.
+
 ## 2.2.1 (2026-10-11)
 
 A website for the kit. Nothing in the kit's own code changed.
