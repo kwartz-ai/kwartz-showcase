@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { ClayCard } from '@/components/atoms/clay-card'
 import { Container } from '@/components/atoms/container'
@@ -67,6 +68,18 @@ export function SiteFooter() {
             </nav>
           ))}
         </ClayCard>
+        <div className="flex justify-center pt-6">
+          <a
+            href="https://kwartz.ai/"
+            rel="noreferrer"
+            className="clay-flat flex items-center gap-2.5 rounded-full py-2 pr-5 pl-3 text-sm text-muted-foreground transition-transform duration-200 hover:-translate-y-0.5"
+          >
+            <Image src="/kwartz-logo.png" alt="" width={28} height={28} className="size-7" />
+            <span>
+              Powered by <strong className="font-heading font-bold text-foreground">Kwartz AI</strong>
+            </span>
+          </a>
+        </div>
       </Container>
     </footer>
   )
