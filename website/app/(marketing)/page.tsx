@@ -5,12 +5,12 @@ import { FeatureBento } from '@/components/organisms/feature-bento'
 import { Hero } from '@/components/organisms/hero'
 import { HowItWorks } from '@/components/organisms/how-it-works'
 import { ThemeStrip } from '@/components/organisms/theme-strip'
-import { softwareJsonLd } from '@/lib/seo'
+import { SHARE_IMAGE, softwareJsonLd } from '@/lib/seo'
 import { SITE } from '@/lib/site'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
-  openGraph: { title: `${SITE.name}: ${SITE.tagline.toLowerCase()}`, description: SITE.description, url: '/' },
+  openGraph: { title: `${SITE.name}: ${SITE.tagline.toLowerCase()}`, description: SITE.description, url: '/', siteName: SITE.name, type: 'website', locale: 'en', images: [SHARE_IMAGE] },
 }
 
 export default function Home() {

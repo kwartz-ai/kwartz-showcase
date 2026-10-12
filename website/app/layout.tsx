@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { DM_Sans, JetBrains_Mono, Outfit } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
+import { SHARE_IMAGE } from '@/lib/seo'
 import { SITE, SITE_URL } from '@/lib/site'
 import './globals.css'
 
@@ -14,8 +15,8 @@ export const metadata: Metadata = {
   description: SITE.description,
   applicationName: SITE.name,
   keywords: ['product demo video', 'demo video from code', 'Playwright video', 'narrated screen recording', 'vertical video for Shorts and Reels', 'Claude Code skill', 'video themes'],
-  openGraph: { siteName: SITE.name, type: 'website', locale: 'en' },
-  twitter: { card: 'summary_large_image' },
+  openGraph: { siteName: SITE.name, type: 'website', locale: 'en', images: [SHARE_IMAGE] },
+  twitter: { card: 'summary_large_image', images: [SHARE_IMAGE] },
   robots: { index: true, follow: true },
 }
 

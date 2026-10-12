@@ -27,6 +27,7 @@ Nothing about the kit is typed by hand here.
 | The theme studio's rules, looks and cards | `../src/brief/theme-rules.ts`, `../src/graphics/cards.ts` and what they import | `scripts/sync-engine.mjs` bundles them for the browser before every `dev` and `build`. The page runs the kit's code, not a copy. A test in the kit fails if these files start to need the disk |
 | The ten steps of "Your first video" | `lib/guide.ts` | Written from `docs/getting-started.md` and guides 1, 3, 10 and 11. Update it when those change |
 | The tour video in the guide | `public/videos/website-tour.mp4` | A web copy of the render of `../examples/website-tour` (its script and its `lavender` theme), about five and a half minutes in 36 scenes. Render it again after the site changes |
+| The share picture | `public/og.png` | Drawn from `scripts/og/og.html` at 1200 by 630. Shown when a link to the site is sent in a chat or posted |
 | The theme videos | `public/videos`, `public/posters` | Small web copies (960x540 and 540x960) of the renders of `examples/motion` |
 
 After changing a theme in the kit, run `bun run sync:kit` and commit the result.
@@ -37,7 +38,7 @@ Atomic design: small parts build bigger ones, and an atom knows nothing about th
 it is on.
 
 ```
-app/                    routes, metadata, sitemap, robots, the share picture
+app/                    routes, metadata, sitemap, robots
   (marketing)/          landing page, themes, the theme studio and how its prompt works, changelog
   docs/                 docs index, the first video guide, every doc
 components/

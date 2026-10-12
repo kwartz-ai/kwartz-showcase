@@ -1,14 +1,24 @@
 import type { Metadata } from 'next'
 import { SITE, abs } from '@/lib/site'
 
+/** The picture shown when a link to the site is sent in a chat or posted. Every page names
+ *  it, because a page that sets its own share card does not inherit the picture. */
+export const SHARE_IMAGE = {
+  url: '/og.png',
+  width: 1200,
+  height: 630,
+  type: 'image/png',
+  alt: 'Kwartz Showcase: demo videos, written not recorded. A video player shows a diagram of the four steps from a script to a video.',
+}
+
 /** Title, description, canonical address and share cards for one page. */
 export function pageMeta({ title, description, path }: { title: string; description: string; path: string }): Metadata {
   return {
     title,
     description,
     alternates: { canonical: path },
-    openGraph: { title, description, url: abs(path), siteName: SITE.name, type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
+    openGraph: { title, description, url: abs(path), siteName: SITE.name, type: 'website', locale: 'en', images: [SHARE_IMAGE] },
+    twitter: { card: 'summary_large_image', title, description, images: [SHARE_IMAGE] },
   }
 }
 
