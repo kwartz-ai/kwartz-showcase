@@ -1,5 +1,59 @@
 # Changelog
 
+## 2.4.0 (2026-10-12)
+
+Presentations are first class, and `explore` sees the page.
+
+These fix what fresh agents ran into when they made videos from the Theme Studio's
+prompt.
+
+Added
+- `showcase init --config --motion`: starts a presentation. The config has
+  `"motionOnly": true` and no address, and the scenes file has three motion scenes and
+  no `prepare` or `run`. It takes `--theme` like the plain form.
+
+Fixed
+- The work order for a presentation no longer talks about a product. It used to list
+  "one interaction on the real product", call each proof an app scene, and say to run
+  `showcase explore`. It now says every scene is a motion scene, how to count scenes
+  (an opening, one for each point, a close), and not to ask for a call to action.
+- `showcase make` no longer says "the address is local" for a video with no address.
+- `showcase explore` listed 40 controls in the order of the page, so a header and a
+  sidebar could use them all up and the page's own buttons were left out. It now lists
+  up to 80, the page's own content first, and writes navigation that is on every screen
+  once, under "On every screen".
+- The end card with no call to action sat in the top third of the frame. It now sits
+  lower, and its small note is larger (18 px, from 15).
+- The work order points at the project's own copy of a theme's skill, when
+  `showcase init` put one there, not at a path inside the kit.
+- A video with `motionOnly` that still has a scene on a product is refused with the
+  scene named and what to remove.
+- The skill, the work order and the starter file pointed at an example and at docs "in
+  the repo", which someone who installed from npm cannot open. They now name the path
+  in the installed package, and the motion example ships in the package.
+- The skill listed nine checks; `read-only` is only printed for a hosted product or
+  when read-only mode is on. The skill now says so.
+
+Changed
+- The tour of the website in `examples/website-tour/` is new: about five and a half
+  minutes in 36 scenes and five parts, covering the Theme Studio, the site's own video
+  player and the install from npm. The older three minute tour is removed.
+- The Theme Studio's prompt starts a presentation with `--motion`.
+- The prompt tells Claude to run `showcase setup` itself when the browser or the voice is
+  missing, and to stop and ask only for FFmpeg or Python.
+- A new page on the website, "From one prompt to a finished video": what happens after
+  the prompt is pasted, who does each step, what ends up in the folder, and a manual
+  guide for the npm package.
+
+Checked: two fresh agents, each given only the Theme Studio's prompt in an empty
+folder, made a voiced video that passed every check. One filmed the website. The
+other made a presentation on a machine with no voice installed, and ran
+`showcase setup` itself.
+
+Known limits: a draft estimates the voice a little slow, so a draft just inside the
+length can come out a second or two shorter when rendered. A label placed beside a
+highlight can still sit on a neighbouring button; the layout check does not see that.
+
 ## 2.3.2 (2026-10-12)
 
 A better first look on npm and GitHub. No code changed.

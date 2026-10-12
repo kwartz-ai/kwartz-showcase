@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     page('/docs/first-video', 0.9),
     page('/themes', 0.8),
     page('/studio', 0.8),
+    page('/studio/how-it-works', 0.7),
     ...DOCS.map((d) => page(hrefOf(d), d.section === 'start' ? 0.8 : 0.6)),
     ...THEMES.map((t) => page(`/themes/${t.name}`, 0.6)),
     page('/changelog', 0.4),

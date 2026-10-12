@@ -20,6 +20,8 @@ const COLUMNS = [
     links: [
       { href: '/docs', label: 'All docs' },
       { href: '/themes', label: 'Themes' },
+      { href: '/studio', label: 'Theme Studio' },
+      { href: '/studio/how-it-works', label: 'How the prompt works' },
       { href: '/docs/craft-guide', label: 'Craft guide' },
       { href: '/docs/troubleshooting', label: 'Troubleshooting' },
     ],

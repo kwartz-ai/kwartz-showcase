@@ -252,14 +252,14 @@ export function frameOf(c: Choice, scene: Scene): { html: string; backdrop: stri
 
 // The work order asks for an audience, a promise and a next step. The page does not
 // collect them, so the prompt says who decides.
-const choose = (deck: boolean) => `Choose the audience and the promise yourself, and tell me which you chose. I gave no call to action: end on ${deck ? 'the title of the talk' : 'the name of the product'} alone.`
+const choose = (deck: boolean) => `Choose the audience and the promise yourself, and tell me which you chose. I gave no call to action: end on ${deck ? 'the title of the talk' : 'the name of the product'}, with no next step.`
 
 /** One prompt for Claude Code that carries everything: the kit, the skills, the theme
  *  file, the config and what to make. Each step is a real command of the kit. */
 export function promptOf(c: Choice): string {
   const name = cleanName(c.name)
   const deck = c.kind === 'deck'
-  const init = c.base === 'classic' ? 'bunx showcase init --config' : `bunx showcase init --config --theme ${c.base}`
+  const init = `bunx showcase init --config${deck ? ' --motion' : ''}${c.base === 'classic' ? '' : ` --theme ${c.base}`}`
   return [
     deck
       ? `Make a ${c.length} second presentation video with Kwartz Showcase. No product is filmed: every scene is a motion graphic.`
@@ -269,8 +269,8 @@ export function promptOf(c: Choice): string {
     'Do this in order. If a step fails, stop and tell me what the error says.',
     '',
     '1. Install the kit in this folder. If this folder has no package.json, create one first: { "name": "my-video", "private": true, "type": "module" }. Then run "bun add -d kwartz-showcase". If Bun is not installed, run "npm install --save-dev kwartz-showcase" and write "npx" wherever these steps say "bunx".',
-    '2. Run "bunx showcase doctor". If something is missing, tell me what to install and wait for me.',
-    `3. Run "${init}". This adds the config, a starter video.ts and the skills: ${skillsOf(c).join(', ')}. Then add "out/" and ".showcase/" to .gitignore.`,
+    '2. Run "bunx showcase doctor". It lists what is missing, and ends with an error when something is: that is expected. If chromium or voice is missing, run "bunx showcase setup" yourself: it is a one-time download of about 350 MB. If ffmpeg or python is missing, tell me what to install and wait for me.',
+    `3. Run "${init}". This adds the config, a starter video.ts and the skills: ${skillsOf(c).join(', ')}. Then add "out/" and ".showcase/" to .gitignore (create the file if there is none).`,
     `4. Save this as themes/${name}.json, exactly as written:`,
     '',
     JSON.stringify(themeFileOf(c), null, 2),
@@ -281,10 +281,10 @@ export function promptOf(c: Choice): string {
     '',
     `6. Run "bunx showcase theme check ${name}". It must pass. Do not change the theme unless it fails.`,
     deck
-      ? `7. Follow the kwartz-showcase skill from here, but there is no product: skip "showcase explore" and everything about app scenes or an address. Run "bunx showcase plan" for the word budget, write the script first, then write every scene as a motion scene. Use an opening, one scene for each point, and a close, even if the plan counts scenes differently. A worked example is in the kit: examples/motion. ${choose(true)}`
-      : `7. Follow the kwartz-showcase skill from here. Run "bunx showcase explore" and "bunx showcase plan", write the script first, then the scenes. ${choose(false)}`,
+      ? `7. Follow the kwartz-showcase skill from here. There is no product, so nothing is explored. Run "bunx showcase plan" for the word budget, write the script first, then write every scene as a motion scene: an opening, one scene for each point, and a close. The plan's table may show fewer scenes: keep its word total, and share it across yours. ${choose(true)}`
+      : `7. Follow the kwartz-showcase skill from here. Run "bunx showcase explore" and "bunx showcase plan", write the script first, then the scenes. The map's screenshots show only the top of each page: for something further down, scroll it into view in the scene before you click or highlight it. ${choose(false)}`,
     '8. Run "bunx showcase make --draft" until it prints no FAIL line, the length included, and frames from every scene look right. Then run "bunx showcase make". If the full render fails the length check, add or cut the words it says and run it again.',
-    '9. Look at frames from the finished video: every scene, and every shape if there is more than one. Report each check line with the value it measured.',
+    '9. Look at frames from the finished video (take stills with ffmpeg): every scene, and every shape if there is more than one. A file named after a platform is a copy of a shape, not another shape. Report each check line with the value it measured.',
     '10. You cannot hear the video. End by asking me to listen to it once before I share it.',
   ].join('\n')
 }

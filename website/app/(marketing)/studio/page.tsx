@@ -50,6 +50,9 @@ export default function StudioPage() {
 
       <section className="pt-10">
         <Container className="flex flex-wrap gap-3">
+          <ClayLink href="/studio/how-it-works">
+            How the prompt works <ArrowRight />
+          </ClayLink>
           <ClayLink href="/docs/guides/your-own-theme" variant="soft">
             Guide 16: Your own theme <ArrowRight />
           </ClayLink>

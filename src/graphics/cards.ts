@@ -156,14 +156,16 @@ export function endCard(theme: Theme, card: EndCard, ms: number): string {
   const chips = (card.chips ?? []).map((c, i) => `
     <div style="opacity:0;animation:showcasechip ${Math.round(420 * theme.speed)}ms ${theme.ease} ${Math.round(ms * (0.1 + i * 0.1))}ms both;${look.chip};
       font:${Math.min(700, heavy(theme))} 24px/1 ${type.display};letter-spacing:${tight(theme, -.01)}em;padding:13px 30px${caps(theme)}">${esc(c)}</div>`).join('')
+  // with no next step the card is shorter: sit it lower, so it does not hang in the top third
+  const top = card.cta || card.ctaSub ? 19 : chips ? 30 : 36
   return sized(theme, `${CARD_KEYS}
     <div style="position:absolute;inset:0;background:${look.canvas}"></div>
-    <div style="position:absolute;left:0;right:0;top:19%;padding:0 7%;text-align:center;text-wrap:balance;color:${look.fg}">
+    <div style="position:absolute;left:0;right:0;top:${top}%;padding:0 7%;text-align:center;text-wrap:balance;color:${look.fg}">
       <div style="${rise(0)};font:${heavy(theme)} ${big(theme, 86)}px/1.02 ${type.display};letter-spacing:${tight(theme, -.04)}em${caps(theme)}">${esc(card.title)}</div>
       ${card.overline ? `<div style="${rise(120)};margin-top:12px;font:600 16px/1 ${type.mono};letter-spacing:.2em;color:${look.muted}">${esc(card.overline)}</div>` : ''}
       ${chips ? `<div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:50px">${chips}</div>` : ''}
       ${card.cta ? `<div style="${rise(ms * 0.42)};margin-top:58px;font:${Math.min(700, heavy(theme))} 36px/1.2 ${type.display};letter-spacing:${tight(theme, -.02)}em">${esc(card.cta)}</div>` : ''}
       ${card.ctaSub ? `<div style="${rise(ms * 0.52)};margin-top:12px;font:600 24px/1.2 ${type.text};color:${accent}">${esc(card.ctaSub)}</div>` : ''}
-      ${card.note ? `<div style="${rise(ms * 0.72)};margin-top:76px;font:400 15px/1.4 ${type.text};color:${look.muted};opacity:.85">${esc(card.note)}</div>` : ''}
+      ${card.note ? `<div style="${rise(ms * 0.72)};margin-top:76px;font:400 18px/1.4 ${type.text};color:${look.muted}">${esc(card.note)}</div>` : ''}
     </div>`)
 }

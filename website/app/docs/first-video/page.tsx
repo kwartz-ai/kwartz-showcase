@@ -30,19 +30,19 @@ export default function FirstVideo() {
       </SectionHeading>
 
       <ClayCard className="grid items-center gap-6 rounded-[2rem] p-4 sm:p-5 lg:grid-cols-[1.35fr_1fr]">
-        <VideoPlayer src="/videos/website-tour.mp4" poster="/posters/website-tour.jpg" title="A three minute tour of this website" priority />
+        <VideoPlayer src="/videos/website-tour.mp4" poster="/posters/website-tour.jpg" title="A tour of this website" priority />
         <div className="flex min-w-0 flex-col gap-3 px-1 pb-1">
           <Kicker>Watch first</Kicker>
-          <h2 className="text-2xl font-bold">A three minute tour</h2>
+          <h2 className="text-2xl font-bold">A tour of the whole site</h2>
           <p className="text-muted-foreground">
-            See the landing page, the docs, this guide and the themes before you start. The tour was made with Showcase itself: one script, filmed on this site while it ran.
+            See the landing page, the docs, this guide, the themes and the theme studio before you start. The tour was made with Showcase itself: one script, filmed on this site while it ran.
           </p>
           <div className="flex flex-wrap gap-2">
             <Pill tone="sky">
-              <Clock className="size-3.5" /> 3 min 12 s
+              <Clock className="size-3.5" /> 5 min 31 s
             </Pill>
             <Pill tone="mint">
-              <Film className="size-3.5" /> 21 scenes
+              <Film className="size-3.5" /> 36 scenes
             </Pill>
             <Pill>
               <Palette className="size-3.5" /> lavender theme

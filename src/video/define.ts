@@ -31,7 +31,8 @@ export function resolveVideo(config: VideoConfig, dir: string): ResolvedVideo {
   if (!config.scenes?.length) throw new Error('video has no scenes')
   // a video made only of motion graphics and clips films no product
   if (!config.baseUrl && !config.serve && config.scenes.some((s) => s.run)) {
-    throw new Error('video needs "baseUrl" (an app to film) or "serve" (a folder of static files): it has scenes that run on a product')
+    const ids = config.scenes.filter((s) => s.run).map((s) => s.id).join(', ')
+    throw new Error(`video needs "baseUrl" (an app to film) or "serve" (a folder of static files): it has scenes that run on a product (${ids}). For a video with no product ("motionOnly"), remove those scenes and "prepare": every scene must be a motion scene or a clip`)
   }
   const seen = new Set<string>()
   for (const s of config.scenes) {

@@ -6,6 +6,7 @@ const HELP = `showcase: narrated product demo videos, rendered from a script
 
 From a config (showcase.config.json): describe the video, and let scenes be written for it
   showcase init --config          start a config-driven video: showcase.config.json, video.ts, the skill
+  showcase init --config --motion a presentation: motion graphics alone, no product filmed
                                   (--theme <name> sets a theme and adds its skill)
   showcase explore [config]       open the product and map its screens into .showcase/explore/
                                   (also takes an address; --max-pages <n>, default 8)

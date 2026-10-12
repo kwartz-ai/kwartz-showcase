@@ -44,7 +44,7 @@ export default defineVideo({
 showcase render video.ts
 ```
 
-> Version 2.3.2. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
+> Version 2.4.0. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
 > It is on npm as [`kwartz-showcase`](https://www.npmjs.com/package/kwartz-showcase).
 
 ## What you get
@@ -146,6 +146,7 @@ Chromium.
 | `showcase verify <video.ts>` | Measure the last render again |
 | `showcase init [dir]` | Start a video in a project |
 | `showcase init --config` | Start a config-driven video: `showcase.config.json`, `video.ts`, the skill |
+| `showcase init --config --motion` | Start a presentation: motion graphics alone, no product filmed |
 | `showcase explore [config or address]` | Map the product's screens into `.showcase/explore/` |
 | `showcase plan [config]` | Print the work order: scenes, word budget, shapes, safety |
 | `showcase auto [config]` | Beta. Explore, have Claude write the scenes through the API, draft, render (needs `ANTHROPIC_API_KEY`) |
@@ -190,7 +191,7 @@ Start at the [docs index](docs/README.md), which lists these in reading order.
 - [How it works](docs/how-it-works.md): the pipeline, and why it is built this way
 - [Architecture](docs/architecture.md): processes, modules, data flow, diagrams, where to extend
 - [Tech stack](docs/tech-stack.md): every tool, its version, licence and role, and what was not chosen
-- [Testing](docs/testing.md): how the 1100 unit tests are organised, and how to add one
+- [Testing](docs/testing.md): how the 1120 unit tests are organised, and how to add one
 - [Release checklist](docs/release-checklist.md): how to know it works before you commit, push or release
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research notes](docs/research.md): the tools and skills we compared before building this
@@ -200,7 +201,7 @@ Start at the [docs index](docs/README.md), which lists these in reading order.
 The landing page and docs site are live at [kwartz-showcase.vercel.app](https://kwartz-showcase.vercel.app). Their source is in [`website/`](website/README.md): Next.js, in a clay
 style, reading these same docs so the two cannot drift apart. It is not part of the
 package. Its **Theme Studio** runs the kit's own theme rules and card code in the browser, and
-hands a checked theme and a prompt to Claude Code. A three minute tour of it, made with the kit, is in `examples/website-tour/`.
+hands a checked theme and a prompt to Claude Code. A tour of it, made with the kit, is in `examples/website-tour/`.
 
 ## Background
 

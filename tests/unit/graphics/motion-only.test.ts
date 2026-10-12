@@ -36,7 +36,12 @@ describe('a config with no product', () => {
   it('resolves to a video with no address, read-only off, and no closing line', () => {
     const { videos, notes } = resolveBrief({ name: 'm', motionOnly: true }, dir, defineScenes({ scenes: [{ id: 'a', say: 'A.', motion }] }))
     expect(videos[0]!.video).toMatchObject({ baseUrl: '', serve: null, readOnly: { on: false } })
-    expect(notes.join(' ')).toMatch(/no call to action/)
+    // there is no address to send a viewer to, so ending without one is not a gap to report
+    expect(notes.join(' ')).not.toMatch(/call to action|address is local/)
+  })
+  it('still notes a missing call to action for a product on a local address', () => {
+    const { notes } = resolveBrief({ name: 'p', url: 'http://localhost:3000' }, dir, defineScenes({ scenes: [{ id: 'a', say: 'A.', motion }] }))
+    expect(notes.join(' ')).toMatch(/no call to action: the address is local/)
   })
   it('says in the work order that nothing is filmed', () => {
     expect(workOrder({ motionOnly: true }, dir)).toContain('Product: none is filmed. Every scene is a motion scene or a clip.')

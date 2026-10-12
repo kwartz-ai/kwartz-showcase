@@ -13,6 +13,7 @@ const groups: SidebarGroup[] = [
     links: [
       { href: '/docs', label: 'All docs' },
       { href: '/docs/first-video', label: 'Your first video' },
+      { href: '/studio/how-it-works', label: 'From a prompt to a video' },
     ],
   },
   ...SECTIONS.map((s) => ({
@@ -23,6 +24,8 @@ const groups: SidebarGroup[] = [
 
 const search: SearchEntry[] = [
   { href: '/docs/first-video', title: 'Your first video, step by step', group: 'Start', hint: 'install setup guide' },
+  { href: '/studio/how-it-works', title: 'From one prompt to a finished video', group: 'Start', hint: 'claude code prompt flow manual npm' },
+  { href: '/studio', title: 'Theme Studio', group: 'Start', hint: 'make a theme surprise brand colour' },
   ...DOCS.map((d) => ({
     href: hrefOf(d),
     title: d.title,
