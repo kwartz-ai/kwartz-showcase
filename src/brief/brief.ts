@@ -3,6 +3,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { FONT_PRESETS } from './fonts.ts'
+import { isHosted } from './hosted.ts'
 import { findTheme } from './custom-theme.ts'
 import { BACKDROPS, FORMATS, MOTION_FEELS, PLATFORMS, type LayoutMode, type MotionFeel } from './presets.ts'
 
@@ -68,12 +69,8 @@ export interface Brief {
   safety?: { readOnly?: boolean; allow?: string[]; banned?: string[] }
 }
 
-const LOCAL_HOST = /^(localhost|127\.\d+\.\d+\.\d+|0\.0\.0\.0|\[?::1\]?|.*\.local|.*\.localhost|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)$/i
-
-/** A hosted address is anything that is not this machine or a private network. */
-export function isHosted(url: string | undefined): boolean {
-  return !!url && !LOCAL_HOST.test(new URL(url).hostname)
-}
+// whether an address is hosted is plain logic, kept apart so a web page can ask it too
+export { isHosted } from './hosted.ts'
 
 const HEX = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i
 export const IMAGE = /\.(png|jpe?g|webp)$/i
