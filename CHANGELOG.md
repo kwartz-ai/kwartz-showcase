@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.3.2 (2026-10-12)
+
+A better first look on npm and GitHub. No code changed.
+
+Changed
+- The package's homepage is the website, not the README on GitHub.
+- The README opens with links to the website, the docs, the first video guide, the
+  themes, the Theme Studio and the npm page.
+
 ## 2.3.1 (2026-10-12)
 
 The kit is on npm, and the docs say so.
