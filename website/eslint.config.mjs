@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // bundled from the kit by scripts/sync-engine.mjs
+    "lib/generated/**",
   ]),
 ]);
 

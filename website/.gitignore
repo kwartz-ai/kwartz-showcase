@@ -42,6 +42,8 @@ next-env.d.ts
 
 # the kit's docs, read from ../docs before every dev and build
 /lib/generated/docs.json
+# the kit's theme rules and cards, bundled for the browser before every dev and build
+/lib/generated/engine.js
 
 # written by next dev on every run; not ours to edit
 /AGENTS.md

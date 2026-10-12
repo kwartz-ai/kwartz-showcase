@@ -86,6 +86,24 @@ kwartz-showcase repo, and `schema/showcase.config.schema.json` checks the file.
 6. **`showcase make`.** If the length check fails, the report says how many words to add or
    cut. Change the narration, not the pacing.
 
+### A video with no product: a presentation
+
+When the config has `"motionOnly": true` in place of `url`, nothing is filmed. Every
+scene is a motion scene (or a clip), so parts of the steps above do not apply:
+
+- Skip `showcase explore`, `prepare`, sign-in and everything about app scenes. Delete
+  the `prepare` and the `run` scene from the starter `video.ts`.
+- `showcase plan` still gives the length and the word budget. Its lines about proofs on
+  the real product and about exploring do not apply. Count scenes by the content: an
+  opening, one scene for each point, and a close.
+- Write each scene as `motion: ({ theme, sayMs }) => ...`. Use `hookCard`, `stepsCard`
+  and `endCard` where they fit, and build your own graphics from `theme.look` where
+  they do not. A complete example is `examples/motion/` in the kwartz-showcase repo.
+- With no address there is no call to action to link to. End on the conclusion, or on
+  a `cta` the user gave. Do not ask for one.
+- Every frame is your design, so look harder: nothing under about 20 px, the lower half
+  of the frame used, one highlight per card.
+
 One scenes file serves every shape. In a vertical video the product is a window about
 830 px wide with captions below it: zoom closer (`scale: layout.mode === 'fill' ? 1.5 : 1.9`),
 keep labels to three words, and leave a scene out of other shapes with

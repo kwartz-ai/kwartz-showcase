@@ -1,5 +1,39 @@
 # Changelog
 
+## 2.3.0 (2026-10-12)
+
+A theme studio on the website: make a theme in the browser, and hand it to Claude.
+
+Added
+- Theme Studio, at `/studio` on the website. Pick one of the looks, a brand colour, a
+  font pairing, the movement and the corners, and see the cards on a video frame as
+  they change. The page runs the kit's own theme rules and draws with the kit's own
+  card code, bundled for the browser, so a theme it hands over is one a render accepts.
+  A theme that fails a rule shows the kit's own message and cannot be copied.
+- Three things to copy from it: the theme file, the config, and one prompt for Claude
+  Code that carries both, names the skills, and says what to make. Two kinds of video:
+  one of your website, or a presentation with no product filmed.
+- "Surprise me": a whole theme by chance, from combinations that suit each other, and
+  only one the rules accept. A backdrop can be drawn in shades of the brand colour.
+- The editor skill has a section for a video with no product (`"motionOnly": true`):
+  what to skip, how to count scenes, and how to end with no address to link to.
+
+Changed
+- The rules of a theme file moved to `src/brief/theme-rules.ts`, with the motion feels
+  and backdrops in `src/brief/looks.ts` and `esc` in `src/core/html.ts`. None of them
+  reads the disk or starts a process, so a web page can run them. Everything is still
+  exported from where it was. A test fails if these files start to need the disk.
+  Nothing about how a video renders changed.
+- `presetTheme`: a theme preset as the theme the cards are drawn with. A test holds it
+  to what a video that names the theme gets, for all twelve themes.
+
+Known limits: the studio shows a landscape frame only. Its "on your product" scene is a
+stand-in screen with the theme's real highlight, label and caption styles. The prompt
+was tested by giving it to a fresh agent in an empty folder, for a website video and for
+a presentation; each produced a voiced video that passed every check. For a
+presentation, `showcase plan` and `showcase init` still print lines about a product:
+the prompt and the skill say which to skip.
+
 ## 2.2.2 (2026-10-11)
 
 A small change to the website. Nothing in the kit's own code changed.

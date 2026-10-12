@@ -21,9 +21,7 @@ export function run(cmd: string, args: string[], opts: { input?: string; stderr?
 
 export const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 
-/** Escape text for use inside overlay HTML. */
-export const esc = (s: unknown) => String(s).replace(/[&<>"]/g,
-  (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c] ?? c)
+export { esc } from './html.ts'
 
 /** Where the voice model and its Python environment live, shared by every project
  *  on the machine so the 350 MB model is downloaded once. Override with SHOWCASE_HOME. */
