@@ -6,7 +6,8 @@ the agent writes the script and the scenes, renders, and reports what it checked
 
 ## Steps
 
-1. Start the video in your project. This also copies the skill to
+1. Install the kit in your project (`bun add -d kwartz-showcase`), then start the
+   video. This also copies the skill to
    `.claude/skills/kwartz-showcase/`:
    ```bash
    bunx showcase init --config

@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.3.1 (2026-10-12)
+
+The kit is on npm, and the docs say so.
+
+Changed
+- Installing is one line: `bun add -d kwartz-showcase` or
+  `npm install --save-dev kwartz-showcase`. The README, the getting started page, the
+  user guide, guide 12, the website's "Your first video" guide and the Theme Studio's
+  prompt no longer tell you to clone the repo and link it.
+- The requirements say Bun 1.2 or later, or Node 22.18 or later: the package holds the
+  compiled JavaScript, so Node needs no build.
+- The examples are in the repo, not in the package. The README and the user guide say
+  how to get them.
+
+Checked: the package was installed from the registry in fresh folders with npm and with
+Bun, and a video was rendered from each kind of install. 2.3.0 was the first version
+published to npm.
+
 ## 2.3.0 (2026-10-12)
 
 A theme studio on the website: make a theme in the browser, and hand it to Claude.
