@@ -151,12 +151,15 @@ The rules that keep it that way:
 | `core/types.ts` | Every shared type: `VideoConfig`, `Scene`, `Layout`, `Take`, `Frame`, `Cue`, `Dissolve` | none |
 | `core/theme.ts` | Colours, font stacks, easing, card and caption scale; merge a partial theme | none |
 | `core/paths.ts` | The kit's own folder and the files that ship in it | file system |
-| `core/util.ts` | `run` (start a process), `sleep`, `esc`, the cache folder | processes |
+| `core/util.ts` | `run` (start a process), `sleep`, the cache folder | processes |
+| `core/html.ts` | `esc`: text made safe for HTML | none |
 | `video/define.ts` | `defineVideo`; fill defaults; refuse mistakes early | file system (import) |
 | `brief/brief.ts` | The config type; every check on it; local or hosted | file system |
-| `brief/presets.ts` | Shapes, platforms, safe areas, motion feels; the layout for a shape | none |
+| `brief/presets.ts` | Shapes, platforms, safe areas; the layout for a shape | file system (import) |
+| `brief/looks.ts` | The motion feels and the named backdrops, as plain data | none |
 | `brief/themes.ts` | The themes: colours, pairing, backdrop, sound mood, and the look of every surface | none |
-| `brief/custom-theme.ts` | Theme files of a project: reading, the checks for safe CSS and readability, finding a theme by name | file system |
+| `brief/theme-rules.ts` | The rules of a theme file: its shape, safe CSS, readability; a theme file as a theme. Plain logic, so the website's theme studio runs the same rules | none |
+| `brief/custom-theme.ts` | Theme files of a project: reading them from disk, finding a theme by name | file system |
 | `brief/fonts.ts` | The Google Fonts table, the pairings, the stylesheet address, the check before a render | network |
 | `brief/plan.ts` | From a length to scenes and a word budget; advice when a render misses | none |
 | `brief/script.ts` | Read a person's script and place its paragraphs on scenes | none |

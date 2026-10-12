@@ -81,6 +81,26 @@ bunx showcase theme new acme --prompt "orange and dark blue, rounded and friendl
 If you ran `showcase explore` first, the product's own button colour and font are
 given to the model too.
 
+## Way 3: on the website
+
+The kit's website has a **Theme Studio**. Pick a look, your brand colour, a font pairing
+and the corners, and see the cards on a video frame as you change them. The page runs
+the same rules as `showcase theme check`, so a theme it hands over is one a render
+accepts.
+
+A **Surprise me** button makes a whole theme by itself: a look, a brand colour, a font
+pairing and a backdrop that suit each other, and only one the rules accept.
+
+It gives you three things to copy:
+
+- the theme file, to save as `themes/<name>.json`
+- the config file
+- one prompt for Claude Code, which carries both, names the skills, and says what to
+  make: a video of your website, or a presentation with no product filmed
+
+Paste the prompt into Claude Code in your project folder. Nothing is sent anywhere by
+the page itself.
+
 ## Check it worked
 
 ```

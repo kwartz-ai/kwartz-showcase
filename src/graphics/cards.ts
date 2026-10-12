@@ -9,7 +9,7 @@
 // Surfaces come from the theme's look: the same card is glass in one theme and
 // clay in another, and arrives the way that look moves.
 import type { Theme } from '../core/theme.ts'
-import { esc } from '../core/util.ts'
+import { esc } from '../core/html.ts'
 
 /** The keyframes every card uses. A scene of your own that uses `arrive` needs them too. */
 export const CARD_KEYS = `<style>

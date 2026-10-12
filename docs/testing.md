@@ -1,6 +1,6 @@
 # Testing
 
-The kit has 1085 unit tests, run with [Vitest](https://vitest.dev). They take about ten
+The kit has 1100 unit tests, run with [Vitest](https://vitest.dev). They take about ten
 seconds and need no browser, no FFmpeg, no voice model and no network.
 
 ```bash
@@ -23,6 +23,7 @@ layer.
 | `audio/sound-voice.test.ts` | 43 | Effects, the music bed, narration and its cache |
 | `auto/auto.test.ts` | 44 | `showcase auto`: reading the reply, the checks on a generated file, the API call, the draft and fix loop |
 | `brief/custom-theme.test.ts` | 71 | Themes of your own: safe CSS, the shape of a theme file, the readability rules, finding and using one, a theme from a description, the commands |
+| `brief/theme-rules.test.ts` | 15 | The theme rules and the cards reach no disk or process code, so a web page can run them; a theme through the plain path gives the same cards as a video |
 | `brief/fonts-style.test.ts` | 52 | The font table and pairings, the stylesheet address and its check, the product's own look, backdrops |
 | `graphics/clip.test.ts` | 28 | Clip scenes: trimming, fitting, length, captions, sound; backdrop patterns and pictures |
 | `brief/brief.test.ts` | 38 | The config: what passes, every refusal, local or hosted, loading the file |
