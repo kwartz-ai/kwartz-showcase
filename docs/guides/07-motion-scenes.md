@@ -55,7 +55,13 @@ them.
 
 ## A video of motion graphics alone
 
-A video does not have to film a product. Set `"motionOnly": true` in place of `url`,
+A complete example ships in the package, at
+`node_modules/kwartz-showcase/examples/motion/`. To render it, copy that folder into your
+project.
+
+A video does not have to film a product. Start one with
+`showcase init --config --motion`, which writes a config and a scenes file with no
+product in them. Or set `"motionOnly": true` in place of `url`,
 and make every scene a motion scene (or a clip):
 
 ```json

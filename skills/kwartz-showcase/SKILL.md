@@ -68,13 +68,18 @@ If `showcase` is not on PATH, use `bunx showcase` or `bun <path-to-kwartz-showca
 ## From a config
 
 `showcase.config.json` is the brief: the address, the length, the platforms, the style.
-Only `url` is required. The full list is `docs/config-driven-video.md` in the
-kwartz-showcase repo, and `schema/showcase.config.schema.json` checks the file.
+Only `url` is required (or `"motionOnly": true` in its place, for a video with no
+product). The kit's docs are in the installed package: the full list of settings is
+`node_modules/kwartz-showcase/docs/config-driven-video.md`, and
+`schema/showcase.config.schema.json` beside it checks the file.
 
 1. **Read the config.** If `audience`, `promise` or `cta` is missing, propose one and
    say which you chose. Do not invent a call to action for a local address: ask.
 2. **`showcase explore`**, then read `.showcase/explore/map.md` and look at its screenshots.
-   Take selectors from the map; prefer test ids. If the product needs a sign-in and
+   Take selectors from the map; prefer test ids. A screenshot shows only the top of a
+   page, and the map lists controls, not every element. For something further down, or
+   something that is not a control, look at the page yourself, and in the scene scroll
+   it into view (`await el.scrollIntoViewIfNeeded()`) before you click or highlight it. If the product needs a sign-in and
    there is no saved session, ask the user to run `showcase login`.
 3. **`showcase plan`** and follow it: it gives the number of scenes, the words for each,
    the shapes to render and the safety rules.
@@ -91,14 +96,17 @@ kwartz-showcase repo, and `schema/showcase.config.schema.json` checks the file.
 When the config has `"motionOnly": true` in place of `url`, nothing is filmed. Every
 scene is a motion scene (or a clip), so parts of the steps above do not apply:
 
-- Skip `showcase explore`, `prepare`, sign-in and everything about app scenes. Delete
-  the `prepare` and the `run` scene from the starter `video.ts`.
-- `showcase plan` still gives the length and the word budget. Its lines about proofs on
-  the real product and about exploring do not apply. Count scenes by the content: an
+- Start it with `showcase init --config --motion`: the starter then has no address and
+  no app scene. Skip `showcase explore`, `prepare`, sign-in and everything about app scenes.
+- `showcase plan` gives the length and the word budget. Count scenes by the content: an
   opening, one scene for each point, and a close.
 - Write each scene as `motion: ({ theme, sayMs }) => ...`. Use `hookCard`, `stepsCard`
   and `endCard` where they fit, and build your own graphics from `theme.look` where
-  they do not. A complete example is `examples/motion/` in the kwartz-showcase repo.
+  they do not. A complete example ships with the kit:
+  `node_modules/kwartz-showcase/examples/motion/video.ts`. Read it there. To render it,
+  copy the `examples/motion` folder into the project first.
+- Give a full-width block of centred text side padding (`padding:0 7%`, as the kit's
+  cards have). Without it the layout check reads the block as running off both sides.
 - With no address there is no call to action to link to. End on the conclusion, or on
   a `cta` the user gave. Do not ask for one.
 - Every frame is your design, so look harder: nothing under about 20 px, the lower half
@@ -145,7 +153,7 @@ takes to say. A scene is one of two kinds:
 | `sayMs`, `theme`, `baseUrl` | Narration length, colours and fonts, the app's address |
 | `format`, `layout`, `cta` | The shape being rendered, its layout, the closing line from the config |
 
-The full reference is `docs/writing-a-video.md` in the kwartz-showcase repo.
+The full reference is `node_modules/kwartz-showcase/docs/writing-a-video.md`.
 
 ## Craft standard
 
@@ -218,9 +226,9 @@ kit only when a second video needs it too.
    every scene, including the middle of a dissolve. If a render stops, open
    `out/failed.png`.
 4. **Render.** `showcase render video.ts`. After a sound-only change, `showcase remix video.ts`.
-5. **Verify.** `showcase render` and `showcase make` print the checks; report each with its
-   number: picture, length, loudness, captions, holds, banned text, read-only,
-   layout, fonts. A failed `layout` check is never acceptable: it means something is
+5. **Verify.** `showcase render` and `showcase make` print the checks; report each line
+   with the value it measured: picture, length, loudness, captions, holds, banned text,
+   layout, fonts, and read-only when the product is hosted or read-only mode is on. A failed `layout` check is never acceptable: it means something is
    cut off, off screen or under a caption in a shape. Fix it and render again; do not
    report the video as done. It is measured per shape, so read every shape's report.
    If read-only mode refused a request, say which, and whether a screen was missing

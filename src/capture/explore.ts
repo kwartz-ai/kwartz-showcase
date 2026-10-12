@@ -37,9 +37,12 @@ export interface ProductMap {
   skipped: string[]
 }
 
+/** How many controls of one screen are listed. */
+export const CONTROL_LIMIT = 80
+
 /** The best selector for an element: a test id, an id, or its role and name.
  *  Runs in the page. */
-function describeControls(limit: number): Control[] {
+export function describeControls(limit: number): Control[] {
   const out: Control[] = []
   const seen = new Set<string>()
   const visible = (el: Element) => {
@@ -48,7 +51,12 @@ function describeControls(limit: number): Control[] {
     return r.width > 4 && r.height > 4 && s.visibility !== 'hidden' && s.display !== 'none'
   }
   const quote = (v: string) => v.replace(/'/g, "\\'")
-  for (const el of document.querySelectorAll('button, a[href], [role=tab], [role=button], input:not([type=hidden]), select, textarea')) {
+  // the page's own content first: a header and a sidebar are the same on every
+  // screen, and listed in document order they used up the whole limit
+  const all = [...document.querySelectorAll('button, a[href], [role=tab], [role=button], input:not([type=hidden]), select, textarea')]
+  const main = document.querySelector('main, [role=main]')
+  const ordered = main ? [...all.filter((el) => main.contains(el)), ...all.filter((el) => !main.contains(el))] : all
+  for (const el of ordered) {
     if (out.length >= limit || !visible(el)) continue
     const tag = el.tagName.toLowerCase()
     const role = el.getAttribute('role')
@@ -120,7 +128,7 @@ async function visit(page: Page, url: string, shot: string): Promise<Omit<Screen
   await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 }).catch(() => page.waitForLoadState('load'))
   await page.waitForTimeout(600)
   const info = await page.evaluate(describeScreen)
-  const controls = await page.evaluate(describeControls, 40)
+  const controls = await page.evaluate(describeControls, CONTROL_LIMIT)
   await page.screenshot({ path: shot, type: 'jpeg', quality: 70 })
   return { url: page.url(), title: info.title, headings: info.headings, controls, tables: info.tables, text: info.text, links: info.links, font: info.font, accent: info.accent }
 }
@@ -167,11 +175,26 @@ export async function explore(opts: ExploreOptions): Promise<ProductMap> {
   }
 }
 
+/** The controls found on every screen of a product with more than one. */
+export function sharedControls(screens: Screen[]): Control[] {
+  if (screens.length < 2) return []
+  return screens[0]!.controls.filter((c) => screens.every((s) => s.controls.some((o) => o.selector === c.selector)))
+}
+
 /** The map as a page a person or an agent can read top to bottom. */
 export function mapAsText(map: ProductMap): string {
   const lines = [`# Product map: ${map.url}`, '', `Explored ${map.exploredAt.slice(0, 10)}. ${map.screens.length} screen(s).`,
     `The product's own font: ${map.style.font ?? 'not found'}${map.style.fontOnGoogle ? ' (on Google Fonts)' : map.style.fontOnGoogle === false ? ' (not on Google Fonts)' : ''}. Its main button colour: ${map.style.accent ?? 'not found'}.`, '']
-  for (const [i, s] of map.screens.entries()) {
+  // what is on every screen (the header, a sidebar) is listed once, not on each
+  const shared = sharedControls(map.screens)
+  if (shared.length) {
+    lines.push('## On every screen', '', 'Navigation that is the same wherever you are:', '')
+    for (const c of shared) lines.push(`- ${c.kind} "${c.text}": \`${c.selector}\``)
+    lines.push('')
+  }
+  const everywhere = new Set(shared.map((c) => c.selector))
+  for (const [i, full] of map.screens.entries()) {
+    const s = { ...full, controls: full.controls.filter((c) => !everywhere.has(c.selector)) }
     lines.push(`## ${i + 1}. ${s.title || s.url}`, '', `Address: ${s.url}`, `Screenshot: ${s.screenshot}`, '')
     if (s.headings.length) lines.push(`Headings: ${s.headings.join(' | ')}`, '')
     for (const t of s.tables) lines.push(`Table with columns: ${t.join(', ')}`, '')

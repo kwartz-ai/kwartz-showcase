@@ -231,6 +231,15 @@ export async function cmdSounds(a: Args): Promise<boolean> {
 
 // ── Setting up ───────────────────────────────────────────────────────────────
 
+const MOTION_CONFIG = (theme?: string) => JSON.stringify({
+  $schema: './node_modules/kwartz-showcase/schema/showcase.config.schema.json',
+  name: 'talk',
+  motionOnly: true,
+  length: 30,
+  formats: ['landscape'],
+  ...(theme ? { theme } : {}),
+}, null, 2) + '\n'
+
 const STARTER_CONFIG = (url: string, theme?: string) => JSON.stringify({
   $schema: './node_modules/kwartz-showcase/schema/showcase.config.schema.json',
   name: 'demo',
@@ -244,6 +253,8 @@ const STARTER_CONFIG = (url: string, theme?: string) => JSON.stringify({
 export function cmdInit(a: Args): boolean {
   const dir = a.rest[0] ?? '.'
   const withConfig = a.flag('config')
+  // a presentation: no product is filmed, so the starter has no address and no app scene
+  const motion = withConfig && a.flag('motion')
   const put = (to: string, write: () => void) => {
     const rel = path.relative(process.cwd(), to)
     if (fs.existsSync(to)) { log(`kept     ${rel} (already there)`); return }
@@ -256,18 +267,20 @@ export function cmdInit(a: Args): boolean {
     const url = a.opt('base') ?? 'http://localhost:3000'
     const picked = a.opt('theme') ? findTheme(a.opt('theme')!, path.resolve(dir)) : null
     const theme = picked?.name
-    put(path.resolve(dir, DEFAULT_CONFIG), () => fs.writeFileSync(path.resolve(dir, DEFAULT_CONFIG), STARTER_CONFIG(url, theme)))
+    put(path.resolve(dir, DEFAULT_CONFIG), () => fs.writeFileSync(path.resolve(dir, DEFAULT_CONFIG), motion ? MOTION_CONFIG(theme) : STARTER_CONFIG(url, theme)))
     // the skill that teaches an agent how this theme is used well
     const styleOf = picked?.custom ? picked.base : theme
     if (styleOf && styleOf !== 'classic') copy(asset('skills', `showcase-theme-${styleOf}`, 'SKILL.md'), path.resolve(dir, '.claude', 'skills', `showcase-theme-${styleOf}`, 'SKILL.md'))
-    copy(asset('templates', 'brief', 'video.ts'), path.resolve(dir, 'video.ts'))
+    copy(asset('templates', motion ? 'motion' : 'brief', 'video.ts'), path.resolve(dir, 'video.ts'))
   } else {
     copy(asset('templates', 'starter', 'video.ts'), path.resolve(dir, 'video.ts'))
   }
   copy(asset('skills', 'kwartz-showcase', 'SKILL.md'), path.resolve(dir, '.claude', 'skills', 'kwartz-showcase', 'SKILL.md'))
   // with it, an agent can make a theme for the brand from a description
   if (withConfig) copy(asset('skills', 'showcase-theme-new', 'SKILL.md'), path.resolve(dir, '.claude', 'skills', 'showcase-theme-new', 'SKILL.md'))
-  log(withConfig
+  log(motion
+    ? '\nnext: write the scenes in video.ts, then "showcase plan" and "showcase make --draft". No product is filmed. Add "out/" and ".showcase/" to .gitignore.'
+    : withConfig
     ? '\nnext: set "url" in showcase.config.json, then "showcase explore", "showcase plan" and "showcase make --draft". Add "out/" and ".showcase/" to .gitignore.'
     : '\nnext: edit video.ts, then "showcase render video.ts --draft". Add "out/" to .gitignore.')
   return true

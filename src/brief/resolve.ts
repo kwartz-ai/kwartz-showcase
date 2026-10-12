@@ -219,7 +219,9 @@ export function resolveBrief(brief: Brief, dir: string, module: ScenesModule): {
   }
 
   const cta = ctaFor(brief)
-  if (!cta) notes.push('no call to action: the address is local, which means nothing to a viewer. Add "cta" to the config.')
+  // a presentation has no address to send a viewer to, so ending without one is not a gap
+  const talk = !!brief.motionOnly && !brief.url && !brief.serve
+  if (!cta && !talk) notes.push('no call to action: the address is local, which means nothing to a viewer. Add "cta" to the config, or end on the product name alone.')
   const targets = targetsFor(brief)
   for (const t of targets) {
     for (const p of t.platforms) {

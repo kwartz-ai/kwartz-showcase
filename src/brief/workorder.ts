@@ -11,22 +11,36 @@ import { ctaFor, targetsFor } from './resolve.ts'
 import { findTheme } from './custom-theme.ts'
 import { asset } from '../core/paths.ts'
 
+/** What each beat is in a presentation, where there is no product to show. */
+const TALK_NOTES: Record<string, string> = {
+  hook: 'the question or the problem, on a card',
+  intro: 'what the talk is about, in one line',
+  proof: 'one point of the talk, as a motion graphic: a title, and one picture that makes the point',
+  how: 'the points together, as steps',
+  chapter: 'a chapter card',
+  end: 'the conclusion, or the title, and a next step if one was given',
+}
+
 export function workOrder(brief: Brief, dir: string): string {
   const length = brief.length ?? 30
   const plan = planFor(length)
   const targets = targetsFor(brief)
   const cta = ctaFor(brief)
   const hasScript = !!brief.script
+  // a presentation: nothing is filmed, so nothing about a product applies
+  const talk = !!brief.motionOnly && !brief.url && !brief.serve
   const mapFile = path.join(dir, '.showcase', 'explore', 'map.md')
   const lines: string[] = [
     `# Work order: ${brief.name ?? 'video'}`, '',
-    brief.motionOnly && !brief.url && !brief.serve
+    talk
       ? 'Product: none is filmed. Every scene is a motion scene or a clip.'
       : `Product: ${brief.url ?? `the static folder ${brief.serve}`} (${isHosted(brief.url) ? 'hosted' : 'local'})`,
     `Length: ${length} seconds (passes between ${plan.minSec} and ${plan.maxSec})`,
     `Audience: ${brief.audience ?? 'not given. Propose one and say which you chose.'}`,
     `Promise: ${brief.promise ?? 'not given. Propose the one thing the video should prove, and say which you chose.'}`,
-    `Next step for the viewer: ${cta ? `${cta.text}${cta.sub ? ` (${cta.sub})` : ''}` : 'not given, and the address is local. Ask the person, or end on the product name alone.'}`,
+    `Next step for the viewer: ${cta ? `${cta.text}${cta.sub ? ` (${cta.sub})` : ''}`
+      : talk ? 'not given. End on the conclusion or the title alone. Do not ask for one.'
+      : 'not given, and the address is local. Ask the person, or end on the product name alone.'}`,
     '',
     '## Shapes to render', '',
   ]
@@ -42,33 +56,46 @@ export function workOrder(brief: Brief, dir: string): string {
   if (picked) {
     // a theme the project made follows the style of the built-in theme it starts from
     const styleOf = picked.custom ? picked.base ?? 'classic' : picked.name
-    const skill = asset('skills', `showcase-theme-${styleOf}`, 'SKILL.md')
+    // the project's own copy when "showcase init" put one there, so the path is one the reader can open
+    const local = path.join(dir, '.claude', 'skills', `showcase-theme-${styleOf}`, 'SKILL.md')
+    const skill = fs.existsSync(local) ? path.relative(dir, local) : asset('skills', `showcase-theme-${styleOf}`, 'SKILL.md')
     lines.push('', picked.custom ? `## Theme: ${picked.name} (your own, from ${styleOf})` : `## Theme: ${picked.name} (${picked.preset.style})`, '',
       picked.custom ? `About it: ${picked.preset.use}. It is defined in ${path.relative(dir, picked.file!)}.` : `Suits: ${picked.preset.use}.`,
       'The theme already sets the surfaces, fonts, colours, backdrop, movement and sound. Build your own graphics from `theme.look` so they match.',
-      fs.existsSync(skill) ? `How a designer uses this style in a video: read ${skill}` : '')
+      fs.existsSync(path.resolve(dir, skill)) ? `How a designer uses this style in a video: read ${skill}` : '')
   }
   lines.push('', '## Script', '',
     hasScript
       ? `The person wrote their own script: ${brief.script}. Use their words as they are, one paragraph per scene. Do not rewrite them.`
       : `Write about ${plan.words} words of narration in ${plan.scenes} scenes. The voice reads about 3 words a second.`,
     '', '| # | Scene | Words | What it is |', '|---|---|---|---|')
-  plan.beats.forEach((b, i) => lines.push(`| ${i + 1} | ${b.kind} | about ${b.words} | ${b.note} |`))
-  if (plan.chapters) lines.push('', `Use ${plan.chapters} chapter card(s) to group the proofs.`)
-  lines.push('', '## Scenes', '',
-    'Write `video.ts` beside the config, ending with `export default defineScenes({ prepare, scenes })`.',
-    '- The hook, a "how it works" card and the end card are motion scenes: `motion: ({ theme, sayMs, cta }) => hookCard(theme, {...}, sayMs)`.',
-    '- Each proof is an app scene: `run: async ({ page, stage, untilSaid }) => { ... }`.',
-    '- Use the call to action from the brief on the end card: it arrives as `cta`.',
-    '', '## Safety', '',
-    `Names that must never appear on screen: ${brief.safety?.banned?.length ? brief.safety.banned.join(', ') : 'none listed'}.`,
-    (brief.safety?.readOnly ?? isHosted(brief.url))
-      ? 'Read-only mode is on: any request that could change data is refused. Scenes must only look and click.'
-      : 'Read-only mode is off. Scenes must still not create, edit or delete anything unless the person agreed.',
-    brief.auth?.session ? `Sign-in: a saved session at ${brief.auth.session}. If it is missing, ask the person to run "showcase login".` : 'Sign-in: none configured.',
-    '', '## Product map', '',
-    fs.existsSync(mapFile) ? `Read ${path.relative(dir, mapFile)} and look at the screenshots beside it.` : 'Not explored yet. Run "showcase explore" first, then read .showcase/explore/map.md.',
-    '', '## Then', '',
+  plan.beats.forEach((b, i) => lines.push(`| ${i + 1} | ${b.kind} | about ${b.words} | ${talk ? TALK_NOTES[b.kind] : b.note} |`))
+  if (talk) {
+    lines.push('', 'The table shares out the words. Count scenes by your content: an opening, one scene for each point, and a close. Keep the total near the word budget.',
+      '', '## Scenes', '',
+      'Write `video.ts` beside the config, ending with `export default defineScenes({ scenes })`. There is no `prepare`, and no scene has `run`.',
+      '- Every scene is a motion scene: `motion: ({ theme, sayMs }) => hookCard(theme, {...}, sayMs)`.',
+      '- Use `hookCard`, `stepsCard` and `endCard` where they fit. Where they do not, build your own graphic from `theme.look`, so it matches the theme.',
+      '- A complete example ships with the kit: `node_modules/kwartz-showcase/examples/motion/video.ts`.',
+      '', '## Safety', '',
+      `Names that must never appear on screen: ${brief.safety?.banned?.length ? brief.safety.banned.join(', ') : 'none listed'}.`)
+  } else {
+    if (plan.chapters) lines.push('', `Use ${plan.chapters} chapter card(s) to group the proofs.`)
+    lines.push('', '## Scenes', '',
+      'Write `video.ts` beside the config, ending with `export default defineScenes({ prepare, scenes })`.',
+      '- The hook, a "how it works" card and the end card are motion scenes: `motion: ({ theme, sayMs, cta }) => hookCard(theme, {...}, sayMs)`.',
+      '- Each proof is an app scene: `run: async ({ page, stage, untilSaid }) => { ... }`.',
+      '- Use the call to action from the brief on the end card: it arrives as `cta`.',
+      '', '## Safety', '',
+      `Names that must never appear on screen: ${brief.safety?.banned?.length ? brief.safety.banned.join(', ') : 'none listed'}.`,
+      (brief.safety?.readOnly ?? isHosted(brief.url))
+        ? 'Read-only mode is on: any request that could change data is refused. Scenes must only look and click.'
+        : 'Read-only mode is off. Scenes must still not create, edit or delete anything unless the person agreed.',
+      brief.auth?.session ? `Sign-in: a saved session at ${brief.auth.session}. If it is missing, ask the person to run "showcase login".` : 'Sign-in: none configured.',
+      '', '## Product map', '',
+      fs.existsSync(mapFile) ? `Read ${path.relative(dir, mapFile)} and look at the screenshots beside it.` : 'Not explored yet. Run "showcase explore" first, then read .showcase/explore/map.md.')
+  }
+  lines.push('', '## Then', '',
     '1. `showcase make --draft` until every scene runs. Look at frames from every scene.',
     '2. `showcase make`. Read the checks. If the length is off, the report says by how many words.',
     '3. Tell the person which promise and audience you chose, what was checked, and that you cannot hear the result.',

@@ -2,7 +2,7 @@
   "$schema": "../../schema/showcase.config.schema.json",
   "name": "website-tour",
   "url": "http://localhost:4310",
-  "length": 210,
+  "length": 330,
   "formats": ["landscape"],
   "theme": "lavender",
   "audience": "a developer or founder who needs demo videos of a product",

@@ -50,6 +50,8 @@ Use that font and colour in `style` ([guide 5](05-style.md)).
 
 - Explore only looks. It runs in read-only mode, and never follows a sign-out link, a
   download, or a data address.
+- Each screen lists up to 80 controls, the page's own content first. Navigation that is
+  on every screen (a header, a sidebar) is listed once, under "On every screen".
 - It visits 8 pages by default and lists the ones it left out. Raise `--max-pages` to
   include them.
 - If the product needs a sign-in, run `showcase login` first and set `auth.session`

@@ -44,7 +44,8 @@ npm pack --dry-run             # lists exactly what would be published
 ```
 
 The package holds `bin/`, `dist/`, `src/`, `python/`, `schema/`, `skills/`,
-`templates/` and `docs/`. It holds no tests, no examples and no media.
+`templates/` and `docs/`, and one small example, `examples/motion/` (a config, its scenes
+and two themes). It holds no tests and no media.
 
 `npm publish` runs the build first (the `prepack` script). The first version published
 was 2.3.0.

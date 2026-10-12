@@ -1,6 +1,6 @@
 {
   "name": "kwartz-showcase",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "description": "Narrated product demo videos rendered from a script: Playwright drives your real app, a local voice reads the narration, FFmpeg joins them. No recording, no editing, no paid tools.",
   "license": "Apache-2.0",
   "author": "Kwartz",
@@ -50,6 +50,9 @@
     "skills",
     "templates",
     "docs",
+    "examples/motion/showcase.config.json",
+    "examples/motion/video.ts",
+    "examples/motion/themes",
     "NOTICE"
   ],
   "engines": {
