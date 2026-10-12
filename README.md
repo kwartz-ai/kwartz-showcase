@@ -44,7 +44,7 @@ export default defineVideo({
 showcase render video.ts
 ```
 
-> Version 2.4.0. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
+> Version 2.4.1. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
 > It is on npm as [`kwartz-showcase`](https://www.npmjs.com/package/kwartz-showcase).
 
 ## What you get
@@ -191,7 +191,7 @@ Start at the [docs index](docs/README.md), which lists these in reading order.
 - [How it works](docs/how-it-works.md): the pipeline, and why it is built this way
 - [Architecture](docs/architecture.md): processes, modules, data flow, diagrams, where to extend
 - [Tech stack](docs/tech-stack.md): every tool, its version, licence and role, and what was not chosen
-- [Testing](docs/testing.md): how the 1120 unit tests are organised, and how to add one
+- [Testing](docs/testing.md): how the 1121 unit tests are organised, and how to add one
 - [Release checklist](docs/release-checklist.md): how to know it works before you commit, push or release
 - [Troubleshooting](docs/troubleshooting.md)
 - [Research notes](docs/research.md): the tools and skills we compared before building this

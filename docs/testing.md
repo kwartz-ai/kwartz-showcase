@@ -1,6 +1,6 @@
 # Testing
 
-The kit has 1120 unit tests, run with [Vitest](https://vitest.dev). They take about ten
+The kit has 1121 unit tests, run with [Vitest](https://vitest.dev). They take about ten
 seconds and need no browser, no FFmpeg, no voice model and no network.
 
 ```bash

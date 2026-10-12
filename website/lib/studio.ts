@@ -58,6 +58,7 @@ const kit = engine as unknown as {
   FONT_PRESETS: Record<string, { display: string; text: string; mono: string; use: string }>
   defaultTheme: { ink: string; accent: string }
   checkThemeFile: (file: unknown) => string[]
+  isHosted: (url: string | undefined) => boolean
   checkThemeName: (name: string) => string | null
   checkReadable: (preset: Preset) => { errors: string[]; warnings: string[] }
   presetFrom: (file: ThemeFile) => Preset
@@ -97,6 +98,8 @@ export interface Choice {
   brandBackdrop: boolean
   name: string
   url: string
+  /** Names that must never appear on screen, separated by commas. Asked for a hosted address. */
+  banned: string
   about: string
   length: number
   platforms: string
@@ -119,7 +122,7 @@ export function baseOf(base: string) {
   }
 }
 
-export const startFrom = (base: string, keep: Pick<Choice, 'kind' | 'name' | 'url' | 'about' | 'length' | 'platforms'>): Choice => {
+export const startFrom = (base: string, keep: Pick<Choice, 'kind' | 'name' | 'url' | 'banned' | 'about' | 'length' | 'platforms'>): Choice => {
   const b = baseOf(base)
   return { ...keep, base, accent: b.accent, ink: b.ink, fontPreset: b.fontPreset, feel: b.feel, radius: b.radius, brandLabel: false, brandBackdrop: false }
 }
@@ -173,6 +176,24 @@ export function themeFileOf(c: Choice): ThemeFile {
   return file
 }
 
+/** Is the address a hosted one (not this machine or a private network)? The kit's own
+ *  test. An address that cannot be read yet, while it is being typed, counts as not hosted. */
+export function hostedSite(c: Pick<Choice, 'kind' | 'url'>): boolean {
+  if (c.kind !== 'site') return false
+  try {
+    return kit.isHosted(c.url.trim())
+  } catch {
+    return false
+  }
+}
+
+/** The names a visitor listed, as the config wants them. */
+export const bannedOf = (c: Pick<Choice, 'banned'>) =>
+  c.banned
+    .split(/[,\n]/)
+    .map((n) => n.trim())
+    .filter(Boolean)
+
 export function configOf(c: Choice) {
   return {
     name: c.kind === 'deck' ? 'talk' : 'demo',
@@ -180,6 +201,8 @@ export function configOf(c: Choice) {
     length: c.length,
     platforms: c.platforms.split(','),
     theme: cleanName(c.name),
+    // the kit refuses a hosted address with no list of names that must stay off screen
+    ...(hostedSite(c) ? { safety: { banned: bannedOf(c) } } : {}),
   }
 }
 
@@ -279,6 +302,14 @@ export function promptOf(c: Choice): string {
     '',
     JSON.stringify(configOf(c), null, 2),
     '',
+    ...(hostedSite(c)
+      ? [
+          bannedOf(c).length
+            ? `The address is a live site, so it is filmed read-only: scenes may only look and click. "safety.banned" lists the names that must never appear on screen. Those are all of them: do not ask me for more.`
+            : `The address is a live site, so it is filmed read-only: scenes may only look and click. "safety.banned" is empty because I have no names that must stay off screen: do not ask me for any.`,
+          '',
+        ]
+      : []),
     `6. Run "bunx showcase theme check ${name}". It must pass. Do not change the theme unless it fails.`,
     deck
       ? `7. Follow the kwartz-showcase skill from here. There is no product, so nothing is explored. Run "bunx showcase plan" for the word budget, write the script first, then write every scene as a motion scene: an opening, one scene for each point, and a close. The plan's table may show fewer scenes: keep its word total, and share it across yours. ${choose(true)}`
@@ -319,7 +350,7 @@ const pick = <T,>(list: T[], random: () => number): T => list[Math.floor(random(
  *  from the one on screen, and it is only returned when the kit's rules accept it with
  *  nothing left to judge by eye, so a surprise is never a theme that cannot be read. */
 export function surprise(now: Choice, random: () => number = Math.random): Choice {
-  const keep = { kind: now.kind, name: now.name, url: now.url, about: now.about, length: now.length, platforms: now.platforms }
+  const keep = { kind: now.kind, name: now.name, url: now.url, banned: now.banned, about: now.about, length: now.length, platforms: now.platforms }
   let fallback: Choice | null = null
   for (let attempt = 0; attempt < 80; attempt++) {
     const base = pick(BASES.filter((b) => b !== now.base), random)
@@ -343,6 +374,7 @@ export const DEFAULTS: Choice = startFrom('glass', {
   kind: 'site',
   name: 'acme',
   url: 'https://my-product.com',
+  banned: '',
   about: 'how a new user gets started',
   length: 60,
   platforms: 'youtube,instagram-reel',

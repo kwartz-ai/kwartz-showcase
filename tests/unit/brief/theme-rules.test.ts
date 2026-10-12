@@ -22,8 +22,8 @@ function reach(entry: string, seen = new Set<string>()): Set<string> {
 }
 
 describe('the theme rules can run in a web page', () => {
-  // the website's theme studio bundles these two for the browser
-  for (const entry of ['brief/theme-rules.ts', 'graphics/cards.ts']) {
+  // the website's theme studio bundles these for the browser
+  for (const entry of ['brief/theme-rules.ts', 'graphics/cards.ts', 'brief/hosted.ts']) {
     it(`${entry} reaches no code that needs the disk or a process`, () => {
       const files = [...reach(path.join(SRC, entry))]
       const node = files.filter((f) => /from\s+'node:|from\s+'(fs|path|os|child_process)'|from\s+'playwright'/.test(fs.readFileSync(f, 'utf8')))

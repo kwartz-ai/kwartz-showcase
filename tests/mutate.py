@@ -16,6 +16,7 @@ MUTATIONS = [
     ('src/audio/palette.ts', 'else if (m.centroidHz > rule.maxCentroidHz)', 'else if (false)', 'a squeaky sound passes the gate'),
     ('src/capture/readonly.ts', 'return READS.has(method.toUpperCase()) || allowed(url)', 'return true', 'read-only mode lets writes through'),
     ('src/brief/brief.ts', "isHosted(b.url) && !Array.isArray(b.safety?.banned)", 'false', 'a hosted product needs no banned list'),
+    ('src/brief/hosted.ts', 'return !!url && !LOCAL_HOST.test(new URL(url).hostname)', 'return false', 'a live site is treated as one on this machine'),
     ('src/brief/resolve.ts', 'const readOnly = brief.safety?.readOnly ?? hosted', 'const readOnly = brief.safety?.readOnly ?? false', 'a hosted product is not read-only by default'),
     ('src/brief/plan.ts', 'export const SPEECH_SHARE = 0.92', 'export const SPEECH_SHARE = 1.4', 'the word budget overfills the length'),
     ('src/brief/script.ts', 'if (need.length !== inOrder.length) {', 'if (false) {', 'a script with the wrong number of paragraphs is accepted'),

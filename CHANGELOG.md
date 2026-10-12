@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.4.1 (2026-10-12)
+
+The Theme Studio's prompt works for a live site.
+
+Fixed
+- For a hosted address, the kit requires `safety.banned` in the config: the names that
+  must never appear on screen, or an empty list. The Theme Studio's config did not have
+  it, so `showcase explore` and `showcase plan` refused to run and Claude had to stop
+  and ask. The studio now shows a field for those names when the address is a live
+  site, writes the list into the config (empty when there are none), and the prompt
+  says the site is filmed read-only and that the list is complete.
+
+Changed
+- `isHosted` moved to `src/brief/hosted.ts`, a file with no disk code, so the studio
+  asks the same question as the kit. It is still exported from `brief.ts`. Nothing
+  about how a video renders changed.
+
+Why it was missed: every earlier test of the prompt filmed a site on the test machine,
+and the rule applies only to a live site. Checked now by giving the studio's config for
+a live site to the kit, and filming a draft of a live site with it: every check passed,
+with read-only mode on.
+
 ## 2.4.0 (2026-10-12)
 
 Presentations are first class, and `explore` sees the page.

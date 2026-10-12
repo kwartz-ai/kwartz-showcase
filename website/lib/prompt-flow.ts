@@ -78,6 +78,7 @@ export const PHASES: Phase[] = [
         title: 'Save your theme and your settings',
         text: 'Claude writes the theme file and the config exactly as the prompt gives them.',
         runs: 'themes/<name>.json  and  showcase.config.json',
+        branches: [{ when: 'If your address is a live site', then: 'The config also lists the names that must never appear on screen, or says there are none. The studio asks you for them, so Claude does not have to. The site is then filmed read-only.' }],
       },
       {
         n: '5',

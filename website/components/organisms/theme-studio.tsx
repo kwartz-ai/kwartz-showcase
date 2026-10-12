@@ -6,7 +6,7 @@ import { ClayButton } from '@/components/atoms/clay-button'
 import { ClayCard } from '@/components/atoms/clay-card'
 import { Kicker, Pill } from '@/components/atoms/pill'
 import { ClayCheckbox, ClaySelect } from '@/components/molecules/clay-select'
-import { BASES, DEFAULTS, FEELS, FONT_PAIRINGS, HEX, LENGTHS, LENGTH_MAX, LENGTH_MIN, PLATFORM_SETS, RULES, baseOf, cleanName, configOf, frameOf, promptOf, skillsOf, startFrom, surprise, verdictOf, type Choice, type Scene } from '@/lib/studio'
+import { BASES, DEFAULTS, FEELS, FONT_PAIRINGS, HEX, LENGTHS, LENGTH_MAX, LENGTH_MIN, PLATFORM_SETS, RULES, baseOf, cleanName, configOf, frameOf, hostedSite, promptOf, skillsOf, startFrom, surprise, verdictOf, type Choice, type Scene } from '@/lib/studio'
 import { cn } from '@/lib/utils'
 
 const SWATCHES = ['#FF5A1F', '#2563EB', '#16A34A', '#DB2777', '#6A4BEA', '#FDE68A', '#0EA5E9', '#111827']
@@ -323,6 +323,11 @@ export function ThemeStudio() {
             {c.kind === 'site' ? (
               <Field label="Address of your website" htmlFor="studio-url">
                 <input id="studio-url" className={cn(field, 'font-mono')} value={c.url} spellCheck={false} onChange={(e) => set({ url: e.target.value })} />
+              </Field>
+            ) : null}
+            {hostedSite(c) ? (
+              <Field label="Names that must never appear on screen" htmlFor="studio-banned" hint="This is a live site, so the kit asks. Customers, people or companies, separated by commas. Leave it empty if there are none.">
+                <input id="studio-banned" className={field} value={c.banned} placeholder="none" onChange={(e) => set({ banned: e.target.value })} />
               </Field>
             ) : null}
             <Field label={c.kind === 'deck' ? 'What is the presentation about?' : 'What should the video show?'} htmlFor="studio-about">

@@ -156,6 +156,7 @@ The rules that keep it that way:
 | `video/define.ts` | `defineVideo`; fill defaults; refuse mistakes early | file system (import) |
 | `brief/brief.ts` | The config type; every check on it; local or hosted | file system |
 | `brief/presets.ts` | Shapes, platforms, safe areas; the layout for a shape | file system (import) |
+| `brief/hosted.ts` | Whether an address is hosted or on this machine | none |
 | `brief/looks.ts` | The motion feels and the named backdrops, as plain data | none |
 | `brief/themes.ts` | The themes: colours, pairing, backdrop, sound mood, and the look of every surface | none |
 | `brief/theme-rules.ts` | The rules of a theme file: its shape, safe CSS, readability; a theme file as a theme. Plain logic, so the website's theme studio runs the same rules | none |
