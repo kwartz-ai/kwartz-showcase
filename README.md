@@ -2,6 +2,8 @@
 
 Narrated product demo videos, rendered from a script.
 
+[![Kwartz Showcase: demo videos, written not recorded](https://raw.githubusercontent.com/kwartz-ai/kwartz-showcase/main/website/public/og.png)](https://kwartz-showcase.vercel.app)
+
 **[Website](https://kwartz-showcase.vercel.app)** · **[Docs](https://kwartz-showcase.vercel.app/docs)** · **[Your first video](https://kwartz-showcase.vercel.app/docs/first-video)** · **[Themes](https://kwartz-showcase.vercel.app/themes)** · **[Theme Studio](https://kwartz-showcase.vercel.app/studio)** · **[npm](https://www.npmjs.com/package/kwartz-showcase)**
 
 You write a TypeScript file: one spoken line per scene, plus the clicks that scene
