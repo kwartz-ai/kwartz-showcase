@@ -268,7 +268,7 @@ export function promptOf(c: Choice): string {
     '',
     'Do this in order. If a step fails, stop and tell me what the error says.',
     '',
-    '1. Get the kit into this folder. If this folder has no package.json, create one first: { "name": "my-video", "private": true, "type": "module" }. Then run "bun link kwartz-showcase". If that fails because the package is not registered, clone https://github.com/kwartz-ai/kwartz-showcase beside this folder, run "bun install" and "bun link" in it, and try again.',
+    '1. Install the kit in this folder. If this folder has no package.json, create one first: { "name": "my-video", "private": true, "type": "module" }. Then run "bun add -d kwartz-showcase". If Bun is not installed, run "npm install --save-dev kwartz-showcase" and write "npx" wherever these steps say "bunx".',
     '2. Run "bunx showcase doctor". If something is missing, tell me what to install and wait for me.',
     `3. Run "${init}". This adds the config, a starter video.ts and the skills: ${skillsOf(c).join(', ')}. Then add "out/" and ".showcase/" to .gitignore.`,
     `4. Save this as themes/${name}.json, exactly as written:`,

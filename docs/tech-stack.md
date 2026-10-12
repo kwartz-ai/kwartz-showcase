@@ -51,8 +51,9 @@ install uses. Node reads a project's own `video.ts` by stripping its types.
   it launched and captured correctly in 6 of 7 trial runs. The one failure was a cold
   first start that delivered no frames; the kit reports that with a "render again"
   message instead of writing an empty video.
-- To use a local copy from another project, use `bun link`. Installing the folder with
-  `file:` failed with a permissions error on Windows.
+- The kit installs from npm. To use a local clone from another project, while changing
+  the kit, use `bun link`: installing the folder with `file:` failed with a permissions
+  error on Windows.
 
 ## Language: TypeScript
 

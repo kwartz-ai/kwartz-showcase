@@ -4,21 +4,18 @@ From an empty folder to a first video of your own app.
 
 ## 1. Install the tools
 
-You need [Bun](https://bun.sh) 1.2 or later and [FFmpeg](https://ffmpeg.org) on your
-PATH. Python 3.10 to 3.13 is needed once, to install the voice.
+You need [Bun](https://bun.sh) 1.2 or later (or Node 22.18 or later) and
+[FFmpeg](https://ffmpeg.org) on your PATH. Python 3.10 to 3.13 is needed once, to
+install the voice.
+
+In your own project:
 
 ```bash
-# get the kit once, and make it available to your projects
-git clone https://github.com/kwartz-ai/kwartz-showcase.git
-cd kwartz-showcase && bun install && bun link
-
-# in your own project
-cd ../your-project && bun link kwartz-showcase
+bun add -d kwartz-showcase     # or: npm install --save-dev kwartz-showcase
 bunx showcase doctor
 ```
 
-(Installing the folder with `file:` failed with a permissions error on Windows; use
-`bun link`.)
+With Node, write `npx` wherever these docs say `bunx`.
 
 `doctor` lists what is there and what is missing. Then:
 

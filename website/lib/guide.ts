@@ -1,5 +1,5 @@
 // The ten steps of "Your first video". Every command and every printed line here is
-// taken from the kit's docs (getting-started.md and guides 1, 3, 10 and 11).
+// taken from the kit's docs (getting-started.md and guides 1, 3, 10, 11 and 12).
 
 export interface GuideStep {
   title: string
@@ -18,22 +18,22 @@ export interface GuideStep {
 export const GUIDE: GuideStep[] = [
   {
     title: 'Install the tools',
-    what: 'Three free tools. Bun runs the kit, FFmpeg builds the video, and Python is needed once, to install the voice.',
+    what: 'Three free tools. Bun or Node runs the kit, FFmpeg builds the video, and Python is needed once, to install the voice.',
     codeLabel: 'Check each one',
     code: 'bun --version\nffmpeg -version\npython --version',
     seeLabel: 'You need',
-    see: 'Bun 1.2 or later\nFFmpeg on your PATH, with ffprobe\nPython 3.10 to 3.13',
+    see: 'Bun 1.2 or later, or Node 22.18 or later\nFFmpeg on your PATH, with ffprobe\nPython 3.10 to 3.13',
     tip: 'Draft renders work without Python. You only need it for the voice.',
     more: { href: '/docs/getting-started', label: 'Getting started' },
   },
   {
     title: 'Get the kit',
-    what: 'Clone it once and link it, so every project on your machine can use it. It is installed from GitHub, not from npm.',
-    codeLabel: 'You type',
-    code: 'git clone https://github.com/kwartz-ai/kwartz-showcase.git\ncd kwartz-showcase\nbun install\nbun link',
-    seeLabel: 'Then, in your own project',
-    see: 'cd ../your-project\nbun link kwartz-showcase',
-    tip: 'You do this once per machine. On Windows use bun link, not a file: install.',
+    what: 'Install it from npm, in your own project folder. One line, and nothing to clone.',
+    codeLabel: 'You type, in your project',
+    code: 'bun add -d kwartz-showcase',
+    seeLabel: 'Or, with npm',
+    see: 'npm install --save-dev kwartz-showcase',
+    tip: 'This guide writes bunx. With Node, write npx in its place: npx showcase doctor.',
     more: { href: '/docs/getting-started', label: 'Getting started' },
   },
   {

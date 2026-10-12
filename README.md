@@ -42,8 +42,8 @@ export default defineVideo({
 showcase render video.ts
 ```
 
-> Version 2.3.0. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
-> It is not on npm; install it from GitHub as shown below.
+> Version 2.3.1. Until 1.0.0 this project was called Kwartz AI Video and its command was `kav`. Source: [github.com/kwartz-ai/kwartz-showcase](https://github.com/kwartz-ai/kwartz-showcase).
+> It is on npm as [`kwartz-showcase`](https://www.npmjs.com/package/kwartz-showcase).
 
 ## What you get
 
@@ -77,38 +77,26 @@ Every tool in the pipeline is free: Playwright, FFmpeg, Kokoro.
 
 ## Requirements
 
-- [Bun](https://bun.sh) 1.2 or later (Node 22.18 or later also works, from a build)
+- [Bun](https://bun.sh) 1.2 or later, or [Node](https://nodejs.org) 22.18 or later
 - [FFmpeg](https://ffmpeg.org) on your PATH (with `ffprobe`)
 - Python 3.10 to 3.13, only to install the voice (draft renders work without it)
 - Developed and tested on Windows 11. macOS and Linux should work but are untested so far.
 
 ## Quick start
 
+In your project's folder:
+
 ```bash
-git clone https://github.com/kwartz-ai/kwartz-showcase.git
-cd kwartz-showcase
-bun install
-bun run showcase doctor        # what is installed, what is missing
-bun run showcase setup         # one-time: Chromium and the voice (about 350 MB)
-bun run example           # renders examples/hello/out/hello.mp4
-bun run example:tour      # one script in three shapes, from a config (draft)
-bun run example:motion    # motion graphics alone: no product filmed (draft)
+bun add -d kwartz-showcase     # or: npm install --save-dev kwartz-showcase
+bunx showcase doctor           # what is installed, what is missing
+bunx showcase setup            # one-time: Chromium and the voice (about 350 MB)
 ```
 
-The example films a tiny made-up app that ships with the repo, so it needs nothing else
-running. `bun run example:draft` does the same with no voice and needs no setup beyond
-Chromium.
+With Node, write `npx` wherever these docs say `bunx`.
 
 ## Use it in your project
 
-Clone the kit once (see Quick start), then link it into any project on the machine:
-
-```bash
-cd kwartz-showcase && bun link            # once, in the kit
-cd ../your-project && bun link kwartz-showcase
-```
-
-Then, in your project:
+Write the video yourself:
 
 ```bash
 bunx showcase init                       # adds video.ts and the editor skill
@@ -128,6 +116,23 @@ bunx showcase make                       # every shape, with sound and checks
 
 Add `out/` and `.showcase/` to your `.gitignore`: frames, takes, the videos and working
 files are written there.
+
+## Run the examples
+
+The examples are in the repo, not in the package:
+
+```bash
+git clone https://github.com/kwartz-ai/kwartz-showcase.git
+cd kwartz-showcase
+bun install
+bun run example           # renders examples/hello/out/hello.mp4
+bun run example:tour      # one script in three shapes, from a config (draft)
+bun run example:motion    # motion graphics alone: no product filmed (draft)
+```
+
+The example films a tiny made-up app that ships with the repo, so it needs nothing else
+running. `bun run example:draft` does the same with no voice and needs no setup beyond
+Chromium.
 
 ## Commands
 

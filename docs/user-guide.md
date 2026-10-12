@@ -39,7 +39,7 @@ These are estimates from making three videos of one product.
 
 | Tool | Why | Check it works |
 |---|---|---|
-| [Bun](https://bun.sh) 1.2 or later | Runs the kit | `bun --version` |
+| [Bun](https://bun.sh) 1.2 or later, or Node 22.18 or later | Runs the kit | `bun --version` or `node --version` |
 | [FFmpeg](https://ffmpeg.org) | Builds the video and the sound | `ffmpeg -version` and `ffprobe -version` |
 | Python 3.10 to 3.13 | Installs the voice (only needed once) | `python --version` |
 
@@ -59,37 +59,41 @@ Close and reopen the terminal afterwards so the new commands are found.
 
 ## Step 2. Get the kit
 
+In your product's own folder, or in a new folder you make for the video:
+
 ```bash
-git clone https://github.com/kwartz-ai/kwartz-showcase.git
-cd kwartz-showcase
-bun install
-bun link
+bun add -d kwartz-showcase     # or: npm install --save-dev kwartz-showcase
 ```
 
-`bun link` makes the kit available to your other projects on this machine.
+With Node, write `npx` wherever this guide says `bunx`.
 
 ## Step 3. Set up the browser and the voice
 
 ```bash
-bun run showcase doctor
+bunx showcase doctor
 ```
 
 This lists what is installed. On a new machine it will say `chromium` and `voice` are
 missing. Fix both with one command:
 
 ```bash
-bun run showcase setup
+bunx showcase setup
 ```
 
 It installs a browser for the kit to drive and downloads the voice model (about
-350 MB, once per machine). Run `bun run showcase doctor` again: every row should say `ok`.
+350 MB, once per machine). Run `bunx showcase doctor` again: every row should say `ok`.
 
 > You can skip the voice for now. Draft renders work without it, and you can run
 > `showcase setup` later.
 
 ## Step 4. Render the example
 
+The example is in the repo, not in the package, so get the repo for this one step:
+
 ```bash
+git clone https://github.com/kwartz-ai/kwartz-showcase.git
+cd kwartz-showcase
+bun install
 bun run example
 ```
 
@@ -129,7 +133,6 @@ account. Never put its password in the video file; Step 9 shows how to pass it i
 In your product's own folder:
 
 ```bash
-bun link kwartz-showcase
 bunx showcase init
 ```
 
